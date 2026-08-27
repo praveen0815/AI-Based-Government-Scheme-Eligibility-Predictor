@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AI-Based Government Scheme Eligibility Predictor
 
 Final-year engineering project. Citizens will later provide socio-economic information through a unified data wallet. The system will use machine learning to predict eligibility for Tamil Nadu Government welfare schemes and explain why a scheme is recommended.
@@ -182,3 +183,6 @@ Still out of scope:
 - Aadhaar / government identity
 - LLM features
 - Deployment
+=======
+# AI-Based-Government-Scheme-Eligibility-Predictor
+>>>>>>> 4c36deab1ebee635aedabbc6ee95262d9b61b25e
