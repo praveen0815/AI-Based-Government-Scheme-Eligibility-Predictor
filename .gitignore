@@ -1,0 +1,56 @@
+# Environment and secrets
+.env
+.env.local
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# ML artifacts: keep baseline pipelines and evaluation exports
+ml/models/*
+!ml/models/.gitkeep
+!ml/models/baseline/
+!ml/models/baseline/**
+!ml/models/evaluation/
+!ml/models/evaluation/**
+
+# Dataset files (do not commit unpublished raw or processed data)
+dataset/raw/*
+!dataset/raw/.gitkeep
+!dataset/raw/schemes.csv
+!dataset/raw/citizens.csv
+dataset/processed/*
+!dataset/processed/.gitkeep
+!dataset/processed/eligibility_dataset.csv
+
+# Node / frontend
+node_modules/
+dist/
+build/
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Supporting document uploads (never commit user files)
+var/supporting_uploads/**
+!var/supporting_uploads/.gitkeep
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db

@@ -1,0 +1,21 @@
+# Local PostgreSQL for the academic prototype. Do not use these defaults in production.
+services:
+  postgres:
+    image: postgres:16
+    container_name: scheme-predictor-pg
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-wallet}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wallet_dev_only}
+      POSTGRES_DB: ${POSTGRES_DB:-scheme_predictor}
+    ports:
+      - "5432:5432"
+    volumes:
+      - schemewise_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-wallet} -d ${POSTGRES_DB:-scheme_predictor}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  schemewise_pg:

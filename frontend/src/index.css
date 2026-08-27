@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-[17px] leading-relaxed text-ink-900 antialiased;
+  }
+
+  html[lang="ta"] body {
+    line-height: 1.75;
+  }
+
+  html[lang="ta"] h1,
+  html[lang="ta"] h2,
+  html[lang="ta"] h3,
+  html[lang="ta"] h4 {
+    line-height: 1.4;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-action;
+  }
+}
+
+@layer components {
+  .field-input {
+    @apply w-full rounded-[12px] border border-line bg-surface px-4 py-3.5 text-[16px] text-ink-900 shadow-sm transition duration-150;
+  }
+
+  .field-input:hover {
+    @apply border-slate-300;
+  }
+
+  .field-input:focus {
+    @apply border-action outline-none ring-2 ring-action/15;
+  }
+
+  .card-surface {
+    @apply rounded-[14px] border border-line bg-surface shadow-card;
+  }
+
+  .hero-title {
+    @apply text-[40px] font-extrabold tracking-tight text-ink-900 sm:text-[52px] lg:text-[58px] lg:leading-[1.12];
+  }
+
+  .page-title {
+    @apply text-[34px] font-extrabold tracking-tight text-ink-900 sm:text-[40px] lg:text-[44px] lg:leading-[1.15];
+  }
+
+  .section-title {
+    @apply text-[26px] font-bold tracking-tight text-ink-900 sm:text-[28px];
+  }
+
+  .card-title {
+    @apply text-[20px] font-semibold tracking-tight text-ink-900 sm:text-[22px];
+  }
+
+  .body-copy {
+    @apply text-[17px] leading-relaxed text-ink-500;
+  }
+
+  .field-label {
+    @apply text-[15px] font-medium text-ink-900 sm:text-[16px];
+  }
+
+  .btn-text {
+    @apply text-[16px] font-semibold;
+  }
+}
+
+@layer utilities {
+  @media (prefers-reduced-motion: reduce) {
+    .motion-safe\:animate-spin {
+      animation: none;
+    }
+  }
+}

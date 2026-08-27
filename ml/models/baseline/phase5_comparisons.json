@@ -1,0 +1,34 @@
+{
+  "rule_engine": {
+    "agreement_rate": 1.0,
+    "disagreements": 0,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "true_positives": 731,
+    "true_negatives": 5269
+  },
+  "logistic_regression": {
+    "agreement_rate": 0.7368333333333333,
+    "disagreements": 1579,
+    "false_positives": 1413,
+    "false_negatives": 166,
+    "true_positives": 565,
+    "true_negatives": 3856
+  },
+  "decision_tree": {
+    "agreement_rate": 1.0,
+    "disagreements": 0,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "true_positives": 731,
+    "true_negatives": 5269
+  },
+  "random_forest": {
+    "agreement_rate": 0.9991666666666666,
+    "disagreements": 5,
+    "false_positives": 5,
+    "false_negatives": 0,
+    "true_positives": 731,
+    "true_negatives": 5264
+  }
+}

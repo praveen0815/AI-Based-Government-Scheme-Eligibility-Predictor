@@ -1,0 +1,93 @@
+{
+  "python": "3.12.10",
+  "scikit_learn": "1.9.0",
+  "random_seed": 20260814,
+  "test_size": 0.2,
+  "dataset": "dataset/processed/eligibility_dataset.csv",
+  "dataset_sha256": "ba91158194b4060be01894306d72ae25b96e4abeebbdf4ff61e93ffd059d30d0",
+  "train_citizens": 4000,
+  "test_citizens": 1000,
+  "train_rows": 24000,
+  "test_rows": 6000,
+  "features": [
+    "age",
+    "wet_land_acres",
+    "dry_land_acres",
+    "scheme_id",
+    "gender",
+    "is_student",
+    "first_higher_education_course",
+    "school_background",
+    "marital_status",
+    "is_orphan",
+    "is_destitute",
+    "occupation_category"
+  ],
+  "excluded": [
+    "citizen_id",
+    "eligibility_reason",
+    "eligible"
+  ],
+  "split": "citizen-grouped stratified 80/20",
+  "class_weight": "balanced",
+  "leakage_checks_passed": true,
+  "best_baseline_by_f1": "decision_tree",
+  "primary_overall": {
+    "logistic_regression": {
+      "accuracy": 0.7368333333333333,
+      "precision": 0.2856420626895854,
+      "recall": 0.7729138166894665,
+      "f1": 0.4171280915466962,
+      "balanced_accuracy": 0.7523707439871701,
+      "roc_auc": 0.8337738817163292,
+      "pr_auc": 0.3254943641307046
+    },
+    "decision_tree": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "balanced_accuracy": 1.0,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    },
+    "random_forest": {
+      "accuracy": 0.9991666666666666,
+      "precision": 0.9932065217391305,
+      "recall": 1.0,
+      "f1": 0.9965916837082481,
+      "balanced_accuracy": 0.9995255266654014,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0
+    }
+  },
+  "alternative_overall": {
+    "logistic_regression": {
+      "accuracy": 0.5718333333333333,
+      "precision": 0.18484224965706447,
+      "recall": 0.7373461012311902,
+      "f1": 0.29558541266794625,
+      "balanced_accuracy": 0.6431084273474228,
+      "roc_auc": 0.7101030236738178,
+      "pr_auc": 0.22932394304890646
+    },
+    "decision_tree": {
+      "accuracy": 0.46016666666666667,
+      "precision": 0.18333333333333332,
+      "recall": 0.9931600547195623,
+      "f1": 0.30952888509912596,
+      "balanced_accuracy": 0.6896906745414095,
+      "roc_auc": 0.7250179728681737,
+      "pr_auc": 0.23052821480773017
+    },
+    "random_forest": {
+      "accuracy": 0.4725,
+      "precision": 0.1855297157622739,
+      "recall": 0.9822161422708618,
+      "f1": 0.31210606389915235,
+      "balanced_accuracy": 0.6920000810044763,
+      "roc_auc": 0.7281872730024802,
+      "pr_auc": 0.24075801357139703
+    }
+  }
+}

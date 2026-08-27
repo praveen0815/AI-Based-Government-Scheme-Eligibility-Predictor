@@ -1,0 +1,57 @@
+# Documentation
+
+Project notes, data-source records, and later design documents.
+
+| Document | Phase | Contents |
+| --- | --- | --- |
+| `dataset_collection.md` | 2 | Scheme schema, official sources, quality rules, and why real citizen data is not collected |
+| `scheme_quality_review.md` | 2.1 | Per-scheme verification, CORE / ADVANCED / HOLD decisions |
+| `citizen_feature_specification.md` | 2.1 | Minimum citizen attributes for CORE schemes |
+| `ml_problem_definition.md` | 2.1 / 3 | Binary eligibility task, labeling rules, evaluation plan |
+| `synthetic_data_generation.md` | 3 | Seed, generation strategy, and confirmation that no real personal data is used |
+| `dataset_statistics.md` | 3 | Counts, per-scheme eligibility, and class imbalance |
+| `dataset_inspection.md` | 4 | Read-only inspection of the labelled ML table |
+| `ml_feature_engineering.md` | 4 | Feature vs leakage columns; why `scheme_id` is used |
+| `ml_evaluation_strategy.md` | 4 | Citizen-grouped split and metrics |
+| `model_baseline_results.md` | 4 | Overall and per-scheme baseline scores |
+| `model_feature_analysis.md` | 4 / 5 | Coefficients, importances, and Phase 5 feature review |
+| `rule_vs_ml_comparison.md` | 5 | Agreement of each model with the rule engine |
+| `threshold_analysis.md` | 5 | Precision/recall at several probability cutoffs |
+| `model_selection.md` | 5 | Why the Decision Tree is the prototype model |
+| `ml_limitations.md` | 5 | Synthetic data and rule-reproduction limits |
+| `phase5_results.md` | 5 | Phase 5 summary and next-phase recommendation |
+| `api_design.md` | 6–11 | Prediction, recommendation, health, auth, wallet, and evaluation APIs |
+| `recommendation_engine.md` | 7 | Eligibility-based recommendation design |
+| `phase7_results.md` | 7 | Recommendation API results |
+| `phase8_results.md` | 8 | React citizen portal |
+| `data_wallet_design.md` | 9 | Unified socio-economic data wallet and PostgreSQL schema |
+| `phase9_results.md` | 9 | PostgreSQL wallet implementation results |
+| `authentication_design.md` | 10 | JWT auth, password hashing, and wallet ownership |
+| `phase10_results.md` | 10 | Authentication implementation results |
+| `evaluation_dashboard_design.md` | 11 | Research dashboard architecture and metric sources |
+| `phase11_results.md` | 11 | Evaluation dashboard implementation results |
+| `phase12_results.md` | 12 | Final UI/UX polish and demo readiness |
+| `demo_walkthrough.md` | 12 | College-review demonstration script |
+| `final_system_architecture.md` | 12 | End-to-end architecture summary |
+| `phase13_ui_redesign.md` | 13 | SchemeWise AI frontend redesign |
+| `hybrid_rule_ml_design.md` | 13 | Hybrid documented-rule + Decision Tree design |
+| `phase13_results.md` | 13 | Hybrid engine implementation results |
+| `scheme_comparison_design.md` | 15 | CORE scheme comparison using the saved wallet |
+| `pdf_report_design.md` | 15 | On-demand recommendation PDF |
+| `phase15_results.md` | 15 | Comparison and PDF implementation results |
+| `i18n_design.md` | 16 | English / Tamil translation structure and PDF language |
+| `phase16_results.md` | 16 | Multilingual implementation results |
+| `document_checklist_design.md` | 19 | Smart document checklist and application preparation progress |
+| `phase19_results.md` | 19 | Document checklist implementation results |
+| `eligibility_insights_design.md` | 20 | Personalized eligibility insights from the saved wallet |
+| `phase20_results.md` | 20 | Eligibility insights implementation results |
+| `security_hardening.md` | 21 | Authentication, CORS, headers, logging, and remaining production risks |
+| `phase21_results.md` | 21 | Security hardening implementation results |
+| `application_readiness_design.md` | 21+ | Manual application-readiness stages for recommended CORE schemes |
+| `application_readiness_results.md` | 21+ | Application readiness tracker implementation results |
+| `dashboard_progress_design.md` | 22 | Personalized progress, journey, and activity dashboard |
+| `phase22_results.md` | 22 | Personalized dashboard implementation results |
+| `document_upload_design.md` | 23 | Optional non-sensitive supporting document uploads |
+| `phase23_results.md` | 23 | Supporting document upload implementation results |
+
+Aadhaar, LLMs, and deployment remain out of scope.

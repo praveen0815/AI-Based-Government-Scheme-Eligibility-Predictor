@@ -1,0 +1,80 @@
+[
+  {
+    "scheme_id": "TN-REV-002",
+    "scheme_name": "Un-married Women Pension",
+    "model_name": "decision_tree",
+    "prediction": "not_eligible",
+    "confidence": 1.0,
+    "probability_eligible": 0.0,
+    "probability_not_eligible": 1.0,
+    "important_factors": [
+      "scheme_id_TN-REV-001 <= 0.5000 (value=0.0000)",
+      "first_higher_education_course_False <= 0.5000 (value=0.0000)",
+      "scheme_id_TN-REV-002 > 0.5000 (value=1.0000)"
+    ],
+    "factor_method": "decision_tree_path",
+    "human_readable": "Not eligible for Un-married Women Pension because age is 23, below 50; the required destitute status is not satisfied.",
+    "rule_label": "not_eligible",
+    "agrees_with_rule_engine": true,
+    "disclaimer": "These values are model prediction probabilities, not government approval and not a guarantee of eligibility."
+  },
+  {
+    "scheme_id": "TN-REV-001",
+    "scheme_name": "Chief Minister's Uzhavar Pathukappu Thittam",
+    "model_name": "decision_tree",
+    "prediction": "not_eligible",
+    "confidence": 1.0,
+    "probability_eligible": 0.0,
+    "probability_not_eligible": 1.0,
+    "important_factors": [
+      "scheme_id_TN-REV-001 > 0.5000 (value=1.0000)",
+      "occupation_category_other > 0.5000 (value=1.0000)"
+    ],
+    "factor_method": "decision_tree_path",
+    "human_readable": "Not eligible for Chief Minister's Uzhavar Pathukappu Thittam because occupation_category is other, not an official main-member group.",
+    "rule_label": "not_eligible",
+    "agrees_with_rule_engine": true,
+    "disclaimer": "These values are model prediction probabilities, not government approval and not a guarantee of eligibility."
+  },
+  {
+    "scheme_id": "TN-REV-002",
+    "scheme_name": "Un-married Women Pension",
+    "model_name": "decision_tree",
+    "prediction": "not_eligible",
+    "confidence": 1.0,
+    "probability_eligible": 0.0,
+    "probability_not_eligible": 1.0,
+    "important_factors": [
+      "scheme_id_TN-REV-001 <= 0.5000 (value=0.0000)",
+      "first_higher_education_course_False > 0.5000 (value=1.0000)",
+      "gender_female <= 0.5000 (value=0.0000)"
+    ],
+    "factor_method": "decision_tree_path",
+    "human_readable": "Not eligible for Un-married Women Pension because gender is male, not female; the required destitute status is not satisfied.",
+    "rule_label": "not_eligible",
+    "agrees_with_rule_engine": true,
+    "disclaimer": "These values are model prediction probabilities, not government approval and not a guarantee of eligibility."
+  },
+  {
+    "scheme_id": "TN-SW-006",
+    "scheme_name": "Annai Therasa orphan-girl marriage",
+    "model_name": "decision_tree",
+    "prediction": "not_eligible",
+    "confidence": 1.0,
+    "probability_eligible": 0.0,
+    "probability_not_eligible": 1.0,
+    "important_factors": [
+      "scheme_id_TN-REV-001 <= 0.5000 (value=0.0000)",
+      "first_higher_education_course_False <= 0.5000 (value=0.0000)",
+      "scheme_id_TN-REV-002 <= 0.5000 (value=0.0000)",
+      "scheme_id_TN-SW-004 <= 0.5000 (value=0.0000)",
+      "scheme_id_TN-SW-006 > 0.5000 (value=1.0000)",
+      "is_orphan_True <= 0.5000 (value=0.0000)"
+    ],
+    "factor_method": "decision_tree_path",
+    "human_readable": "Not eligible for Annai Therasa orphan-girl marriage because the required orphan status is not satisfied.",
+    "rule_label": "not_eligible",
+    "agrees_with_rule_engine": true,
+    "disclaimer": "These values are model prediction probabilities, not government approval and not a guarantee of eligibility."
+  }
+]

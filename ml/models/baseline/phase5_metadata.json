@@ -1,0 +1,10 @@
+{
+  "python": "3.12.10",
+  "scikit_learn": "1.9.0",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "random_seed": 20260814,
+  "dataset_sha256": "ba91158194b4060be01894306d72ae25b96e4abeebbdf4ff61e93ffd059d30d0",
+  "test_rows": 6000,
+  "test_citizens": 1000
+}
