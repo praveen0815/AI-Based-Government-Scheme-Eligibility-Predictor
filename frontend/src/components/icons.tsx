@@ -76,6 +76,15 @@ export function HistoryIcon(props: IconProps) {
   );
 }
 
+export function CompareIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M7 4v16M17 4v16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M4 8h6M14 16h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </Icon>
+  );
+}
+
 export function LoginIcon(props: IconProps) {
   return (
     <Icon {...props}>
@@ -169,6 +178,20 @@ export function BulbIcon(props: IconProps) {
     <Icon {...props}>
       <path d="M9 18h6M10 21h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
       <path d="M8 14a5 5 0 1 1 8 0c-.8.8-1.3 1.8-1.5 3H9.5C9.3 15.8 8.8 14.8 8 14Z" stroke="currentColor" strokeWidth="1.8" />
+    </Icon>
+  );
+}
+
+export function SettingsIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.8" />
+      <path
+        d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9c.3.6.9 1 1.5 1.1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
     </Icon>
   );
 }

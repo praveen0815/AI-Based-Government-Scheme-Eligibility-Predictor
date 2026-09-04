@@ -9,7 +9,9 @@ import { EmptyState } from "../components/ui/EmptyState";
 import { useAuth } from "../context/AuthContext";
 import { useI18n } from "../context/LanguageContext";
 import { useRecommendation } from "../context/RecommendationContext";
-import { ApiError, downloadRecommendationReport, fetchCoreSchemes } from "../services/api";
+import { WhyThisScheme } from "../components/WhyThisScheme";
+import { ApiError, downloadRecommendationReport, fetchSchemeCatalog } from "../services/api";
+import { incompleteProfileFields } from "../utils/profileCompleteness";
 import type { EvaluatedScheme, RecommendedScheme, SchemeCatalogItem } from "../types/api";
 import { displayCatalogText, isUnverified } from "../utils/catalogText";
 
@@ -46,7 +48,7 @@ export function SchemeDetailPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { t } = useI18n();
-  const { result } = useRecommendation();
+  const { profile, result } = useRecommendation();
   const [scheme, setScheme] = useState<SchemeCatalogItem | null>(null);
   const [found, setFound] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -62,9 +64,9 @@ export function SchemeDetailPage() {
       setError(null);
       setFound(true);
       try {
-        const catalog = await fetchCoreSchemes();
+        const catalog = await fetchSchemeCatalog();
         if (cancelled) return;
-        const match = catalog.schemes.find((item) => item.scheme_id === schemeId && item.ml_scope === "CORE");
+        const match = catalog.schemes.find((item) => item.scheme_id === schemeId);
         setScheme(match ?? null);
         setFound(Boolean(match));
       } catch (caught) {
@@ -216,48 +218,23 @@ export function SchemeDetailPage() {
       </section>
 
       {explanation && (isPredictedEligible || isNotRecommended) ? (
-        <section className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="scheme-why-recommended">
-          <h2 id="scheme-why-recommended" className="section-title">
-            {isPredictedEligible ? t.whyRecommended : t.documentedConditions}
-          </h2>
-          {ruleEligible !== undefined ? (
-            <div>
-              <h3 className="text-[16px] font-semibold text-ink-900">{t.ruleResultLabel}</h3>
-              <p className="mt-1 text-[17px] text-ink-500">{ruleEligible ? t.mlEligible : t.mlNotEligible}</p>
-            </div>
-          ) : null}
-          {reasons.length > 0 ? (
-            <ul className="space-y-2 text-[17px] text-ink-500">
-              {reasons.map((reason) => (
-                <li key={reason} className="flex gap-2">
-                  <span className="mt-1 text-accent" aria-hidden="true">
-                    ✓
-                  </span>
-                  <span>{reason}</span>
-                </li>
-              ))}
-            </ul>
-          ) : recommended?.reason ? (
-            <p className="text-[17px] leading-relaxed text-ink-500">{recommended.reason}</p>
-          ) : evaluated?.reason ? (
-            <p className="text-[17px] leading-relaxed text-ink-500">{evaluated.reason}</p>
-          ) : null}
-          {mlPrediction ? (
-            <div>
-              <h3 className="text-[16px] font-semibold text-ink-900">{t.mlPrediction}</h3>
-              <p className="mt-1 text-[17px] text-ink-500">
-                {mlPrediction === "not_eligible" ? t.mlNotEligible : t.mlEligible}
-              </p>
-            </div>
-          ) : null}
-          {agreement === false ? (
-            <aside className="rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-3 text-ink-700" role="status">
-              <p className="font-semibold text-warning">{t.ruleMlDiffer}</p>
-              <p className="mt-1 text-[15px]">{t.ruleMlDifferDetail}</p>
-            </aside>
-          ) : null}
-          {agreement === true ? <p className="text-[16px] font-semibold text-accent">{t.ruleMlAgree}</p> : null}
-        </section>
+        <div className="card-surface p-6 md:p-8">
+          <WhyThisScheme
+            headingId="scheme-why-recommended"
+            title={isPredictedEligible ? t.whyRecommended : t.documentedConditions}
+            collapsible={false}
+            data={{
+              ruleEligible,
+              ruleReasons: reasons,
+              fallbackReason: recommended?.reason ?? evaluated?.reason,
+              mlPrediction,
+              agreement,
+              eligibleProbability: probability,
+              officialSourceUrl: scheme.official_source_url ?? recommended?.official_source_url,
+              incompleteFields: incompleteProfileFields(profile),
+            }}
+          />
+        </div>
       ) : null}
 
       <div className="grid gap-5">

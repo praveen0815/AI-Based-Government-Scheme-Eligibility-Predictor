@@ -58,20 +58,24 @@ export function CheckPage() {
     <div className="mx-auto max-w-4xl space-y-10">
       <PageHeader title={t.checkTitle} description={t.checkDescription} />
       {isAuthenticated ? (
-        <p className="text-[17px] text-ink-500">
-          {t.checkWalletPrompt}{" "}
-          <Link to="/wallet" className="font-semibold text-action underline-offset-2 hover:underline">
-            {t.checkOpenWallet}
-          </Link>
-        </p>
+        <aside className="card-surface p-5 sm:p-6">
+          <p className="text-[17px] leading-relaxed text-ink-500 sm:text-[18px]">
+            {t.checkWalletPrompt}{" "}
+            <Link to="/wallet" className="font-semibold text-action underline-offset-2 hover:underline">
+              {t.checkOpenWallet}
+            </Link>
+          </p>
+        </aside>
       ) : (
-        <p className="text-[17px] text-ink-500">
-          {t.checkRegisterPromptBefore}{" "}
-          <Link to="/register" className="font-semibold text-action underline-offset-2 hover:underline">
-            {t.checkRegisterPromptLink}
-          </Link>{" "}
-          {t.checkRegisterPromptAfter}
-        </p>
+        <aside className="card-surface p-5 sm:p-6">
+          <p className="text-[17px] leading-relaxed text-ink-500 sm:text-[18px]">
+            {t.checkRegisterPromptBefore}{" "}
+            <Link to="/register" className="font-semibold text-action underline-offset-2 hover:underline">
+              {t.checkRegisterPromptLink}
+            </Link>{" "}
+            {t.checkRegisterPromptAfter}
+          </p>
+        </aside>
       )}
       <ResearchNotice compact />
       <CitizenForm

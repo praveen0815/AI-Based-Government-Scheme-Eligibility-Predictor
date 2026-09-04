@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type {
   DocumentProgressResponse,
   InsightsResponse,
+  NotificationListResponse,
   ProfileCompleteness,
   ReadinessProgressResponse,
   RecommendationHistoryItem,
@@ -67,6 +68,7 @@ function mockDashboardFetch(options?: {
   insights?: InsightsResponse | null;
   readiness?: ReadinessProgressResponse;
   uploads?: SupportingUploadListResponse;
+  notifications?: NotificationListResponse;
 }) {
   return vi.fn().mockImplementation((url: string) => {
     const path = String(url);
@@ -100,6 +102,17 @@ function mockDashboardFetch(options?: {
     if (path.includes("/api/v1/uploads")) {
       return Promise.resolve(
         jsonOk(options?.uploads ?? { uploads: [], count: 0, disclaimer: "" }),
+      );
+    }
+    if (path.includes("/api/v1/notifications")) {
+      return Promise.resolve(
+        jsonOk(
+          options?.notifications ?? {
+            notifications: [],
+            unread_count: 0,
+            disclaimer: "These reminders are generated from your research-prototype activity only.",
+          },
+        ),
       );
     }
     if (path.includes("/api/v1/readiness")) {
@@ -300,6 +313,35 @@ describe("user dashboard", () => {
     expect(screen.getByText("Documents Prepared")).toBeInTheDocument();
     expect(screen.getAllByText("Application Readiness").length).toBeGreaterThan(0);
     expect(screen.getByText("100%")).toBeInTheDocument();
+  });
+
+  it("shows unread reminders from the notifications API", async () => {
+    const fetchMock = mockDashboardFetch({
+      notifications: {
+        notifications: [
+          {
+            notification_id: "n-profile",
+            type: "profile_incomplete",
+            title: "Complete your profile",
+            message: "A socio-economic wallet is needed before this research prototype can prepare personalized reminders.",
+            related_feature: "wallet",
+            related_id: null,
+            href: "/wallet",
+            is_read: false,
+            created_at: "2026-08-31T10:00:00+00:00",
+            count: null,
+          },
+        ],
+        unread_count: 1,
+        disclaimer: "These reminders are generated from your research-prototype activity only.",
+      },
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    renderAuthenticatedApp(["/dashboard"]);
+    expect(await screen.findByRole("heading", { name: "Notifications & Reminders" })).toBeInTheDocument();
+    expect(screen.getByText("Complete your profile")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "View All Notifications" })).toHaveAttribute("href", "/notifications");
+    expect(screen.getByRole("link", { name: "Open related page" })).toHaveAttribute("href", "/wallet");
   });
 
   it("opens the wallet from the create-profile action", async () => {

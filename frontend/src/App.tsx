@@ -13,11 +13,13 @@ import { ComparePage } from "./pages/ComparePage";
 import { HistoryPage } from "./pages/HistoryPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { AccountPage } from "./pages/AccountPage";
+import { SystemEvaluationPage } from "./pages/SystemEvaluationPage";
 import { DocumentsPage } from "./pages/DocumentsPage";
 import { InsightsPage } from "./pages/InsightsPage";
 import { ReadinessPage } from "./pages/ReadinessPage";
 import { UploadsPage } from "./pages/UploadsPage";
 import { DashboardPage } from "./pages/DashboardPage";
+import { NotificationsPage } from "./pages/NotificationsPage";
 import { WalletPage } from "./pages/WalletPage";
 
 export default function App() {
@@ -38,6 +40,14 @@ export default function App() {
         <Route path="/schemes" element={<SchemesPage />} />
         <Route path="/schemes/:schemeId" element={<SchemeDetailPage />} />
         <Route path="/evaluation" element={<EvaluationPage />} />
+        <Route
+          path="/system-evaluation"
+          element={
+            <ProtectedRoute>
+              <SystemEvaluationPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route
@@ -49,7 +59,7 @@ export default function App() {
           }
         />
         <Route
-          path="/account"
+          path="/settings"
           element={
             <ProtectedRoute>
               <AccountPage />
@@ -109,6 +119,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <HistoryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <NotificationsPage />
             </ProtectedRoute>
           }
         />

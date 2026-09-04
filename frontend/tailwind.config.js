@@ -5,9 +5,11 @@ export default {
     extend: {
       colors: {
         navy: {
+          950: "#071225",
           900: "#0B1B33",
           800: "#12243F",
           700: "#1A3054",
+          600: "#243E68",
         },
         brand: {
           800: "#1E3A5F",
@@ -21,7 +23,7 @@ export default {
         success: "#0F766E",
         warning: "#B45309",
         danger: "#B91C1C",
-        canvas: "#F7F9FC",
+        canvas: "#F4F6FB",
         surface: "#FFFFFF",
         line: "#E2E8F0",
         ink: {
@@ -32,16 +34,18 @@ export default {
       },
       fontFamily: {
         sans: ["Inter", "Manrope", "Segoe UI", "system-ui", "sans-serif"],
+        display: ["Manrope", "Inter", "Segoe UI", "system-ui", "sans-serif"],
       },
       boxShadow: {
-        card: "0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.04)",
-        lift: "0 2px 4px rgba(15, 23, 42, 0.05), 0 12px 28px rgba(15, 23, 42, 0.06)",
+        card: "0 1px 2px rgba(11, 27, 51, 0.04), 0 10px 28px rgba(11, 27, 51, 0.06)",
+        lift: "0 4px 8px rgba(11, 27, 51, 0.06), 0 16px 36px rgba(11, 27, 51, 0.08)",
+        inset: "inset 0 0 0 1px rgba(226, 232, 240, 0.9)",
       },
       maxWidth: {
         shell: "88rem",
       },
       borderRadius: {
-        card: "14px",
+        card: "16px",
       },
     },
   },

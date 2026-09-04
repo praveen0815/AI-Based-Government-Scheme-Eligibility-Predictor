@@ -182,6 +182,12 @@ describe("authentication pages", () => {
     expect(screen.getAllByText(TEST_USER.full_name).length).toBeGreaterThan(0);
   });
 
+  it("sends an already signed-in visitor from login to the dashboard", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404 }));
+    renderAuthenticatedApp(["/login"]);
+    expect(await screen.findByRole("heading", { name: "Welcome back, Test User" })).toBeInTheDocument();
+  });
+
   it("shows authenticated navigation and logs out", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404 }));
     renderAuthenticatedApp(["/"]);
@@ -192,7 +198,8 @@ describe("authentication pages", () => {
     expect(screen.getByRole("link", { name: /^Insights$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Application Readiness$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^My Documents$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Account$/ })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Account$/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Settings$/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Logout" })).toBeInTheDocument();
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Logout" }));
@@ -204,7 +211,8 @@ describe("authentication pages", () => {
     expect(screen.getByRole("link", { name: /^Insights$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Application Readiness$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^My Documents$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Account$/ })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Account$/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Settings$/ })).toBeInTheDocument();
   });
 
   it("shows unauthenticated navigation", () => {
@@ -218,6 +226,7 @@ describe("authentication pages", () => {
     expect(screen.getByRole("link", { name: /^Insights$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Application Readiness$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^My Documents$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Account$/ })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Account$/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Settings$/ })).toBeInTheDocument();
   });
 });

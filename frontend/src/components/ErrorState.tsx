@@ -10,8 +10,8 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
   const { t } = useI18n();
 
   return (
-    <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3" role="alert">
-      <p className="text-danger">{message}</p>
+    <div className="rounded-[16px] border border-red-200 bg-red-50 px-5 py-4" role="alert">
+      <p className="text-[16px] font-semibold text-danger sm:text-[17px]">{message}</p>
       {onRetry ? (
         <Button type="button" variant="danger" className="mt-3" onClick={onRetry}>
           {t.tryAgain}

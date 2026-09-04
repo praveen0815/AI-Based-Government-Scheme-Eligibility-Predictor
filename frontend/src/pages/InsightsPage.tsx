@@ -28,7 +28,7 @@ function SchemeInsightCard({
 }) {
   const { t } = useI18n();
   return (
-    <article className="rounded-[12px] border border-line px-4 py-4">
+    <article className="rounded-[14px] border border-line bg-canvas px-5 py-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <Badge tone={scheme.predicted_eligible ? "success" : "muted"}>

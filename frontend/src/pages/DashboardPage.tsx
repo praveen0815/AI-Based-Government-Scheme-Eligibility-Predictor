@@ -2,6 +2,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ErrorState } from "../components/ErrorState";
 import {
+  BellIcon,
+  BrainIcon,
   CheckIcon,
   DocumentIcon,
   EvaluationIcon,
@@ -27,6 +29,7 @@ import {
   downloadRecommendationReport,
   fetchCurrentUser,
   fetchDashboardOverview,
+  fetchNotifications,
   fetchSupportingUploads,
   fetchDocumentProgress,
   fetchEligibilityInsights,
@@ -45,6 +48,7 @@ import type {
   DocumentProgressResponse,
   HistorySchemeRef,
   InsightsResponse,
+  NotificationItem,
   ProfileCompleteness,
   ReadinessProgressResponse,
   SupportingUploadListResponse,
@@ -52,6 +56,7 @@ import type {
   RecommendedScheme,
 } from "../types/api";
 import { formatCheckedAt } from "../utils/displayLabels";
+import { notificationCategory, notificationMessage, notificationTitle } from "../utils/notificationCopy";
 
 type Translate = Messages;
 
@@ -180,7 +185,7 @@ function ActionCard({
   description: string;
   disabled?: boolean;
 }) {
-  const className = "card-surface flex h-full flex-col gap-3 p-5 transition duration-150 hover:border-slate-300";
+  const className = "card-surface flex h-full flex-col gap-3 p-5 transition duration-150 hover:border-slate-300 hover:shadow-lift";
   const body = (
     <>
       <span className="inline-flex h-11 w-11 items-center justify-center rounded-[12px] bg-action/10 text-action">
@@ -226,7 +231,7 @@ function ProgressCard({
   return (
     <article className="card-surface p-5 md:p-6">
       <p className="text-[15px] font-medium text-ink-500">{title}</p>
-      <p className="mt-3 text-[32px] font-semibold leading-none text-ink-900">{value}</p>
+      <p className="mt-3 font-display text-[32px] font-extrabold leading-none text-navy-900">{value}</p>
       <p className="mt-3 text-[16px] text-ink-500">{detail}</p>
     </article>
   );
@@ -246,6 +251,7 @@ export function DashboardPage() {
   const [readiness, setReadiness] = useState<ReadinessProgressResponse | null>(null);
   const [overview, setOverview] = useState<DashboardOverviewResponse | null>(null);
   const [uploads, setUploads] = useState<SupportingUploadListResponse | null>(null);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [downloading, setDownloading] = useState(false);
@@ -258,7 +264,7 @@ export function DashboardPage() {
       setLoading(true);
       setError(null);
       try {
-        const [meResult, walletResult, historyResult, docsResult, insightsResult, readinessResult, overviewResult, uploadsResult] =
+        const [meResult, walletResult, historyResult, docsResult, insightsResult, readinessResult, overviewResult, uploadsResult, notificationsResult] =
           await Promise.allSettled([
             fetchCurrentUser(),
             getMyWallet(),
@@ -268,6 +274,7 @@ export function DashboardPage() {
             fetchReadinessProgress(),
             fetchDashboardOverview(),
             fetchSupportingUploads(),
+            fetchNotifications(),
           ]);
 
         if (cancelled) return;
@@ -325,6 +332,12 @@ export function DashboardPage() {
           setUploads(uploadsResult.value);
         } else {
           setUploads(null);
+        }
+
+        if (notificationsResult.status === "fulfilled") {
+          setNotifications(notificationsResult.value.notifications.filter((item) => !item.is_read).slice(0, 3));
+        } else {
+          setNotifications([]);
         }
       } catch (caught) {
         if (!cancelled) {
@@ -491,6 +504,46 @@ export function DashboardPage() {
             </div>
           </section>
 
+          <section className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-notifications">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 id="dashboard-notifications" className="section-title">
+                  {t.notificationsDashboardTitle}
+                </h2>
+                <p className="mt-2 text-[17px] text-ink-500">{t.notificationsDashboardLead}</p>
+              </div>
+              <Link
+                to="/notifications"
+                className="inline-flex items-center justify-center rounded-[12px] bg-action px-4 py-2.5 text-[16px] font-semibold text-white hover:bg-action-hover"
+              >
+                {t.notificationsDashboardCta}
+              </Link>
+            </div>
+            {notifications.length > 0 ? (
+              <ul className="divide-y divide-line">
+                {notifications.map((item) => (
+                  <li key={item.notification_id} className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0 space-y-2">
+                      <p className="text-[15px] font-medium text-ink-500">
+                        {notificationCategory(item.type, t)} · {formatCheckedAt(item.created_at, language)}
+                      </p>
+                      <p className="text-[18px] font-semibold text-ink-900">{notificationTitle(item, t)}</p>
+                      <p className="text-[16px] text-ink-700">{notificationMessage(item, t)}</p>
+                    </div>
+                    <Link
+                      to={item.href}
+                      className="inline-flex shrink-0 items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                    >
+                      {t.notificationsOpen}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-[16px] text-ink-500">{t.notificationsDashboardEmpty}</p>
+            )}
+          </section>
+
           <section aria-labelledby="dashboard-quick-actions">
             <h2 id="dashboard-quick-actions" className="section-title">
               {t.dashboardQuickActions}
@@ -565,7 +618,13 @@ export function DashboardPage() {
             {hasRecommendationData ? (
               <div className="grid gap-4">
                 {previewSchemes.length > 0
-                  ? previewSchemes.map((scheme) => <SchemeCard key={scheme.scheme_id} scheme={scheme} />)
+                  ? previewSchemes.map((scheme) => (
+                      <SchemeCard
+                        key={scheme.scheme_id}
+                        scheme={scheme}
+                        incompleteFields={completeness?.incomplete_fields ?? []}
+                      />
+                    ))
                   : historySchemes.slice(0, 3).map((scheme) => (
                       <HistorySchemePreview key={scheme.scheme_id} scheme={scheme} />
                     ))}
@@ -716,6 +775,20 @@ export function DashboardPage() {
               >
                 <EvaluationIcon />
                 {t.navEvaluation}
+              </Link>
+              <Link
+                to="/system-evaluation"
+                className="inline-flex items-center gap-2 rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+              >
+                <BrainIcon />
+                {t.navSystemEvaluation}
+              </Link>
+              <Link
+                to="/notifications"
+                className="inline-flex items-center gap-2 rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+              >
+                <BellIcon />
+                {t.navNotifications}
               </Link>
               {canCompare ? (
                 <Button

@@ -11,6 +11,7 @@ import { useAuth } from "../context/AuthContext";
 import { useI18n } from "../context/LanguageContext";
 import { useRecommendation } from "../context/RecommendationContext";
 import { ApiError, downloadRecommendationReport } from "../services/api";
+import { incompleteProfileFields } from "../utils/profileCompleteness";
 
 const MAX_COMPARE = 3;
 
@@ -31,6 +32,7 @@ export function ResultsPage() {
   const editPath = isAuthenticated ? "/wallet" : "/check";
   const summary = count === 1 ? t.resultsOneMatch : t.resultsManyMatches(count);
   const canCompare = isAuthenticated && count >= 2;
+  const incompleteFields = incompleteProfileFields(profile);
 
   function toggleScheme(schemeId: string) {
     setSelected((current) => {
@@ -90,6 +92,27 @@ export function ResultsPage() {
       {isAuthenticated ? <p className="text-[15px] text-ink-500">{t.compareWalletNote}</p> : null}
       {actionError ? <ErrorState message={actionError} /> : null}
 
+      {isAuthenticated ? (
+        <nav className="card-surface flex flex-wrap gap-3 p-5 sm:p-6" aria-label={t.resultsContinue}>
+          <p className="w-full text-[16px] font-semibold text-ink-900">{t.resultsContinue}</p>
+          <Link to="/history" className="btn-text rounded-[12px] border border-line px-4 py-2.5 text-ink-900 hover:bg-canvas">
+            {t.navHistory}
+          </Link>
+          <Link to="/documents" className="btn-text rounded-[12px] border border-line px-4 py-2.5 text-ink-900 hover:bg-canvas">
+            {t.navDocuments}
+          </Link>
+          <Link to="/readiness" className="btn-text rounded-[12px] border border-line px-4 py-2.5 text-ink-900 hover:bg-canvas">
+            {t.navReadiness}
+          </Link>
+          <Link to="/insights" className="btn-text rounded-[12px] border border-line px-4 py-2.5 text-ink-900 hover:bg-canvas">
+            {t.navInsights}
+          </Link>
+          <Link to="/notifications" className="btn-text rounded-[12px] border border-line px-4 py-2.5 text-ink-900 hover:bg-canvas">
+            {t.navNotifications}
+          </Link>
+        </nav>
+      ) : null}
+
       {count === 0 ? (
         <EmptyRecommendations onEditProfile={() => navigate(editPath)} />
       ) : (
@@ -106,6 +129,7 @@ export function ResultsPage() {
                 compareChecked={checked}
                 compareLocked={selectionLocked}
                 onCompareToggle={() => toggleScheme(scheme.scheme_id)}
+                incompleteFields={incompleteFields}
               />
             );
           })}

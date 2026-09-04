@@ -24,11 +24,15 @@ import type {
   SupportingUpload,
   SupportingUploadCategory,
   SupportingUploadListResponse,
+  NotificationItem,
+  NotificationListResponse,
   RecommendResponse,
   RecommendationHistoryItem,
   RecommendationHistoryListResponse,
   SchemeCatalogResponse,
+  CatalogSearchResponse,
   SchemeEvaluationResponse,
+  SystemEvaluationResponse,
 } from "../types/api";
 
 const REQUEST_TIMEOUT_MS = 20000;
@@ -169,6 +173,10 @@ export async function recommendSchemes(citizenProfile: CitizenProfile): Promise<
 
 export async function fetchCoreSchemes(): Promise<SchemeCatalogResponse> {
   return requestJson<SchemeCatalogResponse>("/api/v1/schemes");
+}
+
+export async function fetchSchemeCatalog(): Promise<CatalogSearchResponse> {
+  return requestJson<CatalogSearchResponse>("/api/v1/catalog");
 }
 
 export async function registerAccount(payload: {
@@ -315,6 +323,20 @@ export async function fetchReadinessProgress(): Promise<ReadinessProgressRespons
 
 export async function fetchDashboardOverview(): Promise<DashboardOverviewResponse> {
   return requestJson<DashboardOverviewResponse>("/api/v1/dashboard");
+}
+
+export async function fetchNotifications(): Promise<NotificationListResponse> {
+  return requestJson<NotificationListResponse>("/api/v1/notifications");
+}
+
+export async function markNotificationRead(notificationId: string): Promise<NotificationItem> {
+  return requestJson<NotificationItem>(`/api/v1/notifications/${notificationId}/read`, {
+    method: "PATCH",
+  });
+}
+
+export async function deleteNotification(notificationId: string): Promise<void> {
+  await requestNoContent(`/api/v1/notifications/${notificationId}`, { method: "DELETE" });
 }
 
 export async function fetchSupportingUploads(schemeId?: string): Promise<SupportingUploadListResponse> {
@@ -517,6 +539,10 @@ export async function recommendFromWallet(citizenId: string): Promise<RecommendR
     throw new ApiError("The eligibility service returned an unexpected response.");
   }
   return body;
+}
+
+export async function fetchSystemEvaluation(): Promise<SystemEvaluationResponse> {
+  return requestJson<SystemEvaluationResponse>("/api/v1/system-evaluation");
 }
 
 export async function fetchEvaluationBundle(): Promise<EvaluationBundle> {

@@ -17,6 +17,8 @@ from ml_config import CORE_SCHEME_IDS  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
+OPTIONAL_FILTER_FIELDS = ("gender_requirement", "student_status_requirement")
+
 CATALOG_FIELDS = (
     "scheme_id",
     "scheme_name",
@@ -62,6 +64,8 @@ class SchemeRecord:
     eligibility_notes: str | None
     ml_scope: str
     eligibility_rule_status: str | None
+    gender_requirement: str | None = None
+    student_status_requirement: str | None = None
 
 
 class SchemeService:
@@ -113,6 +117,16 @@ class SchemeService:
                     eligibility_notes=_catalog_text(row.get("eligibility_notes")),
                     ml_scope=ml_scope,
                     eligibility_rule_status=_catalog_text(row.get("eligibility_rule_status")),
+                    gender_requirement=(
+                        _catalog_text(row.get("gender_requirement"))
+                        if OPTIONAL_FILTER_FIELDS[0] in frame.columns
+                        else None
+                    ),
+                    student_status_requirement=(
+                        _catalog_text(row.get("student_status_requirement"))
+                        if OPTIONAL_FILTER_FIELDS[1] in frame.columns
+                        else None
+                    ),
                 )
             for scheme_id in CORE_SCHEME_IDS:
                 record = records.get(scheme_id)
@@ -141,6 +155,11 @@ class SchemeService:
 
     def ml_core_schemes(self) -> list[SchemeRecord]:
         return [self.require_core(scheme_id) for scheme_id in CORE_SCHEME_IDS]
+
+    def list_catalog(self) -> list[SchemeRecord]:
+        if not self._by_id:
+            self.load()
+        return list(self._by_id.values())
 
     def catalog_count(self) -> int:
         if not self._by_id:
