@@ -26,9 +26,6 @@ from app.services.profile_completeness_service import calculate_profile_complete
 from app.services.readiness_service import list_readiness
 from app.services.wallet_service import get_wallet_for_user
 
-DASHBOARD_PREVIEW_LIMIT = 3
-
-
 class NotificationNotFoundError(Exception):
     """Raised when a notification is missing or is not owned by the caller."""
 
