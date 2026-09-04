@@ -15,7 +15,7 @@ import { peekAccountDeleted } from "../utils/authStorage";
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { isAuthenticated, login } = useAuth();
   const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,6 +28,9 @@ export function LoginPage() {
 
   if (peekAccountDeleted()) {
     return <Navigate to="/?accountDeleted=1" replace />;
+  }
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -80,55 +83,59 @@ export function LoginPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md">
-      <div className="card-surface space-y-7 p-7 sm:p-9">
-        <BrandMark />
-        <header className="space-y-3">
-          <h1 className="text-[34px] font-extrabold tracking-tight text-ink-900 sm:text-[38px]">{t.loginTitle}</h1>
-          <p className="text-[17px] leading-relaxed text-ink-500">{t.loginLead}</p>
-        </header>
-        <ResearchNotice compact />
-        {registered ? (
-          <p className="rounded-[12px] border border-line bg-teal-50 px-4 py-3 font-medium text-accent" role="status">
-            {t.accountCreated}
-          </p>
-        ) : null}
-        {error ? <ErrorState message={error} /> : null}
-        <form onSubmit={handleSubmit} noValidate className="space-y-5">
-          <FormField id="login-email" label={t.email} error={fieldErrors.email} required>
-            <input
-              id="login-email"
-              type="email"
-              autoComplete="email"
+    <div className="mx-auto max-w-lg">
+      <div className="overflow-hidden rounded-[20px] border border-line bg-surface shadow-lift">
+        <div className="bg-navy-900 px-7 py-6 sm:px-9">
+          <BrandMark inverted />
+        </div>
+        <div className="space-y-7 p-7 sm:p-9">
+          <header className="space-y-3">
+            <h1 className="page-title">{t.loginTitle}</h1>
+            <p className="text-[17px] leading-relaxed text-ink-500 sm:text-[18px]">{t.loginLead}</p>
+          </header>
+          <ResearchNotice compact />
+          {registered ? (
+            <p className="notice-success" role="status">
+              {t.accountCreated}
+            </p>
+          ) : null}
+          {error ? <ErrorState message={error} /> : null}
+          <form onSubmit={handleSubmit} noValidate className="space-y-5">
+            <FormField id="login-email" label={t.email} error={fieldErrors.email} required>
+              <input
+                id="login-email"
+                type="email"
+                autoComplete="email"
+                required
+                aria-invalid={Boolean(fieldErrors.email)}
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="field-input"
+              />
+            </FormField>
+            <PasswordField
+              id="login-password"
+              label={t.password}
+              autoComplete="current-password"
               required
-              aria-invalid={Boolean(fieldErrors.email)}
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="field-input"
+              value={password}
+              error={fieldErrors.password}
+              onChange={setPassword}
             />
-          </FormField>
-          <PasswordField
-            id="login-password"
-            label={t.password}
-            autoComplete="current-password"
-            required
-            value={password}
-            error={fieldErrors.password}
-            onChange={setPassword}
-          />
-          {loading ? <LoadingState message={t.signingIn} /> : null}
-          {googleLoading ? <LoadingState message={t.signingInGoogle} /> : null}
-          <Button type="submit" disabled={loading || googleLoading} className="w-full">
-            {t.loginSubmit}
-          </Button>
-          <GoogleSignInButton onCredential={(value) => void handleGoogleCredential(value)} disabled={loading || googleLoading} />
-          <p className="text-[16px] text-ink-500">
-            {t.needAccount}{" "}
-            <Link to="/register" className="font-semibold text-action">
-              {t.createAnAccount}
-            </Link>
-          </p>
-        </form>
+            {loading ? <LoadingState message={t.signingIn} /> : null}
+            {googleLoading ? <LoadingState message={t.signingInGoogle} /> : null}
+            <Button type="submit" disabled={loading || googleLoading} className="w-full">
+              {t.loginSubmit}
+            </Button>
+            <GoogleSignInButton onCredential={(value) => void handleGoogleCredential(value)} disabled={loading || googleLoading} />
+            <p className="text-[16px] text-ink-500">
+              {t.needAccount}{" "}
+              <Link to="/register" className="font-semibold text-action">
+                {t.createAnAccount}
+              </Link>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import type { RecommendedScheme } from "../types/api";
 import { displayCatalogText, isUnverified } from "../utils/catalogText";
 import { Badge } from "./ui/Badge";
 import { Button } from "./ui/Button";
+import { WhyThisScheme } from "./WhyThisScheme";
 
 function CatalogValue({ value, missing, unverifiedLabel }: { value: string | null; missing: string; unverifiedLabel: string }) {
   const text = displayCatalogText(value, missing);
@@ -25,17 +26,18 @@ export function SchemeCard({
   compareChecked = false,
   compareLocked = false,
   onCompareToggle,
+  incompleteFields = [],
 }: {
   scheme: RecommendedScheme;
   compareEnabled?: boolean;
   compareChecked?: boolean;
   compareLocked?: boolean;
   onCompareToggle?: () => void;
+  incompleteFields?: string[];
 }) {
   const { language, t } = useI18n();
   const [open, setOpen] = useState(true);
   const reasons = scheme.rule_reasons ?? scheme.rule_result?.reasons ?? [];
-  const mlLabel = scheme.ml_prediction === "not_eligible" ? t.mlNotEligible : t.mlEligible;
   const status = language === "ta" ? t.predictedEligible : scheme.status_label || t.predictedEligible;
 
   return (
@@ -53,49 +55,35 @@ export function SchemeCard({
         {scheme.department ? <p className="text-[16px] text-ink-500">{scheme.department}</p> : null}
       </header>
 
-      <section className="mt-6 rounded-[12px] bg-canvas px-4 py-4">
-        <h4 className="text-[15px] font-semibold text-ink-900">{t.probabilityLabel}</h4>
-        <p className="mt-1 text-[32px] font-extrabold tracking-tight text-brand-900">
-          {`${(scheme.eligible_probability * 100).toFixed(0)}%`}
-        </p>
-        <p className="mt-1 text-[15px] text-ink-500">{t.probabilityExplanation}</p>
+      <section className="mt-6 rounded-[14px] bg-canvas px-5 py-5">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <h4 className="text-[15px] font-semibold text-ink-900">{t.probabilityLabel}</h4>
+          <p className="font-display text-[36px] font-extrabold leading-none tracking-tight text-navy-900">
+            {`${(scheme.eligible_probability * 100).toFixed(0)}%`}
+          </p>
+        </div>
+        <div className="mt-4 h-3 overflow-hidden rounded-full bg-line" aria-hidden="true">
+          <div
+            className="h-full rounded-full bg-action transition-[width] duration-300"
+            style={{ width: `${Math.max(0, Math.min(100, scheme.eligible_probability * 100))}%` }}
+          />
+        </div>
+        <p className="mt-3 text-[15px] leading-relaxed text-ink-500 sm:text-[16px]">{t.probabilityExplanation}</p>
       </section>
 
-      {reasons.length > 0 ? (
-        <section className="mt-6 space-y-2">
-          <h4 className="text-[16px] font-semibold text-ink-900">{t.documentedConditions}</h4>
-          <ul className="space-y-2 text-[17px] text-ink-500">
-            {reasons.map((reason) => (
-              <li key={reason} className="flex gap-2">
-                <span className="mt-1 text-accent" aria-hidden="true">
-                  ✓
-                </span>
-                <span>{reason}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : (
-        <section className="mt-6 space-y-1">
-          <h4 className="text-[16px] font-semibold text-ink-900">{t.whyMatch}</h4>
-          <p className="text-[17px] text-ink-500">{scheme.reason}</p>
-        </section>
-      )}
-
-      <section className="mt-5 space-y-1">
-        <h4 className="text-[16px] font-semibold text-ink-900">{t.mlPrediction}</h4>
-        <p className="text-[17px] text-ink-500">{mlLabel}</p>
-      </section>
-
-      {scheme.agreement === false ? (
-        <aside className="mt-5 rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-3 text-ink-700" role="status">
-          <p className="font-semibold text-warning">{t.ruleMlDiffer}</p>
-          <p className="mt-1 text-[15px]">{t.ruleMlDifferDetail}</p>
-        </aside>
-      ) : null}
-      {scheme.agreement === true ? (
-        <p className="mt-5 text-[16px] font-semibold text-accent">{t.ruleMlAgree}</p>
-      ) : null}
+      <WhyThisScheme
+        title={t.whyThisResult}
+        data={{
+          ruleEligible: scheme.rule_result?.eligible,
+          ruleReasons: reasons,
+          fallbackReason: scheme.reason,
+          mlPrediction: scheme.ml_prediction,
+          agreement: scheme.agreement,
+          eligibleProbability: scheme.eligible_probability,
+          officialSourceUrl: scheme.official_source_url,
+          incompleteFields,
+        }}
+      />
 
       <section className="mt-5 space-y-1">
         <h4 className="text-[16px] font-semibold text-ink-900">{t.potentialBenefit}</h4>

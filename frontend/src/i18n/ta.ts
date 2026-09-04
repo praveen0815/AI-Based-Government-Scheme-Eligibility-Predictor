@@ -1,8 +1,8 @@
 import type { Messages } from "./types";
 
 export const ta: Messages = {
-  brandName: "SchemeWise",
-  brandSubtitle: "செயற்கை நுண்ணறிவு அரசு திட்டக் கண்டறிதல்",
+  brandName: "Scheme Predictor",
+  brandSubtitle: "AI-powered scheme discovery",
   productName: "SchemeWise AI",
   productTagline: "அரசு திட்டக் கண்டறிதல் மற்றும் தகுதி ஆராய்ச்சி தளம்",
   researchBadge: "கல்வி ஆராய்ச்சி முன்மாதிரி",
@@ -16,14 +16,17 @@ export const ta: Messages = {
   navCheck: "தகுதி சரிபார்ப்பு",
   navSchemes: "திட்டங்கள்",
   navEvaluation: "மதிப்பீடு",
+  navSystemEvaluation: "கணினி மதிப்பீடு",
   navWallet: "என் பணப்பை",
   navHistory: "வரலாறு",
+  navCompare: "ஒப்பீடு",
   navDashboard: "முகப்பு பலகை",
-  navAccount: "கணக்கு",
+  navSettings: "அமைப்புகள்",
   navDocuments: "ஆவணங்கள்",
   navInsights: "நுண்ணறிவுகள்",
   navReadiness: "விண்ணப்பத் தயாரிப்பு நிலை",
   navUploads: "என் ஆவணங்கள்",
+  navNotifications: "அறிவிப்புகள்",
   navLogin: "உள்நுழைவு",
   navRegister: "பதிவு",
   navLogout: "வெளியேறு",
@@ -71,6 +74,7 @@ export const ta: Messages = {
   homeStartCheck: "தகுதி சரிபார்ப்பைத் தொடங்கு →",
   homeExplore: "திட்டங்களைப் பார்க்க",
   homeWallet: "என் பணப்பையைப் பார்க்க",
+  homeGoToDashboard: "டாஷ்போர்டைத் திற",
   homeHowPortal: "இந்த தளம் எப்படி செயல்படுகிறது",
   homeStepProfile: "விவரம்",
   homeStepProfileText: "கல்வி, குடும்பம் மற்றும் தொழில் விவரங்கள்",
@@ -171,6 +175,7 @@ export const ta: Messages = {
   validationDryLand: "புன்செய் நிலத்தை உள்ளிடுங்கள். இல்லை என்றால் 0.",
   validationLandNegative: "நிலப் பரப்பு எதிர்மறையாக இருக்கக்கூடாது.",
   resultsTitle: "உங்கள் முடிவுகள்",
+  resultsContinue: "இந்த முன்மாதிரியில் அடுத்த படிகள்",
   resultsOneMatch: "1 திட்டம் உங்கள் விவரத்துடன் பொருந்தலாம்",
   resultsManyMatches: (count) => `${count} திட்டங்கள் உங்கள் விவரத்துடன் பொருந்தலாம்`,
   resultsEditProfile: "விவரத்தைத் திருத்து",
@@ -228,9 +233,30 @@ export const ta: Messages = {
   compareDocuments: "தேவையான ஆவணங்கள்",
   compareApplication: "விண்ணப்பம் / செயல்முறை",
   schemesTitle: "அரசு திட்டங்களை ஆராயுங்கள்",
-  schemesDescription: "இந்த ஆராய்ச்சி முன்மாதியில் தற்போது உள்ள CORE திட்டங்களைப் பாருங்கள்.",
+  schemesDescription: "ஆராய்ச்சி முன்மாதிரி அட்டவணையை பெயர் அல்லது திட்ட அடையாளத்தால் தேடுங்கள். அதிகாரப்பூர்வ பெயர்கள், அடையாளங்கள் மற்றும் ஆதாரங்கள் தற்போதைய அட்டவணையிலிருந்து மட்டுமே வருகின்றன.",
   search: "தேடல்",
-  searchPlaceholder: "திட்டப் பெயரால் தேடுங்கள்",
+  searchPlaceholder: "திட்டப் பெயர் அல்லது திட்ட அடையாளத்தால் தேடுங்கள்",
+  catalogOpenFilters: "வடிகட்டிகள்",
+  catalogCloseFilters: "வடிகட்டிகளை மூடு",
+  catalogFiltersTitle: "தேடல் வடிகட்டிகள்",
+  catalogClearFilters: "வடிகட்டிகளை அழி",
+  catalogResultCount: (visible, total) =>
+    visible === 1 ? `${total} திட்டங்களில் 1 காட்டப்படுகிறது` : `${total} திட்டங்களில் ${visible} காட்டப்படுகின்றன`,
+  catalogEmptyTitle: "திட்டங்கள் இல்லை",
+  catalogEmptyLead: "வேறு பெயர், திட்ட அடையாளம் அல்லது வடிகட்டியை முயற்சிக்கவும். இந்தத் தேடல் ஆவணப்படுத்தப்பட்ட தகுதி நிபந்தனைகளை மாற்றாது.",
+  catalogCoreStatus: "CORE நிலை",
+  catalogAllCoreStatuses: "அனைத்து CORE நிலைகளும்",
+  catalogDepartment: "துறை",
+  catalogAllDepartments: "அனைத்து துறைகளும்",
+  catalogGender: "பாலினம்",
+  catalogAllGenders: "அனைத்து பாலினத் தேவைகளும்",
+  catalogUnspecified: "அட்டவணையில் குறிப்பிடப்படவில்லை",
+  catalogStudentStatus: "மாணவர் நிலை",
+  catalogAllStudentStatuses: "அனைத்து மாணவர் தேவைகளும்",
+  catalogBenefitType: "நன்மை / வகை",
+  catalogScopeAdvanced: "ADVANCED",
+  catalogScopeHold: "HOLD",
+  catalogDisclaimer: "இந்த அட்டவணைத் தேடல் ஆராய்ச்சி முன்மாதிரி திட்டப் பதிவுகளை மட்டுமே பட்டியலிடுகிறது. இது தகுதியைக் கணிக்காது.",
   category: "வகை",
   allCategories: "அனைத்து வகைகளும்",
   loadingSchemes: "ஆதரிக்கப்படும் திட்டங்கள் ஏற்றப்படுகின்றன...",
@@ -412,9 +438,10 @@ export const ta: Messages = {
   officialSources: "அதிகாரப்பூர்வ தரவு ஆதாரங்கள்",
   loadingGeneric: "ஏற்றப்படுகிறது...",
   navSectionAccount: "என் கணக்கு",
+  navSectionResearch: "ஆராய்ச்சி",
   navSectionPreferences: "விருப்பங்கள்",
   navSectionAuth: "கணக்கு",
-  sidebarTagline: "AI Scheme Discovery",
+  sidebarTagline: "AI-powered scheme discovery",
   guestUser: "விருந்தினர்",
   notSignedIn: "உள்நுழையவில்லை",
   notifications: "அறிவிப்புகள்",
@@ -508,6 +535,26 @@ export const ta: Messages = {
   schemeNotFoundLead: "அந்த திட்டம் இந்த ஆராய்ச்சி முன்மாதிரியின் தற்போதைய CORE பட்டியலில் இல்லை.",
   viewAllSchemes: "அனைத்து திட்டங்களையும் பார்",
   whyRecommended: "இந்த திட்டம் ஏன் பரிந்துரைக்கப்பட்டது",
+  whyThisResult: "இந்த முடிவு ஏன்?",
+  whyShow: "காட்டு",
+  whyHide: "மறை",
+  whyRulesChecked: "ஆவணப்படுத்தப்பட்ட திட்ட விதிகள் சரிபார்க்கப்பட்டன",
+  whyRulesCheckedLead:
+    "இவை இந்த ஆராய்ச்சி முன்மாதிரி சரிபார்த்த ஆவணப்படுத்தப்பட்ட நிபந்தனைகள். இவை அரசு விண்ணப்பப் பட்டியல் அல்ல.",
+  whyRuleEligible:
+    "ஆவணப்படுத்தப்பட்ட விதி இயந்திரம் இந்த விவரத்தை இந்த ஆராய்ச்சி முன்மாதிரிக்கு தகுதியானது எனக் கருதியது. இது அரசு அனுமதி அல்ல, மேலும் நீங்கள் நன்மையைப் பெறுவீர்கள் என்று அர்த்தமல்ல.",
+  whyRuleNotEligible:
+    "ஆவணப்படுத்தப்பட்ட விதி இயந்திரம் இந்த விவரத்தை இந்த ஆராய்ச்சி முன்மாதிரிக்கு தகுதியானது எனக் கருதவில்லை. இது அதிகாரப்பூர்வ அரசு நிராகரிப்பு அல்ல.",
+  whyMlPredicted: "முடிவு மரம் என்ன கணித்தது",
+  whyMlPredictedLead: (label) =>
+    `முடிவு மரம் கணித்தது: ${label}. இது ஆராய்ச்சி முன்மாதிரி மதிப்பெண், அரசு அனுமதி அல்ல.`,
+  whyRuleReference: "ஆவணப்படுத்தப்பட்ட விதி முடிவு குறிப்பாகப் பயன்படுத்தப்படுகிறது.",
+  whyProbabilityMeans: (percent) =>
+    `இந்த திட்டத்திற்கான மாதிரி கணிப்பு நிகழ்தகவு ${percent}%. இது ஆராய்ச்சி மாதிரி மதிப்பெண் மட்டுமே.`,
+  whyThingsToReview: "பார்க்க வேண்டியவை",
+  whyThingsToReviewLead:
+    "இந்த உருப்படிகள் இந்த ஆராய்ச்சி முன்மாதிரிக்காக ஏற்கனவே சேமிக்கப்பட்ட முழுமையற்ற விவரப் புலங்களிலிருந்து வருகின்றன. தகுதி பெற தனிப்பட்ட தகவலை மாற்றச் சொல்லும் அறிவுறுத்தல்கள் அல்ல.",
+  whyNoReviewItems: "இந்தச் சரிபார்ப்புக்கு கூடுதல் முழுமையற்ற விவரப் புலங்கள் பதிவு செய்யப்படவில்லை.",
   ruleResultLabel: "விதி முடிவு",
   visitOfficialWebsite: "அதிகாரப்பூர்வ இணையதளத்தைப் பார்",
   eligibilityNotes: "தகுதி குறிப்புகள்",
@@ -519,9 +566,18 @@ export const ta: Messages = {
   accountDanger: "ஆபத்துப் பகுதி",
   accountSession: "அமர்வு",
   accountEmail: "மின்னஞ்சல்",
+  accountEmailHint: "பதிவு செய்யப்பட்ட மின்னஞ்சலை இங்கு மாற்ற முடியாது.",
+  accountType: "கணக்கு வகை",
   accountCreatedOn: "கணக்கு உருவாக்கப்பட்ட நாள்",
   accountCreatedUnknown: "உருவாக்கப்பட்ட தேதி கிடைக்கவில்லை.",
   accountSignedInGoogle: "Google மூலம் உள்நுழைந்துள்ளீர்கள்",
+  accountGooglePasswordNote:
+    "இந்தக் கணக்கின் கடவுச்சொல் உள்நுழைவு Google மூலம் நிர்வகிக்கப்படுகிறது. இந்த ஆய்வு முன்மாதிரியில் இங்கு மாற்றக்கூடிய கடவுச்சொல் சேமிக்கப்படவில்லை.",
+  accountWalletTitle: "சமூக-பொருளாதார சுயவிவரம்",
+  accountWalletLead:
+    "உங்கள் ஆய்வு முன்மாதிரி சுயவிவரம் என் வாலட்டில் உள்ளது. இந்தப் பக்கம் இரண்டாவது சுயவிவரத்தை உருவாக்காது.",
+  accountNoWallet: "சமூக-பொருளாதார வாலட் இன்னும் உருவாக்கப்படவில்லை.",
+  accountEditProfile: "சுயவிவரத்தைத் திருத்து",
   accountPasswordAccount: "மின்னஞ்சல் மற்றும் கடவுச்சொல்",
   accountLinkedGoogle: "Google-ம் இந்த கணக்குடன் இணைக்கப்பட்டுள்ளது.",
   accountSaveName: "பெயரைச் சேமி",
@@ -685,4 +741,84 @@ export const ta: Messages = {
   uploadsCategoryIncome: "வருமானச் சான்றிதழ்",
   uploadsCategoryCommunity: "சமூகச் சான்றிதழ்",
   uploadsCategoryOther: "பிற துணை ஆவணம்",
+  notificationsTitle: "அறிவிப்புகள் & நினைவூட்டல்கள்",
+  notificationsLead:
+    "இந்த நினைவூட்டல்கள் உங்கள் ஆராய்ச்சி முன்மாதிரி செயல்பாட்டிலிருந்து மட்டுமே வருகின்றன. இவை அரசு அறிவிப்புகள் அல்லது அதிகாரப்பூர்வ காலக்கெடு அல்ல.",
+  notificationsLoading: "அறிவிப்புகள் ஏற்றப்படுகின்றன...",
+  notificationsEmptyTitle: "இப்போது நினைவூட்டல்கள் இல்லை",
+  notificationsEmptyLead:
+    "உங்கள் விவரம், ஆவணங்கள், தயாரிப்பு நிலை அல்லது தகுதி சரிபார்ப்பு கவனம் தேவைப்படும்போது அவை இங்கே தோன்றும்.",
+  notificationsUnreadCount: (count) =>
+    count === 1 ? "1 படிக்காத நினைவூட்டல்" : `${count} படிக்காத நினைவூட்டல்கள்`,
+  notificationsBellLabel: (count) =>
+    count === 0
+      ? "அறிவிப்புகள், படிக்காத நினைவூட்டல்கள் இல்லை"
+      : `அறிவிப்புகள், ${count === 1 ? "1 படிக்காத நினைவூட்டல்" : `${count} படிக்காத நினைவூட்டல்கள்`}`,
+  notificationsStatusUnread: "படிக்கவில்லை",
+  notificationsStatusRead: "படித்தது",
+  notificationsMarkRead: "படித்ததாக குறி",
+  notificationsDismiss: "நீக்கு",
+  notificationsOpen: "தொடர்புடைய பக்கத்தைத் திற",
+  notificationsCategoryProfile: "விவரம்",
+  notificationsCategoryDocuments: "ஆவணங்கள்",
+  notificationsCategoryReadiness: "தயாரிப்பு நிலை",
+  notificationsCategoryRecommendation: "தகுதி சரிபார்ப்பு",
+  notificationsProfileTitle: "உங்கள் விவரத்தை நிறைவு செய்யவும்",
+  notificationsProfileMissing:
+    "தனிப்பயன் நினைவூட்டல்களுக்கு ஒரு சமூக-பொருளாதார பணப்பையை உருவாக்கவும்.",
+  notificationsProfileIncomplete: (count) =>
+    count === 1
+      ? "இந்த ஆராய்ச்சி முன்மாதிரியில் 1 விவரப் புலம் இன்னும் கவனம் தேவை. விடுபட்ட புலங்கள் அரசு தேவை அல்ல."
+      : `இந்த ஆராய்ச்சி முன்மாதிரியில் ${count} விவரப் புலங்கள் இன்னும் கவனம் தேவை. விடுபட்ட புலங்கள் அரசு தேவை அல்ல.`,
+  notificationsDocumentTitle: "ஆவணத் தயாரிப்பு கவனம் தேவை",
+  notificationsDocumentMessage: (count) =>
+    count === 1
+      ? "1 பரிந்துரைக்கப்பட்ட திட்டத்தில் ஆவணப் பட்டியல் இன்னும் பார்க்க வேண்டும். இது அரசு காலக்கெடு அல்ல."
+      : `${count} பரிந்துரைக்கப்பட்ட திட்டங்களில் ஆவணப் பட்டியல் இன்னும் பார்க்க வேண்டும். இது அரசு காலக்கெடு அல்ல.`,
+  notificationsReadinessTitle: "விண்ணப்பத் தயாரிப்பு இன்னும் நடைபெறுகிறது",
+  notificationsReadinessMessage: (count) =>
+    count === 1
+      ? "1 பரிந்துரைக்கப்பட்ட திட்டம் தயாரிப்பு முடிந்தது எனக் குறிக்கப்படவில்லை. இது அரசு சமர்ப்பிப்பு அல்ல."
+      : `${count} பரிந்துரைக்கப்பட்ட திட்டங்கள் தயாரிப்பு முடிந்தது எனக் குறிக்கப்படவில்லை. இது அரசு சமர்ப்பிப்பு அல்ல.`,
+  notificationsRecommendationTitle: "சமீபத்திய தகுதி சரிபார்ப்பு",
+  notificationsRecommendationMessage: (count) =>
+    count === 1
+      ? "உங்கள் சமீபத்திய சரிபார்ப்பு 1 தகுதியான திட்டத்தைக் கணித்தது. இது அரசு அனுமதி அல்ல."
+      : `உங்கள் சமீபத்திய சரிபார்ப்பு ${count} தகுதியான திட்டங்களைக் கணித்தது. இது அரசு அனுமதி அல்ல.`,
+  notificationsDashboardTitle: "அறிவிப்புகள் & நினைவூட்டல்கள்",
+  notificationsDashboardLead: "உங்கள் ஆராய்ச்சி முன்மாதிரி செயல்பாட்டிலிருந்து சமீபத்திய படிக்காத நினைவூட்டல்கள்.",
+  notificationsDashboardCta: "அனைத்து அறிவிப்புகளையும் பார்",
+  notificationsDashboardEmpty: "படிக்காத நினைவூட்டல்கள் இல்லை.",
+  notificationsDisclaimer:
+    "இந்த நினைவூட்டல்கள் உங்கள் ஆராய்ச்சி முன்மாதிரி செயல்பாட்டிலிருந்து மட்டுமே உருவாக்கப்படுகின்றன. இவை அரசு அறிவிப்புகள், அதிகாரப்பூர்வ காலக்கெடு அல்லது விண்ணப்பப் புதுப்பிப்புகள் அல்ல.",
+  systemEvalTitle: "கணினி செயல்திறன் & மதிப்பீடு",
+  systemEvalLead:
+    "இந்த இயங்கும் முன்மாதிரியின் இருக்கும் ML மதிப்பீட்டு அளவீடுகள் மற்றும் நேரடி API நேரங்களின் ஆராய்ச்சி பார்வை. இது மாதிரிகளை மீண்டும் பயிற்றுவிக்காது அல்லது பரிந்துரைகளை மாற்றாது.",
+  systemEvalDisclaimer:
+    "கல்வி ஆராய்ச்சி முன்மாதிரி. இந்த எண்கள் கல்லூரி மதிப்பாய்வுக்கு மட்டுமே. இவை அரசு துல்லியம், உற்பத்தி கண்காணிப்பு அல்லது அதிகாரப்பூர்வ தகுதி முடிவு அல்ல.",
+  systemEvalDistinction:
+    "ML செயல்திறன், கலப்பின ஒப்பந்தம் மற்றும் தரவுத்தொகுப்பு சுருக்கம் சேமிக்கப்பட்ட Phase 4/5 ஆராய்ச்சி கோப்புகளிலிருந்து வருகின்றன. API செயல்திறன் இந்த செயல்முறையில் நேரடியாக அளவிடப்படுகிறது மற்றும் சேவையகம் மறுதொடக்கம் ஆனால் மீட்டமைக்கப்படும்.",
+  systemEvalMlHeading: "ML செயல்திறன்",
+  systemEvalHybridHeading: "கலப்பின ஒப்பந்தம்",
+  systemEvalDatasetHeading: "தரவுத்தொகுப்பு சுருக்கம்",
+  systemEvalApiHeading: "API செயல்திறன்",
+  systemEvalHealthHeading: "கணினி நிலை",
+  systemEvalLoading: "கணினி மதிப்பீடு ஏற்றப்படுகிறது...",
+  systemEvalLoadError: "கணினி மதிப்பீட்டுச் சுருக்கத்தை ஏற்ற முடியவில்லை.",
+  systemEvalRequests: "கோரிக்கைகள்",
+  systemEvalErrors: "பிழைகள்",
+  systemEvalAvgMs: "சராசரி",
+  systemEvalMinMs: "குறைந்தபட்சம்",
+  systemEvalMaxMs: "அதிகபட்சம்",
+  systemEvalNoSamples: "இந்த செயல்முறைக்கு இன்னும் கோரிக்கைகள் பதிவு செய்யப்படவில்லை.",
+  systemEvalHealthStatus: "API நிலை",
+  systemEvalHealthDatabase: "தரவுத்தளம்",
+  systemEvalHealthEnvironment: "சூழல்",
+  systemEvalHealthModel: "Decision Tree ஏற்றப்பட்டது",
+  systemEvalHealthEvaluation: "மதிப்பீட்டு கோப்புகள்",
+  systemEvalReady: "தயார்",
+  systemEvalNotReady: "தயார் இல்லை",
+  systemEvalOpenEvaluation: "முழு ஆராய்ச்சி மதிப்பீட்டைத் திற",
+  systemEvalEndpoint: "இறுதிப்புள்ளி",
+  formatMs: (value) => `${value.toFixed(2)} ms`,
 };

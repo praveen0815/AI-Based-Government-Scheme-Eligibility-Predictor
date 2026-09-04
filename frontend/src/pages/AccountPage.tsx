@@ -1,9 +1,10 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ErrorState } from "../components/ErrorState";
 import { FormField } from "../components/FormField";
 import { LoadingState } from "../components/LoadingState";
 import { PasswordField } from "../components/PasswordField";
+import { ProfileCompletenessCard } from "../components/ProfileCompletenessCard";
 import { ResearchNotice } from "../components/ResearchNotice";
 import { Badge } from "../components/ui/Badge";
 import { Button } from "../components/ui/Button";
@@ -16,11 +17,23 @@ import {
   changeAccountPassword,
   deleteAccount,
   fetchCurrentUser,
+  fetchProfileCompleteness,
   updateAccountProfile,
 } from "../services/api";
-import type { AuthUser } from "../types/api";
+import type { AuthUser, ProfileCompleteness } from "../types/api";
 import { markAccountDeleted } from "../utils/authStorage";
 import { formatCheckedAt } from "../utils/displayLabels";
+
+function isProfileCompleteness(value: unknown): value is ProfileCompleteness {
+  if (!value || typeof value !== "object") return false;
+  const record = value as ProfileCompleteness;
+  return (
+    typeof record.percentage === "number" &&
+    typeof record.completed_fields === "number" &&
+    typeof record.total_fields === "number" &&
+    Array.isArray(record.incomplete_fields)
+  );
+}
 
 function loginMethodLabel(account: AuthUser, t: ReturnType<typeof useI18n>["t"]): string {
   if (account.has_google && !account.has_password) {
@@ -53,6 +66,7 @@ export function AccountPage() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [completeness, setCompleteness] = useState<ProfileCompleteness | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -65,6 +79,14 @@ export function AccountPage() {
         setAccount(next);
         setFullName(next.full_name);
         updateUser(next);
+        try {
+          const nextCompleteness = await fetchProfileCompleteness();
+          if (!cancelled) {
+            setCompleteness(isProfileCompleteness(nextCompleteness) ? nextCompleteness : null);
+          }
+        } catch {
+          if (!cancelled) setCompleteness(null);
+        }
       } catch (caught) {
         if (!cancelled) {
           setLoadError(caught instanceof ApiError ? caught.message : t.networkError);
@@ -150,7 +172,7 @@ export function AccountPage() {
       await deleteAccount();
       markAccountDeleted();
       clearResult();
-      // Leave /account before clearing the JWT so ProtectedRoute cannot
+      // Leave /settings before clearing the JWT so ProtectedRoute cannot
       // replace this navigation with /login.
       navigate({ pathname: "/", search: "accountDeleted=1" }, { replace: true });
       logout();
@@ -187,6 +209,11 @@ export function AccountPage() {
               <div>
                 <p className="field-label">{t.accountEmail}</p>
                 <p className="mt-2 text-[17px] text-ink-900">{account.email}</p>
+                <p className="mt-1 text-[15px] text-ink-500">{t.accountEmailHint}</p>
+              </div>
+              <div>
+                <p className="field-label">{t.accountType}</p>
+                <p className="mt-2 text-[17px] text-ink-900">{loginMethodLabel(account, t)}</p>
               </div>
               <div>
                 <p className="field-label">{t.accountCreatedOn}</p>
@@ -195,7 +222,7 @@ export function AccountPage() {
                 </p>
               </div>
               {nameNotice ? (
-                <p className="rounded-[12px] bg-teal-50 px-4 py-3 font-medium text-accent" role="status">
+                <p className="notice-success" role="status">
                   {nameNotice}
                 </p>
               ) : null}
@@ -221,6 +248,32 @@ export function AccountPage() {
               <p className="text-[16px] text-ink-500">{t.accountLinkedGoogle}</p>
             ) : null}
           </section>
+
+          <section className="card-surface space-y-4 p-6 md:p-8" aria-labelledby="account-wallet">
+            <h2 id="account-wallet" className="section-title">
+              {t.accountWalletTitle}
+            </h2>
+            <p className="text-[17px] leading-relaxed text-ink-500">{t.accountWalletLead}</p>
+            {!completeness ? <p className="text-[17px] text-ink-500">{t.accountNoWallet}</p> : null}
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/wallet"
+                className="btn-text inline-flex items-center justify-center rounded-[12px] bg-action px-5 py-3 text-white shadow-sm transition duration-150 hover:bg-action-hover"
+              >
+                {t.goToWallet}
+              </Link>
+              <Link
+                to="/wallet"
+                className="btn-text inline-flex items-center justify-center rounded-[12px] border border-line bg-surface px-5 py-3 text-ink-900 transition duration-150 hover:border-slate-300 hover:bg-canvas"
+              >
+                {t.accountEditProfile}
+              </Link>
+            </div>
+          </section>
+
+          {completeness ? (
+            <ProfileCompletenessCard completeness={completeness} onCompleteProfile={() => navigate("/wallet")} />
+          ) : null}
 
           {canChangePassword ? (
             <section className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="account-security">
@@ -254,7 +307,7 @@ export function AccountPage() {
                   onChange={setConfirmPassword}
                 />
                 {passwordNotice ? (
-                  <p className="rounded-[12px] bg-teal-50 px-4 py-3 font-medium text-accent" role="status">
+                  <p className="notice-success" role="status">
                     {passwordNotice}
                   </p>
                 ) : null}
@@ -270,6 +323,7 @@ export function AccountPage() {
                 {t.accountSecurity}
               </h2>
               <p className="text-[17px] leading-relaxed text-ink-500">{t.accountSignedInGoogle}</p>
+              <p className="text-[16px] leading-relaxed text-ink-500">{t.accountGooglePasswordNote}</p>
             </section>
           )}
 

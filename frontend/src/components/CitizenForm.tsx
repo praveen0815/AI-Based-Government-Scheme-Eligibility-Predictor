@@ -266,7 +266,7 @@ export function CitizenForm({
 
       {children}
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+      <div className="card-surface flex flex-col-reverse gap-3 p-5 sm:flex-row sm:justify-end sm:p-6">
         {onReset ? (
           <Button type="button" variant="secondary" onClick={onReset}>
             {t.reset}

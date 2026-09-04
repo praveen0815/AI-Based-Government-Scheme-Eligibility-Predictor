@@ -26,8 +26,8 @@ function FeatureTable({
 }) {
   return (
     <div className="overflow-x-auto">
-      <h3 className="mb-2 text-base font-semibold text-ink-900">{title}</h3>
-      <table className="min-w-full text-left text-sm">
+      <h3 className="mb-3 text-[18px] font-semibold text-ink-900">{title}</h3>
+      <table className="min-w-full text-left text-[15px] sm:text-[16px]">
         <thead>
           <tr className="border-b border-line text-ink-700">
             <th className="py-2 pr-4 font-medium">{featureLabel}</th>

@@ -115,8 +115,9 @@ describe("scheme comparison and PDF report", () => {
     expect(screen.getAllByText(SECOND_SCHEME.scheme_name).length).toBeGreaterThan(0);
     expect(screen.getAllByText("Predicted eligible").length).toBeGreaterThan(0);
     expect(screen.getByText(/not an official government rejection/)).toBeInTheDocument();
-    expect(String(fetchMock.mock.calls[0]?.[0])).toContain("/api/v1/compare");
-    expect(JSON.parse(String((fetchMock.mock.calls[0]?.[1] as RequestInit).body))).toEqual({
+    const compareCall = fetchMock.mock.calls.find((call) => String(call[0]).includes("/api/v1/compare"));
+    expect(String(compareCall?.[0])).toContain("/api/v1/compare");
+    expect(JSON.parse(String((compareCall?.[1] as RequestInit).body))).toEqual({
       scheme_ids: [SAMPLE_SCHEME.scheme_id, SECOND_SCHEME.scheme_id],
     });
   });
@@ -144,9 +145,12 @@ describe("scheme comparison and PDF report", () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Download PDF Report" }));
     expect(fetchMock).toHaveBeenCalled();
-    expect(String(fetchMock.mock.calls[0]?.[0])).toContain("/api/v1/reports/recommendations");
-    expect((fetchMock.mock.calls[0]?.[1] as RequestInit).method).toBe("POST");
-    expect(JSON.parse(String((fetchMock.mock.calls[0]?.[1] as RequestInit).body))).toEqual({
+    const reportCall = fetchMock.mock.calls.find((call) =>
+      String(call[0]).includes("/api/v1/reports/recommendations"),
+    );
+    expect(String(reportCall?.[0])).toContain("/api/v1/reports/recommendations");
+    expect((reportCall?.[1] as RequestInit).method).toBe("POST");
+    expect(JSON.parse(String((reportCall?.[1] as RequestInit).body))).toEqual({
       compare_scheme_ids: [],
       language: "en",
     });

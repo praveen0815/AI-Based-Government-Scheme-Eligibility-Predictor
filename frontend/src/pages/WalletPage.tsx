@@ -172,7 +172,7 @@ export function WalletPage() {
       <p className="text-[15px] text-ink-500">{t.walletNotIdentity}</p>
 
       {notice ? (
-        <p className="rounded-[12px] border border-line bg-teal-50 px-4 py-3 font-medium text-accent" role="status">
+        <p className="notice-success" role="status">
           {notice}
         </p>
       ) : null}

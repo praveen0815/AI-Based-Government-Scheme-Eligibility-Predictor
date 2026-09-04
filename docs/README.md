@@ -53,5 +53,17 @@ Project notes, data-source records, and later design documents.
 | `phase22_results.md` | 22 | Personalized dashboard implementation results |
 | `document_upload_design.md` | 23 | Optional non-sensitive supporting document uploads |
 | `phase23_results.md` | 23 | Supporting document upload implementation results |
+| `notifications_design.md` | 24 | Owner-only in-app reminders from existing prototype activity |
+| `phase24_results.md` | 24 | Notifications and reminders implementation results |
+| `catalog_search_design.md` | 25 | Catalog search and filters over the official 13 scheme rows |
+| `phase25_results.md` | 25 | Advanced scheme search implementation results |
+| `explainability_design.md` | 26 | Plain-language Why this scheme? view of hybrid results |
+| `phase26_results.md` | 26 | Explainable recommendation view implementation results |
+| `account_settings_design.md` | 27 | Account settings, password, wallet links, and owner-only deletion |
+| `phase27_results.md` | 27 | Account and profile management implementation results |
+| `performance_evaluation_design.md` | 29 | In-process API timings and research evaluation summary |
+| `phase29_results.md` | 29 | Performance and system evaluation implementation results |
+| `final_system_flow.md` | 30 | End-to-end architecture, demo flow, modules, and limits |
+| `phase30_results.md` | 30 | Final integration and demo-readiness results |
 
 Aadhaar, LLMs, and deployment remain out of scope.

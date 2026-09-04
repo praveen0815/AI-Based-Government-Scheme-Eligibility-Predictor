@@ -97,6 +97,27 @@ export interface SchemeCatalogResponse {
   schemes: SchemeCatalogItem[];
 }
 
+export interface CatalogSearchItem extends SchemeCatalogItem {
+  gender_requirement: string | null;
+  student_status_requirement: string | null;
+}
+
+export interface CatalogFilterOptions {
+  ml_scopes: string[];
+  departments: string[];
+  genders: string[];
+  student_statuses: string[];
+  categories: string[];
+}
+
+export interface CatalogSearchResponse {
+  scheme_count: number;
+  total_catalog_count: number;
+  schemes: CatalogSearchItem[];
+  filters: CatalogFilterOptions;
+  disclaimer: string;
+}
+
 export interface AuthUser {
   user_id: string;
   full_name: string;
@@ -485,4 +506,65 @@ export interface DocumentProgressResponse {
   overall_item_count: number;
   overall_progress_percent: number;
   disclaimer: string;
+}
+
+export type NotificationType =
+  | "profile_incomplete"
+  | "document_attention"
+  | "readiness_in_progress"
+  | "recommendation";
+
+export type NotificationFeature = "wallet" | "documents" | "readiness" | "history";
+
+export interface NotificationItem {
+  notification_id: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  related_feature: NotificationFeature;
+  related_id: string | null;
+  href: string;
+  is_read: boolean;
+  created_at: string;
+  count: number | null;
+}
+
+export interface NotificationListResponse {
+  notifications: NotificationItem[];
+  unread_count: number;
+  disclaimer: string;
+}
+
+export interface EndpointPerformance {
+  endpoint: string;
+  request_count: number;
+  error_count: number;
+  average_ms: number | null;
+  min_ms: number | null;
+  max_ms: number | null;
+}
+
+export interface ApiPerformanceSummary {
+  note: string;
+  started_at: string;
+  endpoints: EndpointPerformance[];
+}
+
+export interface SystemHealth {
+  status: string;
+  database: string;
+  environment: string;
+  model_loaded: boolean;
+  evaluation_ready: boolean;
+}
+
+export interface SystemEvaluationResponse {
+  prototype_notice: string;
+  ml_metrics_note: string;
+  api_metrics_note: string;
+  dataset: EvaluationOverview;
+  models: ModelMetrics[];
+  hybrid: HybridEvaluationResponse;
+  api_performance: ApiPerformanceSummary;
+  health: SystemHealth;
 }

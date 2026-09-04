@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 type Tone = "brand" | "success" | "warning" | "muted";
 
 const tones: Record<Tone, string> = {
-  brand: "bg-brand-900/5 text-brand-900",
-  success: "bg-teal-50 text-accent",
+  brand: "bg-navy-900/5 text-navy-800",
+  success: "bg-emerald-50 text-success",
   warning: "bg-amber-50 text-warning",
   muted: "bg-slate-100 text-ink-500",
 };
