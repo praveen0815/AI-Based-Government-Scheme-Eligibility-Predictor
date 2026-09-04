@@ -74,8 +74,23 @@ Copy `frontend/.env.example` to `frontend/.env` if needed. Default API base URL 
 docker run --name scheme-predictor-pg -e POSTGRES_USER=USERNAME -e POSTGRES_PASSWORD=PASSWORD -e POSTGRES_DB=scheme_predictor -p 5432:5432 -d postgres:16
 ```
 
+<<<<<<< HEAD
 2. Copy `backend/.env.example` to `backend/.env` and set `DATABASE_URL` and `JWT_SECRET_KEY`.
 3. Create tables:
+=======
+If Docker Desktop was stopped, start it and then:
+
+```powershell
+docker start scheme-predictor-pg
+```
+
+Auth, Google sign-in, wallet, and history return HTTP 503 until this container is running. From the project root you can also use `docker compose up -d`.
+
+2. Create the application database if you installed PostgreSQL locally, for example `scheme_predictor`. Create a separate `scheme_predictor_test` database for automated tests.
+3. Copy `.env.example` to `.env` and set `DATABASE_URL` with your username and password:
+
+4. Install backend dependencies and create tables (this does not drop existing tables):
+>>>>>>> ab6e8af (Update README to remove sensitive information)
 
 ```powershell
 cd backend
