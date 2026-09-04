@@ -122,13 +122,6 @@ Auth, Google sign-in, wallet, and history return HTTP 503 until this container i
 2. Create the application database if you installed PostgreSQL locally, for example `scheme_predictor`. Create a separate `scheme_predictor_test` database for automated tests.
 3. Copy `.env.example` to `.env` and set `DATABASE_URL` with your username and password:
 
-```
-DATABASE_URL=postgresql+psycopg://USERNAME:PASSWORD@localhost:5432/scheme_predictor
-JWT_SECRET_KEY=change-me-academic-prototype-only-not-for-production
-JWT_ALGORITHM=HS256
-JWT_ACCESS_TOKEN_EXPIRE_MINUTES=60
-```
-
 4. Install backend dependencies and create tables (this does not drop existing tables):
 
 ```powershell
