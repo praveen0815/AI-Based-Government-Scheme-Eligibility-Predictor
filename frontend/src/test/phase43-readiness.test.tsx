@@ -148,10 +148,16 @@ describe("phase 43 income what-if CTA", () => {
             }),
           );
         }
+        if (path.includes("/recommend")) {
+          return Promise.resolve(jsonOk(recommendResponse([SAMPLE_SCHEME])));
+        }
         return Promise.resolve({ ok: false, status: 404 });
       }),
     );
-    renderAuthenticatedApp(["/voice-assistant"]);
+    renderAuthenticatedApp(["/voice-assistant"], {
+      profile: VALID_PROFILE,
+      result: recommendResponse([SAMPLE_SCHEME]),
+    });
     const user = userEvent.setup();
     await user.type(screen.getByRole("textbox", { name: "Type your question" }), "What if my salary changes?");
     await user.click(screen.getByRole("button", { name: "Send" }));
