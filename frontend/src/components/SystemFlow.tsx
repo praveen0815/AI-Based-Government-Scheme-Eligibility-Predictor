@@ -19,8 +19,8 @@ export function SystemFlow() {
     <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
       {steps.map((step, index) => (
         <li key={step} className="card-surface p-5">
-          <p className="text-[13px] font-bold uppercase tracking-wide text-accent">{t.stepN(index + 1)}</p>
-          <p className="mt-2 text-[16px] font-semibold text-ink-900">{step}</p>
+          <p className="text-[15px] font-bold uppercase tracking-wide text-accent">{t.stepN(index + 1)}</p>
+          <p className="mt-3 text-[17px] font-semibold text-ink-900">{step}</p>
         </li>
       ))}
     </ol>

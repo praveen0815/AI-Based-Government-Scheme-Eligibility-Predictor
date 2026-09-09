@@ -5,6 +5,8 @@ export function notificationCategory(type: NotificationType, t: Messages): strin
   if (type === "profile_incomplete") return t.notificationsCategoryProfile;
   if (type === "document_attention") return t.notificationsCategoryDocuments;
   if (type === "readiness_in_progress") return t.notificationsCategoryReadiness;
+  if (type === "eligibility_incomplete") return t.notificationsCategoryEligibility;
+  if (type === "application_status") return t.notificationsCategoryApplications;
   return t.notificationsCategoryRecommendation;
 }
 
@@ -12,6 +14,8 @@ export function notificationTitle(item: NotificationItem, t: Messages): string {
   if (item.type === "profile_incomplete") return t.notificationsProfileTitle;
   if (item.type === "document_attention") return t.notificationsDocumentTitle;
   if (item.type === "readiness_in_progress") return t.notificationsReadinessTitle;
+  if (item.type === "eligibility_incomplete") return t.notificationsEligibilityTitle;
+  if (item.type === "application_status") return t.notificationsApplicationTitle;
   return t.notificationsRecommendationTitle;
 }
 
@@ -27,6 +31,12 @@ export function notificationMessage(item: NotificationItem, t: Messages): string
   }
   if (item.type === "readiness_in_progress") {
     return item.count != null ? t.notificationsReadinessMessage(item.count) : item.message;
+  }
+  if (item.type === "eligibility_incomplete") {
+    return item.count != null ? t.notificationsEligibilityMessage(item.count) : item.message;
+  }
+  if (item.type === "application_status") {
+    return item.count != null ? t.notificationsApplicationMessage(item.count) : item.message;
   }
   return item.count != null ? t.notificationsRecommendationMessage(item.count) : item.message;
 }

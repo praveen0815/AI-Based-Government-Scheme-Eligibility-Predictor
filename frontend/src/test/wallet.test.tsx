@@ -179,11 +179,7 @@ describe("data wallet page", () => {
     await user.click(screen.getByRole("button", { name: "Delete Wallet" }));
     expect(screen.getByText("Are you sure you want to delete your data wallet?")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Yes, delete wallet" }));
-    expect(
-      await screen.findByRole("heading", {
-        name: "Welcome 👋",
-      }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Welcome back, Test User" })).toBeInTheDocument();
     expect(fetchMock.mock.calls.some((call) => (call[1] as RequestInit | undefined)?.method === "DELETE")).toBe(true);
   });
 

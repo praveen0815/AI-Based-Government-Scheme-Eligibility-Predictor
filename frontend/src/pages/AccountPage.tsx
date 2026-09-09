@@ -162,7 +162,7 @@ export function AccountPage() {
   function handleLogout() {
     logout();
     clearResult();
-    navigate("/");
+    navigate("/login");
   }
 
   async function handleDelete() {
@@ -172,9 +172,7 @@ export function AccountPage() {
       await deleteAccount();
       markAccountDeleted();
       clearResult();
-      // Leave /settings before clearing the JWT so ProtectedRoute cannot
-      // replace this navigation with /login.
-      navigate({ pathname: "/", search: "accountDeleted=1" }, { replace: true });
+      navigate({ pathname: "/login", search: "accountDeleted=1" }, { replace: true });
       logout();
     } catch (caught) {
       setDeleteError(caught instanceof ApiError ? caught.message : t.genericError);
@@ -183,7 +181,7 @@ export function AccountPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
+    <div className="mx-auto max-w-3xl page-stack">
       <PageHeader title={t.accountTitle} description={t.accountLead} />
       <ResearchNotice compact />
 
@@ -264,7 +262,7 @@ export function AccountPage() {
               </Link>
               <Link
                 to="/wallet"
-                className="btn-text inline-flex items-center justify-center rounded-[12px] border border-line bg-surface px-5 py-3 text-ink-900 transition duration-150 hover:border-slate-300 hover:bg-canvas"
+                className="btn-text inline-flex items-center justify-center rounded-[12px] border border-line bg-surface px-5 py-3 text-ink-900 transition duration-150 hover:border-[#C5CDC7] hover:bg-sage"
               >
                 {t.accountEditProfile}
               </Link>

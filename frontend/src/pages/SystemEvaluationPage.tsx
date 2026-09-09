@@ -27,11 +27,11 @@ function ApiTimingBar({ endpoints }: { endpoints: EndpointPerformance[] }) {
         const width = row.average_ms === null ? 0 : (row.average_ms / maxAverage) * 100;
         return (
           <div key={row.endpoint}>
-            <div className="mb-1 flex justify-between gap-3 text-[14px] text-ink-500">
+            <div className="mb-2 flex justify-between gap-3 text-[16px] text-ink-500">
               <span className="font-mono">{row.endpoint}</span>
               <span>{row.average_ms === null ? "—" : `${row.average_ms.toFixed(2)} ms`}</span>
             </div>
-            <div className="h-2 overflow-hidden rounded-full bg-canvas">
+            <div className="h-2 overflow-hidden rounded-full bg-sage">
               <div className="h-full rounded-full bg-action" style={{ width: `${width}%` }} />
             </div>
           </div>
@@ -68,7 +68,7 @@ export function SystemEvaluationPage() {
   const recorded = data?.api_performance.endpoints.some((row) => row.request_count > 0) ?? false;
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8">
+    <div className="mx-auto max-w-6xl page-stack">
       <PageHeader
         eyebrow={t.researchBadge}
         title={t.systemEvalTitle}
@@ -106,23 +106,23 @@ export function SystemEvaluationPage() {
               </div>
             ) : null}
             <div className="overflow-x-auto rounded-[14px] border border-line">
-              <table className="min-w-full text-left text-[15px]">
+              <table className="data-table">
                 <thead>
                   <tr className="border-b border-line text-ink-700">
-                    <th className="px-3 py-2 font-medium">{t.model}</th>
-                    <th className="px-3 py-2 font-medium">{t.accuracy}</th>
-                    <th className="px-3 py-2 font-medium">{t.precision}</th>
-                    <th className="px-3 py-2 font-medium">{t.recall}</th>
-                    <th className="px-3 py-2 font-medium">{t.f1}</th>
+                    <th>{t.model}</th>
+                    <th>{t.accuracy}</th>
+                    <th>{t.precision}</th>
+                    <th>{t.recall}</th>
+                    <th>{t.f1}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data.models.map((model) => (
-                    <tr key={model.model_key} className={model.selected ? "bg-canvas font-semibold" : ""}>
-                      <td className="px-3 py-2">
+                    <tr key={model.model_key} className={model.selected ? "bg-sage font-semibold" : ""}>
+                      <td>
                         {model.model}
                         {model.selected ? (
-                          <span className="ml-2 text-xs font-normal text-brand-800">{t.selectedPrototype}</span>
+                          <span className="ml-2 text-[15px] font-semibold text-brand-800">{t.selectedPrototype}</span>
                         ) : null}
                       </td>
                       <td className="px-3 py-2">{formatMetric(model.accuracy)}</td>

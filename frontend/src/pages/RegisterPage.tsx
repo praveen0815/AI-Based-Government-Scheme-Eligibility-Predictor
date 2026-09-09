@@ -84,19 +84,21 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto max-w-lg">
-      <div className="overflow-hidden rounded-[20px] border border-line bg-surface shadow-lift">
-        <div className="bg-navy-900 px-7 py-6 sm:px-9">
+    <div className="mx-auto max-w-5xl">
+      <div className="overflow-hidden rounded-[24px] border border-line bg-surface shadow-lift lg:grid lg:grid-cols-[0.92fr_1.08fr]">
+        <div className="bg-navy-900 px-8 py-10 text-white sm:px-10 lg:px-12 lg:py-14">
           <BrandMark inverted />
+          <p className="mt-8 font-display text-[28px] font-bold leading-snug sm:text-[32px]">{t.productTagline}</p>
+          <p className="mt-8 text-[16px] leading-relaxed text-[#D5DDD8]">{t.notOfficialService}</p>
         </div>
-        <div className="space-y-7 p-7 sm:p-9">
+        <div className="space-y-7 p-8 sm:p-10">
           <header className="space-y-3">
             <h1 className="page-title">{t.registerTitle}</h1>
-            <p className="text-[17px] leading-relaxed text-ink-500 sm:text-[18px]">{t.registerLead}</p>
+            <p className="body-copy">{t.registerLead}</p>
           </header>
           <ResearchNotice compact />
           {error ? <ErrorState message={error} /> : null}
-          <form onSubmit={handleSubmit} noValidate className="space-y-5">
+          <form onSubmit={handleSubmit} noValidate className="space-y-6">
             <FormField id="register-name" label={t.fullName} error={fieldErrors.fullName} required>
               <input
                 id="register-name"

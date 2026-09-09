@@ -55,7 +55,7 @@ export function CheckPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl space-y-10">
+    <div className="mx-auto max-w-4xl page-stack">
       <PageHeader title={t.checkTitle} description={t.checkDescription} />
       {isAuthenticated ? (
         <aside className="card-surface p-5 sm:p-6">

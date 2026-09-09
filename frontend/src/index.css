@@ -8,18 +8,18 @@
   }
 
   body {
-    @apply bg-canvas font-sans text-[17px] leading-relaxed text-ink-900 antialiased;
+    @apply bg-canvas font-sans text-[17px] leading-[1.7] text-ink-900 antialiased;
   }
 
   html[lang="ta"] body {
-    line-height: 1.75;
+    line-height: 1.8;
   }
 
   html[lang="ta"] h1,
   html[lang="ta"] h2,
   html[lang="ta"] h3,
   html[lang="ta"] h4 {
-    line-height: 1.4;
+    line-height: 1.45;
   }
 
   :focus-visible {
@@ -29,19 +29,19 @@
 
 @layer components {
   .field-input {
-    @apply w-full rounded-[14px] border border-line bg-surface px-4 py-3.5 text-[16px] text-ink-900 shadow-sm transition duration-150;
+    @apply w-full rounded-[14px] border border-line bg-surface px-4 py-3.5 text-[17px] leading-normal text-ink-900 shadow-sm transition duration-150;
   }
 
   .field-input:hover {
-    @apply border-slate-300;
+    @apply border-[#C5CDC7];
   }
 
   .field-input:focus {
-    @apply border-action outline-none ring-2 ring-action/15;
+    @apply border-action outline-none ring-2 ring-action/20;
   }
 
   .card-surface {
-    @apply rounded-[16px] border border-line bg-surface shadow-card;
+    @apply rounded-[18px] border border-line bg-surface shadow-card;
   }
 
   .hero-title {
@@ -49,15 +49,15 @@
   }
 
   .page-title {
-    @apply font-display text-[36px] font-extrabold tracking-tight text-ink-900 sm:text-[42px] lg:text-[48px] lg:leading-[1.15];
+    @apply font-display text-[40px] font-extrabold tracking-tight text-ink-900 sm:text-[44px] lg:text-[48px] lg:leading-[1.15];
   }
 
   .section-title {
-    @apply font-display text-[24px] font-bold tracking-tight text-ink-900 sm:text-[28px] lg:text-[32px];
+    @apply font-display text-[26px] font-bold tracking-tight text-ink-900 sm:text-[28px] lg:text-[32px];
   }
 
   .card-title {
-    @apply font-display text-[20px] font-semibold tracking-tight text-ink-900 sm:text-[22px];
+    @apply font-display text-[22px] font-semibold tracking-tight text-ink-900 sm:text-[24px];
   }
 
   .body-copy {
@@ -65,19 +65,51 @@
   }
 
   .field-label {
-    @apply text-[15px] font-semibold text-ink-900 sm:text-[16px];
+    @apply text-[16px] font-semibold text-ink-900 sm:text-[18px];
   }
 
   .btn-text {
-    @apply text-[16px] font-semibold;
+    @apply text-[16px] font-semibold leading-none;
+  }
+
+  .nav-label {
+    @apply text-[13px] font-bold uppercase tracking-[0.16em] text-[#8A958F];
+  }
+
+  .soft-link {
+    @apply text-[16px] font-semibold text-action underline-offset-2 hover:underline;
+  }
+
+  .chip-link {
+    @apply btn-text inline-flex items-center justify-center rounded-[12px] border border-line bg-surface px-5 py-3 text-ink-900 transition duration-150 hover:border-[#C5CDC7] hover:bg-sage;
+  }
+
+  .chip-link-primary {
+    @apply btn-text inline-flex items-center justify-center rounded-[12px] bg-action px-5 py-3 text-white shadow-sm transition duration-150 hover:bg-action-hover;
   }
 
   .notice-success {
-    @apply rounded-[14px] border border-emerald-200 bg-emerald-50 px-4 py-3 text-[16px] font-medium text-success;
+    @apply rounded-[14px] border border-emerald-200 bg-emerald-50 px-5 py-4 text-[16px] font-medium leading-relaxed text-success sm:text-[17px];
   }
 
   .notice-warning {
-    @apply rounded-[14px] border border-amber-200 bg-amber-50 px-5 py-4 text-[16px] leading-relaxed text-ink-700;
+    @apply rounded-[14px] border border-amber-200 bg-amber-50 px-5 py-4 text-[16px] leading-relaxed text-ink-700 sm:text-[17px];
+  }
+
+  .page-stack {
+    @apply space-y-10;
+  }
+
+  .data-table {
+    @apply min-w-full text-left text-[16px];
+  }
+
+  .data-table th {
+    @apply px-4 py-3 font-semibold text-ink-700;
+  }
+
+  .data-table td {
+    @apply px-4 py-3 align-top;
   }
 }
 
@@ -86,5 +118,26 @@
     .motion-safe\:animate-spin {
       animation: none;
     }
+  }
+}
+
+@keyframes voice-mic-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(23 107 82 / 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 18px rgb(23 107 82 / 0);
+  }
+}
+
+.voice-mic-listening {
+  animation: voice-mic-pulse 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-mic-listening {
+    animation: none;
+    box-shadow: 0 0 0 6px rgb(23 107 82 / 0.2);
   }
 }

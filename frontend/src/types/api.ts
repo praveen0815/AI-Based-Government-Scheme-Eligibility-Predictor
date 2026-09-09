@@ -512,9 +512,40 @@ export type NotificationType =
   | "profile_incomplete"
   | "document_attention"
   | "readiness_in_progress"
-  | "recommendation";
+  | "recommendation"
+  | "eligibility_incomplete"
+  | "application_status";
 
-export type NotificationFeature = "wallet" | "documents" | "readiness" | "history";
+export type NotificationFeature = "wallet" | "documents" | "readiness" | "history" | "applications";
+
+export type ApplicationStatus =
+  | "not_applied"
+  | "planning"
+  | "documents_ready"
+  | "applied"
+  | "under_review"
+  | "approved"
+  | "rejected";
+
+export interface ApplicationItem {
+  application_id: string;
+  scheme_id: string;
+  scheme_name: string;
+  department: string | null;
+  required_documents: string | null;
+  official_source_url: string | null;
+  status: ApplicationStatus;
+  application_date: string | null;
+  created_at: string;
+  updated_at: string;
+  disclaimer: string;
+}
+
+export interface ApplicationListResponse {
+  applications: ApplicationItem[];
+  count: number;
+  disclaimer: string;
+}
 
 export interface NotificationItem {
   notification_id: string;

@@ -35,7 +35,7 @@ function Timeline({ scheme }: { scheme: SchemeReadiness }) {
         return (
           <li
             key={stage}
-            className={`h-2 min-w-8 flex-1 rounded-full ${reached ? "bg-action" : "bg-canvas"}`}
+            className={`h-2 min-w-8 flex-1 rounded-full ${reached ? "bg-action" : "bg-sage"}`}
             aria-current={stage === scheme.stage ? "step" : undefined}
           />
         );
@@ -91,7 +91,7 @@ export function ReadinessPage() {
   const schemes = summary?.schemes ?? [];
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
+    <div className="mx-auto max-w-5xl page-stack">
       <PageHeader title={t.readinessTitle} description={t.readinessLead} />
       <ResearchNotice compact />
 
@@ -112,7 +112,7 @@ export function ReadinessPage() {
 
       {!loading && !error && schemes.length > 0 ? (
         <div className="space-y-5">
-          <p className="rounded-[12px] border border-line bg-canvas px-4 py-3 text-[16px] text-ink-700" role="note">
+          <p className="rounded-[12px] border border-line bg-sage px-4 py-3 text-[16px] text-ink-700" role="note">
             {t.readinessCompletedNote}
           </p>
           {schemes.map((scheme) => (
@@ -128,7 +128,7 @@ export function ReadinessPage() {
                 <div className="flex flex-wrap gap-2">
                   <Link
                     to={`/documents?scheme=${scheme.scheme_id}`}
-                    className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                    className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
                   >
                     {t.readinessDocumentsLink}
                   </Link>
@@ -137,7 +137,7 @@ export function ReadinessPage() {
                       href={scheme.official_source_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                      className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
                     >
                       {t.visitOfficialWebsite}
                     </a>
@@ -154,10 +154,10 @@ export function ReadinessPage() {
                       type="button"
                       disabled={savingId === scheme.scheme_id}
                       onClick={() => void handleStage(scheme.scheme_id, stage)}
-                      className={`rounded-full border px-3 py-1.5 text-[14px] font-semibold ${
+                      className={`rounded-full border px-3 py-1.5 text-[16px] font-semibold ${
                         scheme.stage === stage
-                          ? "border-action bg-[#E8F0FE] text-action"
-                          : "border-line bg-white text-ink-700 hover:bg-canvas"
+                          ? "border-action bg-[#E8F1EC] text-action"
+                          : "border-line bg-white text-ink-700 hover:bg-sage"
                       }`}
                     >
                       {stageLabel(stage, t)}

@@ -4,7 +4,7 @@ Final-year academic research prototype. Citizens store a socio-economic profile 
 
 The citizen portal is branded **Scheme Predictor** / **SchemeWise AI**. Predictions are research results only. They are not government approval, identity verification, or a final eligibility decision.
 
-This repository is at **Phase 30: final integration and demo readiness**. Phases 1–29 remain in place. No new ML algorithms, datasets, payment, Aadhaar, government APIs, or messaging services were added.
+This repository is at **Phase 43: final integration, QA, and demo-readiness**. Phases 1–38 remain in place. The Hybrid Rule + ML engine remains the only eligibility authority. Phase 43 adds regression coverage, compare empty-state handling, and clearer simulator temporary-copy labels. Authentication, eligibility scoring, and database schemas were not rewritten. No new ML algorithms, datasets, payment, Aadhaar, government application APIs, or messaging services were added.
 
 ## Stack
 
@@ -32,11 +32,11 @@ This repository is at **Phase 30: final integration and demo readiness**. Phases
 - `dataset/raw/schemes.csv` holds 13 official Tamil Nadu scheme rows. Six are CORE for ML.
 - Synthetic CORE citizens and rule-derived labels are in `dataset/raw/citizens.csv` and `dataset/processed/eligibility_dataset.csv`.
 - The selected prototype model is the Decision Tree at `ml/models/baseline/decision_tree.joblib`.
-- FastAPI exposes public prediction, recommendation, catalog, and evaluation APIs, plus JWT-protected wallet, history, documents, readiness, insights, notifications, settings, and system-evaluation routes.
-- The React portal covers the academic demo flow: Login → Dashboard → Wallet → Check Eligibility → hybrid results / Why this result? → History → Compare → PDF → Documents → Readiness → Insights → Notifications → System Evaluation.
+- FastAPI exposes public prediction, recommendation, catalog, and evaluation APIs, plus JWT-protected wallet, history, documents, readiness, insights, notifications, settings, system-evaluation, and application-tracking routes.
+- The React portal covers the academic demo flow: Login → Dashboard → Wallet → Check Eligibility → hybrid results / Why this result? → Eligibility Simulator → Applications → History → Compare → PDF → Documents → Readiness → Insights → Notifications → Voice Assistant → Schemes discovery → System Evaluation → Research Dashboard.
 - English and Tamil use the existing `useI18n()` dictionaries.
 
-See `docs/final_system_flow.md` for the complete architecture and user flow.
+See `docs/final_system_flow.md` for the complete architecture and user flow. Phase 43 QA notes are in `docs/phase43_results.md`.
 
 ## Setup
 
@@ -74,10 +74,6 @@ Copy `frontend/.env.example` to `frontend/.env` if needed. Default API base URL 
 docker run --name scheme-predictor-pg -e POSTGRES_USER=USERNAME -e POSTGRES_PASSWORD=PASSWORD -e POSTGRES_DB=scheme_predictor -p 5432:5432 -d postgres:16
 ```
 
-<<<<<<< HEAD
-2. Copy `backend/.env.example` to `backend/.env` and set `DATABASE_URL` and `JWT_SECRET_KEY`.
-3. Create tables:
-=======
 If Docker Desktop was stopped, start it and then:
 
 ```powershell
@@ -86,11 +82,9 @@ docker start scheme-predictor-pg
 
 Auth, Google sign-in, wallet, and history return HTTP 503 until this container is running. From the project root you can also use `docker compose up -d`.
 
-2. Create the application database if you installed PostgreSQL locally, for example `scheme_predictor`. Create a separate `scheme_predictor_test` database for automated tests.
-3. Copy `.env.example` to `.env` and set `DATABASE_URL` with your username and password:
-
+2. Copy `backend/.env.example` to `backend/.env` and set `DATABASE_URL` and `JWT_SECRET_KEY`. Do not commit `.env`.
+3. Create the application database if you installed PostgreSQL locally, for example `scheme_predictor`. Use a separate `scheme_predictor_test` database for automated tests.
 4. Install backend dependencies and create tables (this does not drop existing tables):
->>>>>>> ab6e8af (Update README to remove sensitive information)
 
 ```powershell
 cd backend
@@ -107,7 +101,7 @@ React citizen portal
  ↓
 FastAPI
  ↓
-JWT owner  →  PostgreSQL wallet / history / documents / readiness / notifications
+JWT owner  →  PostgreSQL wallet / history / documents / readiness / notifications / applications
  ↓
 Hybrid Rule Engine + Decision Tree
  ↓
@@ -118,7 +112,7 @@ Public routes include `/predict`, `/recommend`, `/schemes`, `/catalog`, `/evalua
 
 ## Phase status
 
-Phases 1–29 are complete. Phase 30 is the final integration and demo-readiness pass: navigation, login landing on Dashboard, unused duplicate UI cleanup, and documentation. Business logic, APIs, ML, and datasets were not rewritten.
+Phases 1–38 are complete. Phase 43 is the final QA and demo-readiness pass: protected-route coverage, JWT expiry (session clear, no refresh token), income voice CTA, wallet-safe simulation labels, and compare empty state. Business logic, ML, ranking, authentication implementation, and existing API contracts were not rewritten.
 
 Still out of scope:
 

@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/AppShell";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { RootRedirect } from "./components/RootRedirect";
 import { CheckPage } from "./pages/CheckPage";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
@@ -20,13 +21,18 @@ import { ReadinessPage } from "./pages/ReadinessPage";
 import { UploadsPage } from "./pages/UploadsPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { NotificationsPage } from "./pages/NotificationsPage";
+import { VoiceAssistantPage } from "./pages/VoiceAssistantPage";
 import { WalletPage } from "./pages/WalletPage";
+import { EligibilitySimulatorPage } from "./pages/EligibilitySimulatorPage";
+import { ApplicationsPage } from "./pages/ApplicationsPage";
+import { ResearchDashboardPage } from "./pages/ResearchDashboardPage";
 
 export default function App() {
   return (
     <AppShell>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<RootRedirect />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/check" element={<CheckPage />} />
         <Route path="/results" element={<ResultsPage />} />
         <Route
@@ -127,6 +133,38 @@ export default function App() {
           element={
             <ProtectedRoute>
               <NotificationsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/voice-assistant"
+          element={
+            <ProtectedRoute>
+              <VoiceAssistantPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/eligibility-simulator"
+          element={
+            <ProtectedRoute>
+              <EligibilitySimulatorPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/applications"
+          element={
+            <ProtectedRoute>
+              <ApplicationsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/research-dashboard"
+          element={
+            <ProtectedRoute>
+              <ResearchDashboardPage />
             </ProtectedRoute>
           }
         />

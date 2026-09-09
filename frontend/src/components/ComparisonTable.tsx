@@ -71,11 +71,11 @@ export function ComparisonTable({ schemes }: { schemes: ComparedScheme[] }) {
         <table className="min-w-full border-collapse text-left text-[16px]">
           <thead>
             <tr>
-              <th className="w-52 border-b border-line bg-canvas px-5 py-4 font-semibold text-ink-900">
+              <th className="w-52 border-b border-line bg-sage px-5 py-4 font-semibold text-ink-900">
                 {t.compareField}
               </th>
               {schemes.map((scheme) => (
-                <th key={scheme.scheme_id} className="border-b border-l border-line bg-canvas px-5 py-4 align-top">
+                <th key={scheme.scheme_id} className="border-b border-l border-line bg-sage px-5 py-4 align-top">
                   <p className="text-[18px] font-semibold text-ink-900">
                     <Link to={`/schemes/${scheme.scheme_id}`} className="hover:text-action hover:underline">
                       {scheme.scheme_name}
@@ -136,12 +136,12 @@ export function ComparisonTable({ schemes }: { schemes: ComparedScheme[] }) {
             <dl className="mt-5 space-y-4">
               {rows.map((row) => (
                 <div key={row.key}>
-                  <dt className="text-sm text-ink-500">{row.label}</dt>
+                  <dt className="text-[16px] text-ink-500">{row.label}</dt>
                   <dd className="text-ink-900">{row.render(scheme)}</dd>
                 </div>
               ))}
               <div>
-                <dt className="text-sm text-ink-500">{t.officialSourceField}</dt>
+                <dt className="text-[16px] text-ink-500">{t.officialSourceField}</dt>
                 <dd>
                   {scheme.official_source_url ? (
                     <a

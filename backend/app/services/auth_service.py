@@ -12,6 +12,7 @@ from app.db.session import DatabaseUnavailableError
 from app.models.citizen import CitizenProfileRecord
 from app.models.documents import DocumentChecklistProgressRecord
 from app.models.readiness import ApplicationReadinessRecord
+from app.models.applications import ApplicationTrackingRecord
 from app.models.history import RecommendationHistoryRecord
 from app.services.notification_service import delete_notifications_for_user
 from app.services.upload_service import delete_uploads_for_user
@@ -192,6 +193,9 @@ def delete_account(session: Session, user: UserRecord) -> None:
         ).delete(synchronize_session=False)
         session.query(ApplicationReadinessRecord).filter(
             ApplicationReadinessRecord.user_id == user.id
+        ).delete(synchronize_session=False)
+        session.query(ApplicationTrackingRecord).filter(
+            ApplicationTrackingRecord.user_id == user.id
         ).delete(synchronize_session=False)
         delete_uploads_for_user(session, user.id)
         delete_notifications_for_user(session, user.id)

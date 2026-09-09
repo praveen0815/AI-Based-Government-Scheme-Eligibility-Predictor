@@ -1,5 +1,6 @@
 """SQLAlchemy models."""
 
+from app.models.applications import ApplicationTrackingRecord
 from app.models.citizen import CitizenProfileRecord
 from app.models.documents import DocumentChecklistProgressRecord
 from app.models.history import RecommendationHistoryRecord
@@ -10,6 +11,7 @@ from app.models.user import UserRecord
 
 __all__ = [
     "ApplicationReadinessRecord",
+    "ApplicationTrackingRecord",
     "CitizenProfileRecord",
     "DocumentChecklistProgressRecord",
     "NotificationRecord",

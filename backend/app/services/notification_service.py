@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 
 from app.db.session import DatabaseUnavailableError
 from app.models.notifications import NotificationRecord
+from app.models.applications import ApplicationTrackingRecord
 from app.schemas.notifications import (
     NOTIFICATION_DISCLAIMER,
     NotificationItem,
@@ -56,6 +57,8 @@ def _href(feature: RelatedFeature, related_id: str | None) -> str:
         return f"/documents?scheme={related_id}" if related_id else "/documents"
     if feature == "readiness":
         return "/readiness"
+    if feature == "applications":
+        return "/applications"
     if related_id:
         return f"/history/{related_id}"
     return "/history"
@@ -109,6 +112,22 @@ def _desired_reminders(session: Session, user_id: str) -> list[_Desired]:
                     message=(
                         f"Your research-prototype profile is {completeness.percentage}% complete. "
                         "Missing fields are not a government requirement."
+                    ),
+                    related_feature="wallet",
+                    related_id=None,
+                    href="/wallet",
+                    count=completeness.total_fields - completeness.completed_fields,
+                )
+            )
+            desired.append(
+                _Desired(
+                    source_key="eligibility_incomplete",
+                    source_version=f"incomplete:{completeness.percentage}",
+                    type="eligibility_incomplete",
+                    title="Eligibility cannot be fully evaluated",
+                    message=(
+                        "Your saved profile is missing information required to fully "
+                        "evaluate some schemes. This is not a government requirement."
                     ),
                     related_feature="wallet",
                     related_id=None,
@@ -187,6 +206,33 @@ def _desired_reminders(session: Session, user_id: str) -> list[_Desired]:
                 related_id=latest.id,
                 href=_href("history", latest.id),
                 count=latest.recommendation_count,
+            )
+        )
+
+    try:
+        tracked = (
+            session.query(ApplicationTrackingRecord)
+            .filter(ApplicationTrackingRecord.user_id == user_id)
+            .count()
+        )
+    except (OperationalError, InterfaceError) as exc:
+        raise DatabaseUnavailableError("The notifications database is unavailable.") from exc
+    if tracked:
+        desired.append(
+            _Desired(
+                source_key="applications",
+                source_version=f"count:{tracked}",
+                type="application_status",
+                title="Review your application tracking",
+                message=(
+                    f"You are tracking {tracked} scheme"
+                    f"{'' if tracked == 1 else 's'} in this research prototype. "
+                    "This is not a government application update."
+                ),
+                related_feature="applications",
+                related_id=None,
+                href="/applications",
+                count=tracked,
             )
         )
     return desired

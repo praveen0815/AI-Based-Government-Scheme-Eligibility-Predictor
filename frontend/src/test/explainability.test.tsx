@@ -68,11 +68,49 @@ describe("explainable recommendation view", () => {
     });
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: /Why this result/ }));
-    expect(screen.getByText("Occupation")).toBeInTheDocument();
+    expect(screen.getAllByText(/Occupation/).length).toBeGreaterThan(0);
     expect(
       screen.getByText(/They are not instructions to change personal information to become eligible/),
     ).toBeInTheDocument();
     expect(screen.queryByText(/government approved/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/guaranteed/i)).not.toBeInTheDocument();
+  });
+
+  it("explains a not-eligible evaluated scheme from the existing response", async () => {
+    const result: RecommendResponse = {
+      ...recommendResponse([SAMPLE_SCHEME]),
+      evaluated_schemes: [
+        {
+          scheme_id: "TN-SW-099",
+          scheme_name: "Example Not Eligible Scheme",
+          prediction: "not_eligible",
+          eligible_probability: 0.1,
+          not_eligible_probability: 0.9,
+          reason: "Age requirement not satisfied",
+          rule_eligible: false,
+          ml_prediction: "not_eligible",
+          agreement: true,
+        },
+      ],
+    };
+    renderApp(["/results"], { profile: VALID_PROFILE, result });
+    expect(screen.getByRole("heading", { name: "Not predicted eligible" })).toBeInTheDocument();
+    expect(screen.getByText("Example Not Eligible Scheme")).toBeInTheDocument();
+    const user = userEvent.setup();
+    await user.click(screen.getAllByRole("button", { name: /Why this result/ })[1]);
+    expect(screen.getByText("Age requirement not satisfied")).toBeInTheDocument();
+    expect(screen.getByText("Decision summary")).toBeInTheDocument();
+    expect(screen.queryByText(/add this information to become eligible/i)).not.toBeInTheDocument();
+  });
+
+  it("shows cannot-fully-evaluate copy for incomplete profile fields", () => {
+    renderApp(["/results"], {
+      profile: { ...VALID_PROFILE, occupation_category: "" as never },
+      result: recommendResponse([SAMPLE_SCHEME]),
+    });
+    expect(screen.getByRole("heading", { name: "Cannot be fully evaluated" })).toBeInTheDocument();
+    expect(screen.getAllByText("This information is required to fully evaluate this scheme.").length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Occupation/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/add this information to become eligible/i)).not.toBeInTheDocument();
   });
 });

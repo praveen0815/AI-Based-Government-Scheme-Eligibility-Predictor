@@ -77,7 +77,7 @@ export function NotificationsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
+    <div className="mx-auto max-w-5xl page-stack">
       <PageHeader title={t.notificationsTitle} description={t.notificationsLead} />
       <ResearchNotice compact />
 
@@ -132,7 +132,7 @@ export function NotificationsPage() {
                         type="button"
                         disabled={busyId === item.notification_id}
                         onClick={() => void handleRead(item.notification_id)}
-                        className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas disabled:opacity-60"
+                        className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage disabled:opacity-60"
                       >
                         {t.notificationsMarkRead}
                       </button>
@@ -141,7 +141,7 @@ export function NotificationsPage() {
                       type="button"
                       disabled={busyId === item.notification_id}
                       onClick={() => void handleDismiss(item.notification_id)}
-                      className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas disabled:opacity-60"
+                      className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage disabled:opacity-60"
                     >
                       {t.notificationsDismiss}
                     </button>

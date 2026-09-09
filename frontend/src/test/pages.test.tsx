@@ -17,7 +17,7 @@ async function fillValidForm() {
 
 describe("citizen portal", () => {
   it("loads the home page", () => {
-    renderApp(["/"]);
+    renderApp(["/home"]);
     expect(
       screen.getByRole("heading", { name: "Welcome 👋" }),
     ).toBeInTheDocument();

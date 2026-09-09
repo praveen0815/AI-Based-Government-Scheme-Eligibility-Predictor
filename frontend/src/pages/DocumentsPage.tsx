@@ -35,7 +35,7 @@ function ProgressBar({ percent, label }: { percent: number; label: string }) {
         <p className="text-[16px] font-semibold text-ink-900">{label}</p>
         <p className="text-[16px] font-semibold text-action">{percent}%</p>
       </div>
-      <div className="mt-3 h-3 overflow-hidden rounded-full bg-canvas" role="progressbar" aria-valuenow={percent} aria-valuemin={0} aria-valuemax={100}>
+      <div className="mt-3 h-3 overflow-hidden rounded-full bg-sage" role="progressbar" aria-valuenow={percent} aria-valuemin={0} aria-valuemax={100}>
         <div className="h-full rounded-full bg-action transition-[width] duration-200" style={{ width: `${percent}%` }} />
       </div>
     </div>
@@ -136,7 +136,7 @@ export function DocumentsPage() {
   const reminderItems = checklist?.items.filter((item) => item.source === "project_reminder") ?? [];
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
+    <div className="mx-auto max-w-5xl page-stack">
       <PageHeader title={t.documentsTitle} description={t.documentsLead} />
       <ResearchNotice compact />
 
@@ -170,14 +170,14 @@ export function DocumentsPage() {
                     type="button"
                     onClick={() => setSearchParams({ scheme: scheme.scheme_id })}
                     className={`rounded-[12px] border px-4 py-4 text-left transition duration-150 ${
-                      active ? "border-action bg-[#E8F0FE]" : "border-line bg-white hover:bg-canvas"
+                      active ? "border-action bg-[#E8F1EC]" : "border-line bg-white hover:bg-sage"
                     }`}
                   >
                     <p className="text-[17px] font-semibold text-ink-900">{scheme.scheme_name}</p>
                     <p className="mt-2 text-[15px] text-ink-500">
                       {t.documentsPreparationProgress}: {scheme.progress_percent}%
                     </p>
-                    <p className="mt-1 text-[14px] text-ink-500">
+                    <p className="mt-1 text-[16px] text-ink-500">
                       {t.uploadsOptionalEvidence}: {uploads.filter((item) => item.scheme_id === scheme.scheme_id).length}
                     </p>
                   </button>
@@ -203,7 +203,7 @@ export function DocumentsPage() {
                     href={checklist.official_source_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                    className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
                   >
                     {t.visitOfficialWebsite}
                   </a>
@@ -211,7 +211,7 @@ export function DocumentsPage() {
               </div>
 
               <ProgressBar percent={checklist.progress_percent} label={t.documentsPreparationProgress} />
-              <div className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+              <div className="rounded-[12px] border border-line bg-sage px-4 py-4">
                 <p className="text-[16px] font-semibold text-ink-900">{t.uploadsOptionalEvidence}</p>
                 <p className="mt-2 text-[16px] text-ink-700">
                   {t.uploadsCount(uploads.filter((item) => item.scheme_id === checklist.scheme_id).length)}
@@ -219,7 +219,7 @@ export function DocumentsPage() {
                 <p className="mt-2 text-[15px] text-ink-500">{t.uploadsOptionalNote}</p>
                 <Link
                   to="/uploads"
-                  className="mt-3 inline-flex items-center justify-center rounded-[12px] border border-line bg-white px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                  className="mt-3 inline-flex items-center justify-center rounded-[12px] border border-line bg-white px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
                 >
                   {t.uploadsManageForScheme}
                 </Link>
@@ -229,7 +229,7 @@ export function DocumentsPage() {
               </p>
 
               {checklist.documents_need_verification ? (
-                <p className="rounded-[12px] border border-line bg-canvas px-4 py-3 text-[16px] text-ink-700" role="status">
+                <p className="rounded-[12px] border border-line bg-sage px-4 py-3 text-[16px] text-ink-700" role="status">
                   {t.documentsNeedsOfficialVerification}
                 </p>
               ) : null}
@@ -246,10 +246,10 @@ export function DocumentsPage() {
                           type="button"
                           disabled={savingKey === item.item_key}
                           onClick={() => void handleStatus(item.item_key, status)}
-                          className={`rounded-full border px-3 py-1.5 text-[14px] font-semibold ${
+                          className={`rounded-full border px-3 py-1.5 text-[16px] font-semibold ${
                             item.status === status
-                              ? "border-action bg-[#E8F0FE] text-action"
-                              : "border-line bg-white text-ink-700 hover:bg-canvas"
+                              ? "border-action bg-[#E8F1EC] text-action"
+                              : "border-line bg-white text-ink-700 hover:bg-sage"
                           }`}
                         >
                           {statusLabel(status, t)}
@@ -275,10 +275,10 @@ export function DocumentsPage() {
                             type="button"
                             disabled={savingKey === item.item_key}
                             onClick={() => void handleStatus(item.item_key, status)}
-                            className={`rounded-full border px-3 py-1.5 text-[14px] font-semibold ${
+                            className={`rounded-full border px-3 py-1.5 text-[16px] font-semibold ${
                               item.status === status
-                                ? "border-action bg-[#E8F0FE] text-action"
-                                : "border-line bg-white text-ink-700 hover:bg-canvas"
+                                ? "border-action bg-[#E8F1EC] text-action"
+                                : "border-line bg-white text-ink-700 hover:bg-sage"
                             }`}
                           >
                             {statusLabel(status, t)}

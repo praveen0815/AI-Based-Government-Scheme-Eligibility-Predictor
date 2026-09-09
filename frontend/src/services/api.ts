@@ -26,6 +26,9 @@ import type {
   SupportingUploadListResponse,
   NotificationItem,
   NotificationListResponse,
+  ApplicationItem,
+  ApplicationListResponse,
+  ApplicationStatus,
   RecommendResponse,
   RecommendationHistoryItem,
   RecommendationHistoryListResponse,
@@ -323,6 +326,39 @@ export async function fetchReadinessProgress(): Promise<ReadinessProgressRespons
 
 export async function fetchDashboardOverview(): Promise<DashboardOverviewResponse> {
   return requestJson<DashboardOverviewResponse>("/api/v1/dashboard");
+}
+
+export async function fetchApplications(): Promise<ApplicationListResponse> {
+  return requestJson<ApplicationListResponse>("/api/v1/applications");
+}
+
+export async function createApplication(
+  schemeId: string,
+  status: ApplicationStatus = "planning",
+  applicationDate?: string | null,
+): Promise<ApplicationItem> {
+  return requestJson<ApplicationItem>("/api/v1/applications", {
+    method: "POST",
+    body: JSON.stringify({
+      scheme_id: schemeId,
+      status,
+      application_date: applicationDate || null,
+    }),
+  });
+}
+
+export async function updateApplication(
+  applicationId: string,
+  payload: { status?: ApplicationStatus; application_date?: string | null },
+): Promise<ApplicationItem> {
+  return requestJson<ApplicationItem>(`/api/v1/applications/${applicationId}`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function deleteApplication(applicationId: string): Promise<void> {
+  await requestNoContent(`/api/v1/applications/${applicationId}`, { method: "DELETE" });
 }
 
 export async function fetchNotifications(): Promise<NotificationListResponse> {

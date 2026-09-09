@@ -11,7 +11,7 @@ import { Button } from "../components/ui/Button";
 import { useAuth } from "../context/AuthContext";
 import { useI18n } from "../context/LanguageContext";
 import { ApiError, loginAccount, loginWithGoogle } from "../services/api";
-import { peekAccountDeleted } from "../utils/authStorage";
+import { consumeAccountDeleted } from "../utils/authStorage";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -25,10 +25,10 @@ export function LoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const registered = searchParams.get("registered") === "1";
+  const [accountDeleted] = useState(
+    () => searchParams.get("accountDeleted") === "1" || consumeAccountDeleted(),
+  );
 
-  if (peekAccountDeleted()) {
-    return <Navigate to="/?accountDeleted=1" replace />;
-  }
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -83,15 +83,17 @@ export function LoginPage() {
   }
 
   return (
-    <div className="mx-auto max-w-lg">
-      <div className="overflow-hidden rounded-[20px] border border-line bg-surface shadow-lift">
-        <div className="bg-navy-900 px-7 py-6 sm:px-9">
+    <div className="mx-auto max-w-5xl">
+      <div className="overflow-hidden rounded-[24px] border border-line bg-surface shadow-lift lg:grid lg:grid-cols-[0.92fr_1.08fr]">
+        <div className="bg-navy-900 px-8 py-10 text-white sm:px-10 lg:px-12 lg:py-14">
           <BrandMark inverted />
+          <p className="mt-8 font-display text-[28px] font-bold leading-snug sm:text-[32px]">{t.productTagline}</p>
+          <p className="mt-8 text-[16px] leading-relaxed text-[#D5DDD8]">{t.notOfficialService}</p>
         </div>
-        <div className="space-y-7 p-7 sm:p-9">
+        <div className="space-y-7 p-8 sm:p-10">
           <header className="space-y-3">
             <h1 className="page-title">{t.loginTitle}</h1>
-            <p className="text-[17px] leading-relaxed text-ink-500 sm:text-[18px]">{t.loginLead}</p>
+            <p className="body-copy">{t.loginLead}</p>
           </header>
           <ResearchNotice compact />
           {registered ? (
@@ -99,8 +101,13 @@ export function LoginPage() {
               {t.accountCreated}
             </p>
           ) : null}
+          {accountDeleted ? (
+            <p className="notice-success" role="status">
+              {t.accountDeleted}
+            </p>
+          ) : null}
           {error ? <ErrorState message={error} /> : null}
-          <form onSubmit={handleSubmit} noValidate className="space-y-5">
+          <form onSubmit={handleSubmit} noValidate className="space-y-6">
             <FormField id="login-email" label={t.email} error={fieldErrors.email} required>
               <input
                 id="login-email"
