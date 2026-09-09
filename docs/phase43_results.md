@@ -102,9 +102,10 @@ cd ..\backend
 
 Recorded in this pass:
 
-- Frontend: see the command output in the Phase 43 run (includes `phase43-readiness.test.tsx`).
-- `npx tsc -b` and `npm run build` must be clean.
-- Backend unittest via `.venv`; ownership tests skip without PostgreSQL.
+- Frontend `npm test`: 25 files, 209 tests passed (includes `phase43-readiness.test.tsx` with the expired-JWT/401 login redirect, voice income CTA, simulator immutability, compare empty state, and existing module suites).
+- `npx tsc -b`: clean.
+- `npm run build`: production bundle succeeded.
+- Backend `python -m unittest discover -s tests -q` via `backend\.venv`: 171 tests, 38 skipped (PostgreSQL ownership). System Python 3.13 is not used.
 
 ## Limitations
 
