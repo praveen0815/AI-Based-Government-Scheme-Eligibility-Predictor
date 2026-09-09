@@ -16,7 +16,7 @@ export function ProfileCompletenessCard({
 
   return (
     <section className="card-surface p-7 md:p-8" aria-labelledby="completeness-title">
-      <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-accent">{t.completenessTitle}</p>
+      <p className="text-[15px] font-semibold uppercase tracking-[0.1em] text-accent">{t.completenessTitle}</p>
       <h2 id="completeness-title" className="section-title mt-3">
         {t.completenessPercent(percent)}
       </h2>
@@ -24,7 +24,7 @@ export function ProfileCompletenessCard({
         {t.completenessFields(completeness.completed_fields, completeness.total_fields)}
       </p>
       <div
-        className="mt-5 h-3 overflow-hidden rounded-full bg-canvas"
+        className="mt-5 h-3 overflow-hidden rounded-full bg-sage"
         role="progressbar"
         aria-valuemin={0}
         aria-valuemax={100}

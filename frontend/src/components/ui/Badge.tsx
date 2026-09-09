@@ -1,17 +1,18 @@
 import type { ReactNode } from "react";
 
-type Tone = "brand" | "success" | "warning" | "muted";
+type Tone = "brand" | "success" | "warning" | "muted" | "danger";
 
 const tones: Record<Tone, string> = {
-  brand: "bg-navy-900/5 text-navy-800",
+  brand: "bg-sage text-navy-800",
   success: "bg-emerald-50 text-success",
   warning: "bg-amber-50 text-warning",
-  muted: "bg-slate-100 text-ink-500",
+  muted: "bg-[#EEF1ED] text-ink-700",
+  danger: "bg-red-50 text-red-800",
 };
 
 export function Badge({ tone = "brand", children }: { tone?: Tone; children: ReactNode }) {
   return (
-    <span className={`inline-flex rounded-full px-3 py-1 text-[13px] font-semibold tracking-wide ${tones[tone]}`}>
+    <span className={`inline-flex rounded-full px-3.5 py-1.5 text-[15px] font-semibold tracking-wide ${tones[tone]}`}>
       {children}
     </span>
   );

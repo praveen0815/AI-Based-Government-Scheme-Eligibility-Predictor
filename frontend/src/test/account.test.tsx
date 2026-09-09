@@ -128,7 +128,7 @@ describe("account settings", () => {
     ).toBe(true);
   });
 
-  it("deletes the account after confirmation and returns home", async () => {
+  it("deletes the account after confirmation and returns to login", async () => {
     vi.stubGlobal("fetch", mockAccountFetch(PASSWORD_USER));
     renderAuthenticatedApp(["/settings"]);
     expect(await screen.findByRole("button", { name: "Delete Account" })).toBeInTheDocument();
@@ -136,7 +136,7 @@ describe("account settings", () => {
     await user.click(screen.getByRole("button", { name: "Delete Account" }));
     expect(screen.getByText("Delete this account and its associated application data?")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Yes, delete my account" }));
-    expect(await screen.findByRole("heading", { name: "Welcome 👋" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent(
       "Your account was deleted. You can create a new research prototype account at any time.",
     );

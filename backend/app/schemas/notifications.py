@@ -11,9 +11,11 @@ NotificationType = Literal[
     "document_attention",
     "readiness_in_progress",
     "recommendation",
+    "eligibility_incomplete",
+    "application_status",
 ]
 
-RelatedFeature = Literal["wallet", "documents", "readiness", "history"]
+RelatedFeature = Literal["wallet", "documents", "readiness", "history", "applications"]
 
 NOTIFICATION_DISCLAIMER = (
     "These reminders are generated from your research-prototype activity only. "

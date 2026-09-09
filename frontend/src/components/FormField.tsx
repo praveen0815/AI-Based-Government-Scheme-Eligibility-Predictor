@@ -14,7 +14,7 @@ export function FormField({ id, label, hint, error, required, children }: FormFi
   const errorId = error ? `${id}-error` : undefined;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       <div className="flex items-center gap-1">
         <label htmlFor={id} className="field-label block">
           {label}
@@ -26,13 +26,13 @@ export function FormField({ id, label, hint, error, required, children }: FormFi
         ) : null}
       </div>
       {hint ? (
-        <p id={hintId} className="text-[15px] text-ink-500">
+        <p id={hintId} className="text-[16px] leading-relaxed text-ink-500">
           {hint}
         </p>
       ) : null}
       {children}
       {error ? (
-        <p id={errorId} className="text-[14px] text-danger" role="alert">
+        <p id={errorId} className="text-[16px] font-medium text-danger" role="alert">
           {error}
         </p>
       ) : null}

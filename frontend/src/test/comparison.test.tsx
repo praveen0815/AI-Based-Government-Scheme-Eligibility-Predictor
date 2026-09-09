@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { CompareResponse } from "../types/api";
@@ -90,6 +90,22 @@ describe("scheme comparison and PDF report", () => {
     expect(boxes[0]).toBeChecked();
     expect(boxes[1]).toBeChecked();
     expect(boxes[2]).toBeChecked();
+  });
+
+  it("shows an empty state when Compare is opened without a scheme selection", () => {
+    renderAuthenticatedApp(["/compare"], {
+      profile: VALID_PROFILE,
+      result: recommendResponse([SAMPLE_SCHEME, SECOND_SCHEME]),
+    });
+    expect(screen.getByRole("heading", { name: "Select two or three schemes to compare" })).toBeInTheDocument();
+    const empty = screen.getByRole("heading", { name: "Select two or three schemes to compare" }).closest("section");
+    expect(empty).not.toBeNull();
+    expect(within(empty as HTMLElement).getByRole("link", { name: "Back to recommendations" })).toHaveAttribute(
+      "href",
+      "/results",
+    );
+    expect(within(empty as HTMLElement).getByRole("link", { name: "Schemes" })).toHaveAttribute("href", "/schemes");
+    expect(screen.queryByRole("heading", { name: "Your Results" })).not.toBeInTheDocument();
   });
 
   it("loads comparison from the backend and does not treat status as government approval", async () => {

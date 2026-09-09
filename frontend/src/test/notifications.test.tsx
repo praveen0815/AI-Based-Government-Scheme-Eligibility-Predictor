@@ -134,6 +134,50 @@ describe("notifications page", () => {
     ).toBeInTheDocument();
   });
 
+  it("renders eligibility and application reminder categories", async () => {
+    vi.stubGlobal(
+      "fetch",
+      mockNotificationsFetch({
+        notifications: [
+          {
+            notification_id: "note-elig",
+            type: "eligibility_incomplete",
+            title: "Eligibility cannot be fully evaluated",
+            message: "3 profile fields are required to fully evaluate some schemes.",
+            related_feature: "wallet",
+            related_id: null,
+            href: "/wallet",
+            is_read: false,
+            created_at: "2026-09-08T10:00:00+00:00",
+            count: 3,
+          },
+          {
+            notification_id: "note-app",
+            type: "application_status",
+            title: "Review your saved schemes",
+            message: "You are tracking 1 scheme in this research prototype.",
+            related_feature: "applications",
+            related_id: null,
+            href: "/applications",
+            is_read: true,
+            created_at: "2026-09-08T09:00:00+00:00",
+            count: 1,
+          },
+        ],
+        unread_count: 1,
+        disclaimer: "These reminders are generated from your research-prototype activity only.",
+      }),
+    );
+    renderAuthenticatedApp(["/notifications"]);
+    expect(await screen.findByRole("heading", { name: "Eligibility cannot be fully evaluated" })).toBeInTheDocument();
+    expect(screen.getAllByText("Eligibility").length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: "Applications" })).toHaveAttribute("href", "/applications");
+    expect(screen.getByText("3 profile fields are required to fully evaluate some schemes.")).toBeInTheDocument();
+    expect(screen.getByText("You are tracking 1 scheme in this research prototype.")).toBeInTheDocument();
+    expect(screen.getByText("Unread")).toBeInTheDocument();
+    expect(screen.getByText("Read")).toBeInTheDocument();
+  });
+
   it("shows Tamil copy on the notifications page", async () => {
     vi.stubGlobal("fetch", mockNotificationsFetch(EMPTY_LIST));
     renderApp(["/notifications"], {

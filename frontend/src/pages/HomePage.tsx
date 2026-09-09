@@ -18,17 +18,23 @@ import { consumeAccountDeleted } from "../utils/authStorage";
 
 function CivicHero() {
   return (
-    <svg viewBox="0 0 420 280" className="h-auto w-full max-w-lg" role="img" aria-hidden="true">
-      <rect x="0" y="0" width="420" height="280" rx="24" fill="#12243F" />
-      <circle cx="352" cy="48" r="22" fill="#F8E3A3" opacity="0.9" />
-      <rect x="86" y="78" width="248" height="128" rx="16" fill="#FFFFFF" />
-      <rect x="114" y="108" width="52" height="64" rx="8" fill="#315CF6" opacity="0.18" />
-      <rect x="184" y="108" width="52" height="64" rx="8" fill="#0F9F8F" opacity="0.2" />
-      <rect x="254" y="108" width="52" height="64" rx="8" fill="#315CF6" opacity="0.12" />
-      <rect x="114" y="186" width="192" height="8" rx="4" fill="#E2E8F0" />
-      <circle cx="78" cy="228" r="16" fill="#C7D2FE" />
-      <circle cx="112" cy="226" r="14" fill="#FDE68A" />
-      <circle cx="144" cy="230" r="12" fill="#BBF7D0" />
+    <svg viewBox="0 0 460 300" className="h-auto w-full max-w-lg" role="img" aria-hidden="true">
+      <rect x="0" y="0" width="460" height="300" rx="28" fill="#0F4D3A" />
+      <rect x="28" y="28" width="404" height="52" rx="16" fill="#0A2E24" />
+      <circle cx="58" cy="54" r="10" fill="#C49A4A" />
+      <rect x="80" y="44" width="120" height="10" rx="5" fill="#DDE3DE" />
+      <rect x="80" y="60" width="72" height="8" rx="4" fill="#66736D" />
+      <rect x="48" y="104" width="118" height="156" rx="18" fill="#FFFFFF" />
+      <rect x="68" y="124" width="78" height="10" rx="5" fill="#0F4D3A" />
+      <rect x="68" y="148" width="78" height="8" rx="4" fill="#DDE3DE" />
+      <rect x="68" y="168" width="54" height="8" rx="4" fill="#DDE3DE" />
+      <rect x="68" y="208" width="78" height="28" rx="8" fill="#176B52" />
+      <rect x="182" y="104" width="230" height="72" rx="18" fill="#FFFFFF" />
+      <rect x="202" y="124" width="88" height="10" rx="5" fill="#C49A4A" />
+      <rect x="202" y="146" width="150" height="8" rx="4" fill="#DDE3DE" />
+      <rect x="182" y="192" width="110" height="68" rx="16" fill="#FFFFFF" />
+      <rect x="314" y="192" width="98" height="68" rx="16" fill="#FFFFFF" />
+      <circle cx="400" cy="56" r="16" fill="#E8D5A3" />
     </svg>
   );
 }
@@ -42,43 +48,37 @@ export function HomePage() {
   );
 
   return (
-    <div className="space-y-10">
+    <div className="page-stack">
       {accountDeleted ? (
         <p className="notice-success" role="status">
           {t.accountDeleted}
         </p>
       ) : null}
 
-      <section className="overflow-hidden rounded-[24px] bg-navy-900 px-6 py-10 text-white shadow-lift sm:px-10 sm:py-12 lg:px-14">
-        <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-          <div className="space-y-6">
-            <p className="inline-flex rounded-full bg-white/10 px-3 py-1 text-[13px] font-semibold uppercase tracking-[0.14em] text-sky-200">
+      <section className="overflow-hidden rounded-[28px] bg-navy-900 px-6 py-12 text-white shadow-lift sm:px-10 sm:py-14 lg:px-14">
+        <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="space-y-7">
+            <p className="inline-flex rounded-full bg-white/10 px-4 py-1.5 text-[15px] font-semibold uppercase tracking-[0.14em] text-[#E4D4A8]">
               {t.homePrototype}
             </p>
             <h1 className="hero-title">{t.homeTitle}</h1>
-            <p className="max-w-2xl font-display text-[22px] font-semibold leading-snug text-slate-100 md:text-[24px]">
+            <p className="max-w-2xl font-display text-[22px] font-semibold leading-snug text-[#F7F6F1] md:text-[26px]">
               {t.homeLead}
             </p>
-            <p className="max-w-2xl text-[17px] leading-relaxed text-slate-300 sm:text-[18px]">{t.homeCheckLead}</p>
+            <p className="max-w-2xl text-[17px] leading-relaxed text-[#D8E0DB] sm:text-[18px]">{t.homeCheckLead}</p>
             <div className="flex flex-col gap-3 sm:flex-row">
               {isAuthenticated ? (
-                <Link
-                  to="/dashboard"
-                  className="btn-text inline-flex items-center justify-center rounded-[12px] bg-action px-6 py-3.5 text-white shadow-sm transition duration-150 hover:bg-action-hover"
-                >
+                <Link to="/dashboard" className="chip-link-primary min-h-12 px-7 py-4">
                   {t.homeGoToDashboard}
                 </Link>
               ) : (
-                <Link
-                  to="/check"
-                  className="btn-text inline-flex items-center justify-center rounded-[12px] bg-action px-6 py-3.5 text-white shadow-sm transition duration-150 hover:bg-action-hover"
-                >
+                <Link to="/check" className="chip-link-primary min-h-12 px-7 py-4">
                   {t.homeStartCheck}
                 </Link>
               )}
               <Link
                 to={isAuthenticated ? "/check" : "/wallet"}
-                className="btn-text inline-flex items-center justify-center rounded-[12px] border border-white/20 bg-white/5 px-6 py-3.5 text-white transition duration-150 hover:bg-white/10"
+                className="btn-text inline-flex min-h-12 items-center justify-center rounded-[12px] border border-white/20 bg-white/5 px-7 py-4 text-white transition duration-150 hover:bg-white/10"
               >
                 {isAuthenticated ? t.homeStartCheck : t.homeWallet}
               </Link>
@@ -88,79 +88,76 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="card-surface grid gap-8 p-6 md:grid-cols-[1.2fr_0.8fr] md:p-8">
-        <div className="space-y-4">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-[14px] bg-action/10 text-action">
+      <section className="card-surface grid gap-8 p-7 md:grid-cols-[1.2fr_0.8fr] md:p-10">
+        <div className="space-y-5">
+          <span className="inline-flex h-14 w-14 items-center justify-center rounded-[16px] bg-action/10 text-action">
             <ClipboardIcon />
           </span>
           <h2 className="section-title">{t.homeCheckTitle}</h2>
-          <p className="text-[17px] leading-relaxed text-ink-500 sm:text-[18px]">{t.homeCheckLead}</p>
-          <Link
-            to="/check"
-            className="btn-text inline-flex items-center justify-center rounded-[12px] bg-navy-900 px-6 py-3.5 text-white shadow-sm transition duration-150 hover:bg-navy-800"
-          >
+          <p className="body-copy">{t.homeCheckLead}</p>
+          <Link to="/check" className="chip-link-primary bg-navy-900 hover:bg-navy-800">
             {t.homeStartCheck}
           </Link>
         </div>
-        <ul className="space-y-4">
-          <li className="flex gap-3">
-            <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-emerald-50 text-accent">
+        <ul className="space-y-5">
+          <li className="flex gap-4">
+            <span className="mt-0.5 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-emerald-50 text-accent">
               <CheckIcon />
             </span>
             <div>
-              <p className="text-[18px] font-semibold text-ink-900">{t.homeSecure}</p>
-              <p className="text-[16px] text-ink-500 sm:text-[17px]">{t.homeSecureText}</p>
+              <p className="text-[20px] font-semibold text-ink-900">{t.homeSecure}</p>
+              <p className="mt-1 text-[16px] leading-relaxed text-ink-500 sm:text-[17px]">{t.homeSecureText}</p>
             </div>
           </li>
-          <li className="flex gap-3">
-            <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-indigo-50 text-action">
+          <li className="flex gap-4">
+            <span className="mt-0.5 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-sage text-action">
               <SparkIcon />
             </span>
             <div>
-              <p className="text-[18px] font-semibold text-ink-900">{t.homeAiPowered}</p>
-              <p className="text-[16px] text-ink-500 sm:text-[17px]">{t.homeAiPoweredText}</p>
+              <p className="text-[20px] font-semibold text-ink-900">{t.homeAiPowered}</p>
+              <p className="mt-1 text-[16px] leading-relaxed text-ink-500 sm:text-[17px]">{t.homeAiPoweredText}</p>
             </div>
           </li>
-          <li className="flex gap-3">
-            <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-amber-50 text-warning">
+          <li className="flex gap-4">
+            <span className="mt-0.5 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-amber-50 text-warning">
               <BulbIcon />
             </span>
             <div>
-              <p className="text-[18px] font-semibold text-ink-900">{t.homeExplainablePoint}</p>
-              <p className="text-[16px] text-ink-500 sm:text-[17px]">{t.homeExplainablePointText}</p>
+              <p className="text-[20px] font-semibold text-ink-900">{t.homeExplainablePoint}</p>
+              <p className="mt-1 text-[16px] leading-relaxed text-ink-500 sm:text-[17px]">{t.homeExplainablePointText}</p>
             </div>
           </li>
         </ul>
       </section>
 
       <section className="grid gap-5 md:grid-cols-3">
-        <article className="card-surface p-6">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-[12px] bg-emerald-50 text-accent">
+        <article className="card-surface p-7">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-[14px] bg-emerald-50 text-accent">
             <UserIcon />
           </span>
-          <h3 className="card-title mt-4">{t.completenessTitle}</h3>
-          <p className="mt-2 text-[16px] text-ink-500 sm:text-[17px]">{t.homeCompletePrompt}</p>
-          <Link to="/wallet" className="mt-4 inline-block text-[16px] font-semibold text-action">
+          <h3 className="card-title mt-5">{t.completenessTitle}</h3>
+          <p className="mt-3 text-[16px] leading-relaxed text-ink-500 sm:text-[17px]">{t.homeCompletePrompt}</p>
+          <Link to="/wallet" className="soft-link mt-5 inline-block">
             {t.homeCompletePrompt}
           </Link>
         </article>
-        <article className="card-surface p-6">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-[12px] bg-indigo-50 text-action">
+        <article className="card-surface p-7">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-[14px] bg-sage text-action">
             <SchemesIcon />
           </span>
-          <h3 className="card-title mt-4">{t.homeTotalSchemes}</h3>
-          <p className="mt-2 text-[16px] text-ink-500 sm:text-[17px]">{t.homeCoreAvailable}</p>
-          <Link to="/schemes" className="mt-4 inline-block text-[16px] font-semibold text-action">
+          <h3 className="card-title mt-5">{t.homeTotalSchemes}</h3>
+          <p className="mt-3 text-[16px] leading-relaxed text-ink-500 sm:text-[17px]">{t.homeCoreAvailable}</p>
+          <Link to="/schemes" className="soft-link mt-5 inline-block">
             {t.homeExplore}
           </Link>
         </article>
-        <article className="card-surface p-6">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-[12px] bg-sky-50 text-navy-800">
+        <article className="card-surface p-7">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-[14px] bg-sage text-navy-800">
             <HistoryIcon />
           </span>
-          <h3 className="card-title mt-4">{t.homeRecentHistory}</h3>
-          <p className="mt-2 text-[16px] text-ink-500 sm:text-[17px]">{t.homeRecentChecks}</p>
-          <Link to="/history" className="mt-4 inline-block text-[16px] font-semibold text-action">
+          <h3 className="card-title mt-5">{t.homeRecentHistory}</h3>
+          <p className="mt-3 text-[16px] leading-relaxed text-ink-500 sm:text-[17px]">{t.homeRecentChecks}</p>
+          <Link to="/history" className="soft-link mt-5 inline-block">
             {t.homeViewHistory}
           </Link>
         </article>
@@ -177,13 +174,13 @@ export function HomePage() {
             ["03", t.howStep3Title, t.howStep3Text, <TargetIcon key="3" />],
             ["04", t.howStep4Title, t.howStep4Text, <DocumentIcon key="4" />],
           ].map(([step, title, text, icon]) => (
-            <li key={String(step)} className="card-surface p-6">
+            <li key={String(step)} className="card-surface p-7">
               <div className="flex items-center justify-between">
-                <p className="text-[15px] font-bold text-action">{step}</p>
+                <p className="text-[16px] font-bold text-action">{step}</p>
                 <span className="text-navy-700">{icon}</span>
               </div>
-              <h3 className="card-title mt-4">{title}</h3>
-              <p className="mt-2 text-[16px] leading-relaxed text-ink-500 sm:text-[17px]">{text}</p>
+              <h3 className="card-title mt-5">{title}</h3>
+              <p className="mt-3 text-[16px] leading-relaxed text-ink-500 sm:text-[17px]">{text}</p>
             </li>
           ))}
         </ol>

@@ -122,8 +122,8 @@ export function SchemeDetailPage() {
       <div className="space-y-6">
         <LoadingState message={t.schemeDetailLoading} />
         <div className="grid gap-4">
-          <div className="card-surface h-40 animate-pulse bg-canvas" />
-          <div className="card-surface h-32 animate-pulse bg-canvas" />
+          <div className="card-surface h-40 animate-pulse bg-sage" />
+          <div className="card-surface h-32 animate-pulse bg-sage" />
         </div>
       </div>
     );
@@ -158,8 +158,8 @@ export function SchemeDetailPage() {
   const agreement = recommended?.agreement ?? evaluated?.agreement;
 
   return (
-    <div className="space-y-8">
-      <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">{t.aiResearchPrototype}</p>
+    <div className="page-stack">
+      <p className="text-[15px] font-semibold uppercase tracking-[0.12em] text-accent">{t.aiResearchPrototype}</p>
       <header className="space-y-4">
         <div className="flex flex-wrap items-center gap-2">
           <Badge>{t.coreBadge}</Badge>
@@ -232,6 +232,7 @@ export function SchemeDetailPage() {
               eligibleProbability: probability,
               officialSourceUrl: scheme.official_source_url ?? recommended?.official_source_url,
               incompleteFields: incompleteProfileFields(profile),
+              outcome: isPredictedEligible ? "eligible" : "not_eligible",
             }}
           />
         </div>
@@ -286,6 +287,11 @@ export function SchemeDetailPage() {
           <Button type="button" onClick={() => navigate(checkPath)}>
             {t.navCheck}
           </Button>
+          {isAuthenticated ? (
+            <Button type="button" variant="secondary" onClick={() => navigate(`/applications?scheme=${scheme.scheme_id}`)}>
+              {t.appSave}
+            </Button>
+          ) : null}
           <Button type="button" variant="secondary" disabled={!canCompare} onClick={handleCompare}>
             {t.compareSchemes}
           </Button>
@@ -297,7 +303,7 @@ export function SchemeDetailPage() {
               href={scheme.official_source_url}
               target="_blank"
               rel="noreferrer"
-              className="btn-text inline-flex items-center justify-center rounded-[12px] border border-line px-5 py-3 text-ink-900 hover:bg-canvas"
+              className="btn-text inline-flex items-center justify-center rounded-[12px] border border-line px-5 py-3 text-ink-900 hover:bg-sage"
             >
               {t.visitOfficialWebsite}
             </a>

@@ -128,7 +128,7 @@ export function UploadsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
+    <div className="mx-auto max-w-5xl page-stack">
       <PageHeader title={t.uploadsTitle} description={t.uploadsLead} />
       <ResearchNotice compact />
       <p className="rounded-[12px] border border-line bg-[#FFF6E8] px-4 py-3 text-[16px] font-medium text-ink-900" role="alert">
@@ -212,7 +212,7 @@ export function UploadsPage() {
                     {t.uploadsLinkedScheme}: {item.scheme_name || t.uploadsUnlinked}
                   </p>
                   {schemes.length > 0 ? (
-                    <label className="block text-[14px] font-semibold text-ink-700">
+                    <label className="block text-[16px] font-semibold text-ink-700">
                       {t.uploadsLinkScheme}
                       <select
                         value={item.scheme_id ?? ""}
@@ -235,7 +235,7 @@ export function UploadsPage() {
                     type="button"
                     disabled={busyId === item.id}
                     onClick={() => void handleDownload(item)}
-                    className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                    className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
                   >
                     {t.uploadsView}
                   </button>
@@ -243,7 +243,7 @@ export function UploadsPage() {
                     type="button"
                     disabled={busyId === item.id}
                     onClick={() => void handleDelete(item)}
-                    className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                    className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
                   >
                     {t.uploadsDelete}
                   </button>

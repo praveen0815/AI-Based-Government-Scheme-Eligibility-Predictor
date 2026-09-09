@@ -24,14 +24,14 @@ export function LanguageSwitcher({
       <button
         type="button"
         aria-pressed={language === "en"}
-        className={`min-w-[4.5rem] flex-1 rounded-[10px] px-3 py-2 text-[14px] font-semibold transition duration-150 ${
+        className={`min-w-[4.75rem] flex-1 rounded-[10px] px-3 py-2.5 text-[16px] font-semibold transition duration-150 ${
           language === "en"
             ? sidebar || dark
               ? "bg-action text-white"
               : "bg-navy-900 text-white"
             : sidebar || dark
-              ? "text-slate-300 hover:bg-white/10 hover:text-white"
-              : "text-ink-500 hover:bg-canvas hover:text-ink-900"
+              ? "text-[#D5DDD8] hover:bg-white/10 hover:text-white"
+              : "text-ink-500 hover:bg-sage hover:text-ink-900"
         }`}
         onClick={() => setLanguage("en")}
       >
@@ -40,14 +40,14 @@ export function LanguageSwitcher({
       <button
         type="button"
         aria-pressed={language === "ta"}
-        className={`min-w-[4.5rem] flex-1 rounded-[10px] px-3 py-2 text-[14px] font-semibold transition duration-150 ${
+        className={`min-w-[4.75rem] flex-1 rounded-[10px] px-3 py-2.5 text-[16px] font-semibold transition duration-150 ${
           language === "ta"
             ? sidebar || dark
               ? "bg-action text-white"
               : "bg-navy-900 text-white"
             : sidebar || dark
-              ? "text-slate-300 hover:bg-white/10 hover:text-white"
-              : "text-ink-500 hover:bg-canvas hover:text-ink-900"
+              ? "text-[#D5DDD8] hover:bg-white/10 hover:text-white"
+              : "text-ink-500 hover:bg-sage hover:text-ink-900"
         }`}
         onClick={() => setLanguage("ta")}
       >

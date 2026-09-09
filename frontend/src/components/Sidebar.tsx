@@ -6,15 +6,18 @@ import {
   BrainIcon,
   CapIcon,
   CheckIcon,
+  ClipboardIcon,
   CompareIcon,
   DashboardIcon,
   DocumentIcon,
   EvaluationIcon,
   HistoryIcon,
   InsightsIcon,
+  MicIcon,
   ReadinessIcon,
   SchemesIcon,
   SettingsIcon,
+  SparkIcon,
   UploadIcon,
   WalletIcon,
 } from "./icons";
@@ -22,8 +25,10 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const itemClass = ({ isActive }: { isActive: boolean }) =>
   [
-    "flex items-center gap-3 rounded-[12px] px-3 py-2.5 text-[16px] font-medium transition duration-150",
-    isActive ? "bg-action text-white shadow-sm" : "text-slate-200 hover:bg-white/10 hover:text-white",
+    "flex items-center gap-3 rounded-[12px] border-l-[3px] px-3 py-3 text-[16px] font-semibold transition duration-150",
+    isActive
+      ? "border-l-accent bg-white/12 text-white shadow-sm"
+      : "border-l-transparent text-[#D5DDD8] hover:bg-white/8 hover:text-white",
   ].join(" ");
 
 export function Sidebar({
@@ -38,12 +43,12 @@ export function Sidebar({
   return (
     <>
       <div
-        className={`fixed inset-0 z-30 bg-navy-950/50 transition-opacity lg:hidden ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        className={`fixed inset-0 z-30 bg-navy-950/55 transition-opacity lg:hidden ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
         onClick={onClose}
         aria-hidden="true"
       />
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-[292px] flex-col bg-navy-900 text-white transition-transform duration-200 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-[300px] flex-col bg-navy-900 pt-1 text-white transition-transform duration-200 ${
           open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
@@ -51,11 +56,9 @@ export function Sidebar({
           <BrandMark inverted />
         </div>
 
-        <div className="flex-1 space-y-6 overflow-y-auto px-4 py-5">
-          <nav aria-label={t.mainNav} className="space-y-1">
-            <p className="px-3 pb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
-              {t.mainNav}
-            </p>
+        <div className="flex-1 space-y-7 overflow-y-auto px-4 py-6">
+          <nav aria-label={t.mainNav} className="space-y-1.5">
+            <p className="nav-label px-3 pb-2">{t.mainNav}</p>
             <NavLink to="/dashboard" className={itemClass} onClick={onClose}>
               <DashboardIcon />
               {t.navDashboard}
@@ -76,6 +79,14 @@ export function Sidebar({
               <CompareIcon />
               {t.navCompare}
             </NavLink>
+            <NavLink to="/eligibility-simulator" className={itemClass} onClick={onClose}>
+              <SparkIcon />
+              {t.navSimulator}
+            </NavLink>
+            <NavLink to="/applications" className={itemClass} onClick={onClose}>
+              <ClipboardIcon />
+              {t.navApplications}
+            </NavLink>
             <NavLink to="/documents" className={itemClass} onClick={onClose}>
               <DocumentIcon />
               {t.navDocuments}
@@ -92,12 +103,14 @@ export function Sidebar({
               <BellIcon />
               {t.navNotifications}
             </NavLink>
+            <NavLink to="/voice-assistant" className={itemClass} onClick={onClose}>
+              <MicIcon />
+              {t.navVoiceAssistant}
+            </NavLink>
           </nav>
 
-          <nav aria-label={t.navSectionResearch} className="space-y-1 border-t border-white/10 pt-5">
-            <p className="px-3 pb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
-              {t.navSectionResearch}
-            </p>
+          <nav aria-label={t.navSectionResearch} className="space-y-1.5 border-t border-white/10 pt-6">
+            <p className="nav-label px-3 pb-2">{t.navSectionResearch}</p>
             <NavLink to="/schemes" className={itemClass} onClick={onClose}>
               <SchemesIcon />
               {t.navSchemes}
@@ -110,12 +123,14 @@ export function Sidebar({
               <BrainIcon />
               {t.navSystemEvaluation}
             </NavLink>
+            <NavLink to="/research-dashboard" className={itemClass} onClick={onClose}>
+              <EvaluationIcon />
+              {t.navResearchDashboard}
+            </NavLink>
           </nav>
 
-          <nav aria-label={t.navSectionAccount} className="space-y-1 border-t border-white/10 pt-5">
-            <p className="px-3 pb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
-              {t.navSectionAccount}
-            </p>
+          <nav aria-label={t.navSectionAccount} className="space-y-1.5 border-t border-white/10 pt-6">
+            <p className="nav-label px-3 pb-2">{t.navSectionAccount}</p>
             <NavLink to="/uploads" className={itemClass} onClick={onClose}>
               <UploadIcon />
               {t.navUploads}
@@ -126,20 +141,18 @@ export function Sidebar({
             </NavLink>
           </nav>
 
-          <div className="space-y-2 border-t border-white/10 pt-5">
-            <p className="px-3 pb-1 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
-              {t.navSectionPreferences}
-            </p>
+          <div className="space-y-3 border-t border-white/10 pt-6">
+            <p className="nav-label px-3">{t.navSectionPreferences}</p>
             <LanguageSwitcher variant="sidebar" />
           </div>
         </div>
 
-        <div className="m-4 rounded-[14px] bg-navy-800 px-4 py-4">
-          <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-action/20 text-sky-200">
+        <div className="m-4 rounded-[16px] border border-white/10 bg-navy-800 px-4 py-4">
+          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-action/20 text-[#E4D4A8]">
             <CapIcon />
           </div>
-          <p className="text-[13px] font-semibold text-white">{t.researchBadge}</p>
-          <p className="mt-1 text-[12px] leading-relaxed text-slate-300">{t.notOfficialService}</p>
+          <p className="text-[16px] font-semibold text-white">{t.researchBadge}</p>
+          <p className="mt-2 text-[15px] leading-relaxed text-[#D5DDD8]">{t.notOfficialService}</p>
         </div>
       </aside>
     </>

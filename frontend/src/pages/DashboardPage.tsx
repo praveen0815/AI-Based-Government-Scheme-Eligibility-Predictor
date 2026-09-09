@@ -9,8 +9,10 @@ import {
   EvaluationIcon,
   HistoryIcon,
   InsightsIcon,
+  MicIcon,
   ReadinessIcon,
   SchemesIcon,
+  SparkIcon,
   WalletIcon,
 } from "../components/icons";
 import { LoadingState } from "../components/LoadingState";
@@ -28,6 +30,7 @@ import {
   ApiError,
   downloadRecommendationReport,
   fetchCurrentUser,
+  fetchApplications,
   fetchDashboardOverview,
   fetchNotifications,
   fetchSupportingUploads,
@@ -39,6 +42,7 @@ import {
   getMyWallet,
 } from "../services/api";
 import type {
+  ApplicationListResponse,
   AuthUser,
   CitizenWallet,
   DashboardActivityItem,
@@ -165,7 +169,7 @@ function DashboardSkeleton({ message }: { message: string }) {
       <LoadingState message={message} />
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {[0, 1, 2, 3].map((key) => (
-          <div key={key} className="card-surface h-36 animate-pulse bg-canvas" />
+          <div key={key} className="card-surface h-36 animate-pulse bg-sage" />
         ))}
       </div>
     </div>
@@ -185,7 +189,7 @@ function ActionCard({
   description: string;
   disabled?: boolean;
 }) {
-  const className = "card-surface flex h-full flex-col gap-3 p-5 transition duration-150 hover:border-slate-300 hover:shadow-lift";
+  const className = "card-surface flex h-full flex-col gap-3 p-5 transition duration-150 hover:border-[#C5CDC7] hover:shadow-lift";
   const body = (
     <>
       <span className="inline-flex h-11 w-11 items-center justify-center rounded-[12px] bg-action/10 text-action">
@@ -208,7 +212,7 @@ function ActionCard({
 function HistorySchemePreview({ scheme }: { scheme: HistorySchemeRef }) {
   const { t } = useI18n();
   return (
-    <article className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+    <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
       <Badge tone="success">{t.predictedEligible}</Badge>
       <h3 className="mt-3 text-[18px] font-semibold text-ink-900">
         <Link to={`/schemes/${scheme.scheme_id}`} className="hover:text-action hover:underline">
@@ -252,6 +256,7 @@ export function DashboardPage() {
   const [overview, setOverview] = useState<DashboardOverviewResponse | null>(null);
   const [uploads, setUploads] = useState<SupportingUploadListResponse | null>(null);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [applications, setApplications] = useState<ApplicationListResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [downloading, setDownloading] = useState(false);
@@ -264,7 +269,7 @@ export function DashboardPage() {
       setLoading(true);
       setError(null);
       try {
-        const [meResult, walletResult, historyResult, docsResult, insightsResult, readinessResult, overviewResult, uploadsResult, notificationsResult] =
+        const [meResult, walletResult, historyResult, docsResult, insightsResult, readinessResult, overviewResult, uploadsResult, notificationsResult, applicationsResult] =
           await Promise.allSettled([
             fetchCurrentUser(),
             getMyWallet(),
@@ -275,6 +280,7 @@ export function DashboardPage() {
             fetchDashboardOverview(),
             fetchSupportingUploads(),
             fetchNotifications(),
+            fetchApplications(),
           ]);
 
         if (cancelled) return;
@@ -339,6 +345,12 @@ export function DashboardPage() {
         } else {
           setNotifications([]);
         }
+
+        if (applicationsResult.status === "fulfilled") {
+          setApplications(applicationsResult.value);
+        } else {
+          setApplications(null);
+        }
       } catch (caught) {
         if (!cancelled) {
           setError(caught instanceof ApiError ? caught.message : t.networkError);
@@ -384,7 +396,7 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="page-stack">
       <PageHeader title={t.dashboardWelcome(displayName)} description={t.dashboardLead} />
 
       {loading ? <DashboardSkeleton message={t.dashboardLoading} /> : null}
@@ -399,7 +411,14 @@ export function DashboardPage() {
               </Button>
             </EmptyState>
           ) : completeness && completeness.incomplete_fields.length > 0 ? (
-            <ProfileCompletenessCard completeness={completeness} onCompleteProfile={() => navigate("/wallet")} />
+            <section aria-labelledby="dashboard-profile-improvement">
+              <h2 id="dashboard-profile-improvement" className="section-title">
+                {t.dashProfileImprovement}
+              </h2>
+              <div className="mt-4">
+                <ProfileCompletenessCard completeness={completeness} onCompleteProfile={() => navigate("/wallet")} />
+              </div>
+            </section>
           ) : null}
 
           <section aria-labelledby="dashboard-progress">
@@ -435,6 +454,21 @@ export function DashboardPage() {
                 value={`${snapshot.progress.readiness_progress_percent}%`}
                 detail={t.readinessDashboardLead}
               />
+              <ProgressCard
+                title={t.dashCannotEvaluate}
+                value={String(completeness?.incomplete_fields.length ?? 0)}
+                detail={t.whyRequiredToEvaluate}
+              />
+              <ProgressCard
+                title={t.dashSavedSchemes}
+                value={String(applications?.count ?? 0)}
+                detail={t.appEligibilityVsStatus}
+              />
+              <ProgressCard
+                title={t.dashApplications}
+                value={String(applications?.count ?? 0)}
+                detail={t.appLead}
+              />
             </div>
           </section>
 
@@ -450,12 +484,12 @@ export function DashboardPage() {
                 <li key={step.key} className="relative flex flex-col gap-3">
                   <div className="flex items-center gap-3">
                     <span
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-bold ${
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[16px] font-bold ${
                         step.status === "completed"
                           ? "bg-action text-white"
                           : step.status === "current"
-                            ? "border-2 border-action bg-[#E8F0FE] text-action"
-                            : "border border-line bg-canvas text-ink-500"
+                            ? "border-2 border-action bg-[#E8F1EC] text-action"
+                            : "border border-line bg-sage text-ink-500"
                       }`}
                     >
                       {index + 1}
@@ -466,7 +500,7 @@ export function DashboardPage() {
                   </div>
                   <div>
                     <p className="text-[16px] font-semibold text-ink-900">{journeyLabel(step.key, t)}</p>
-                    <p className="mt-1 text-[14px] text-ink-500">{journeyStatusLabel(step.status, t)}</p>
+                    <p className="mt-1 text-[16px] text-ink-500">{journeyStatusLabel(step.status, t)}</p>
                   </div>
                 </li>
               ))}
@@ -481,22 +515,22 @@ export function DashboardPage() {
               <p className="mt-2 text-[17px] text-ink-500">{t.dashboardSmartSummaryLead}</p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              <article className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+              <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
                 <p className="text-[18px] font-semibold text-ink-900">
                   {t.dashboardTotalRecommended(snapshot.summary.total_recommended_schemes)}
                 </p>
               </article>
-              <article className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+              <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
                 <p className="text-[18px] font-semibold text-ink-900">
                   {t.readinessSchemesPreparing(snapshot.summary.schemes_being_prepared)}
                 </p>
               </article>
-              <article className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+              <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
                 <p className="text-[18px] font-semibold text-ink-900">
                   {t.documentsSchemesWithProgress(snapshot.summary.schemes_with_document_progress)}
                 </p>
               </article>
-              <article className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+              <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
                 <p className="text-[18px] font-semibold text-ink-900">
                   {t.dashboardOverallPrep(snapshot.summary.overall_preparation_progress)}
                 </p>
@@ -532,7 +566,7 @@ export function DashboardPage() {
                     </div>
                     <Link
                       to={item.href}
-                      className="inline-flex shrink-0 items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                      className="inline-flex shrink-0 items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
                     >
                       {t.notificationsOpen}
                     </Link>
@@ -550,9 +584,14 @@ export function DashboardPage() {
             </h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               <ActionCard to="/check" icon={<CheckIcon />} title={t.navCheck} description={t.checkDescription} />
+              <ActionCard to="/schemes" icon={<SchemesIcon />} title={t.dashboardBrowseSchemes} description={t.schemesDescription} />
+              <ActionCard to="/compare" icon={<HistoryIcon />} title={t.navCompare} description={t.compareHint} />
+              <ActionCard to="/documents" icon={<DocumentIcon />} title={t.documentsManage} description={t.documentsDashboardLead} />
+              <ActionCard to="/voice-assistant" icon={<MicIcon />} title={t.navVoiceAssistant} description={t.voiceLead} />
+              <ActionCard to="/eligibility-simulator" icon={<SparkIcon />} title={t.navSimulator} description={t.simLead} />
+              <ActionCard to="/applications" icon={<WalletIcon />} title={t.navApplications} description={t.appLead} />
               <ActionCard to="/wallet" icon={<WalletIcon />} title={t.navWallet} description={t.walletDescription} />
               <ActionCard to="/insights" icon={<InsightsIcon />} title={t.insightsDashboardCta} description={t.insightsDashboardLead} />
-              <ActionCard to="/documents" icon={<DocumentIcon />} title={t.documentsManage} description={t.documentsDashboardLead} />
               <ActionCard to="/readiness" icon={<ReadinessIcon />} title={t.readinessDashboardCta} description={t.readinessDashboardLead} />
               <ActionCard to="/history" icon={<HistoryIcon />} title={t.dashboardViewHistory} description={t.historySubtitle} />
             </div>
@@ -584,7 +623,7 @@ export function DashboardPage() {
                     </div>
                     <Link
                       to={activityHref(item)}
-                      className="inline-flex shrink-0 items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                      className="inline-flex shrink-0 items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
                     >
                       {item.kind === "recommendation" ? t.viewHistoryDetails : t.dashboardViewAllRecommendations}
                     </Link>
@@ -598,7 +637,7 @@ export function DashboardPage() {
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 id="dashboard-recommendations" className="section-title">
-                  {t.dashboardRecommendationSummary}
+                  {t.dashRecommendedForYou}
                 </h2>
                 {hasRecommendationData ? (
                   <p className="mt-2 text-[17px] text-ink-500">{t.dashboardEligibleCount(eligibleCount)}</p>
@@ -682,12 +721,12 @@ export function DashboardPage() {
             </div>
             {readiness && readiness.schemes_being_prepared > 0 ? (
               <div className="grid gap-4 sm:grid-cols-2">
-                <article className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+                <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
                   <p className="text-[18px] font-semibold text-ink-900">
                     {t.readinessSchemesPreparing(readiness.schemes_being_prepared)}
                   </p>
                 </article>
-                <article className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+                <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
                   <p className="text-[18px] font-semibold text-ink-900">
                     {t.readinessOverallProgress(readiness.overall_progress_percent)}
                   </p>
@@ -715,13 +754,13 @@ export function DashboardPage() {
             </div>
             {docProgress && docProgress.schemes.length > 0 ? (
               <div className="grid gap-4 sm:grid-cols-2">
-                <article className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+                <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
                   <p className="text-[15px] font-medium text-ink-500">{t.documentsProgress}</p>
                   <p className="mt-2 text-[22px] font-semibold text-ink-900">
                     {t.documentsSchemesWithProgress(docProgress.schemes_with_progress)}
                   </p>
                 </article>
-                <article className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+                <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
                   <p className="text-[15px] font-medium text-ink-500">{t.documentsPreparationProgress}</p>
                   <p className="mt-2 text-[22px] font-semibold text-ink-900">
                     {t.documentsOverallProgress(docProgress.overall_progress_percent)}
@@ -764,28 +803,28 @@ export function DashboardPage() {
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
                 to="/schemes"
-                className="inline-flex items-center gap-2 rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                className="inline-flex items-center gap-2 rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
               >
                 <SchemesIcon />
                 {t.dashboardBrowseSchemes}
               </Link>
               <Link
                 to="/evaluation"
-                className="inline-flex items-center gap-2 rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                className="inline-flex items-center gap-2 rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
               >
                 <EvaluationIcon />
                 {t.navEvaluation}
               </Link>
               <Link
                 to="/system-evaluation"
-                className="inline-flex items-center gap-2 rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                className="inline-flex items-center gap-2 rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
               >
                 <BrainIcon />
                 {t.navSystemEvaluation}
               </Link>
               <Link
                 to="/notifications"
-                className="inline-flex items-center gap-2 rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-canvas"
+                className="inline-flex items-center gap-2 rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
               >
                 <BellIcon />
                 {t.navNotifications}

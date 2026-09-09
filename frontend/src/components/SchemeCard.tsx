@@ -27,6 +27,7 @@ export function SchemeCard({
   compareLocked = false,
   onCompareToggle,
   incompleteFields = [],
+  outcome = "eligible",
 }: {
   scheme: RecommendedScheme;
   compareEnabled?: boolean;
@@ -34,17 +35,27 @@ export function SchemeCard({
   compareLocked?: boolean;
   onCompareToggle?: () => void;
   incompleteFields?: string[];
+  outcome?: "eligible" | "not_eligible" | "incomplete";
 }) {
   const { language, t } = useI18n();
   const [open, setOpen] = useState(true);
   const reasons = scheme.rule_reasons ?? scheme.rule_result?.reasons ?? [];
-  const status = language === "ta" ? t.predictedEligible : scheme.status_label || t.predictedEligible;
+  const status =
+    outcome === "not_eligible"
+      ? t.catalogEligibilityNotEligible
+      : outcome === "incomplete"
+        ? t.catalogEligibilityIncomplete
+        : language === "ta"
+          ? t.predictedEligible
+          : scheme.status_label || t.predictedEligible;
 
   return (
     <article className="card-surface p-6 md:p-8">
       <header className="space-y-3">
         <div className="flex flex-wrap items-center gap-2">
-          <Badge tone="success">{status}</Badge>
+          <Badge tone={outcome === "eligible" ? "success" : outcome === "incomplete" ? "warning" : "muted"}>
+            {status}
+          </Badge>
           {scheme.scheme_category ? <Badge tone="muted">{scheme.scheme_category}</Badge> : null}
         </div>
         <h3 className="card-title">
@@ -55,7 +66,7 @@ export function SchemeCard({
         {scheme.department ? <p className="text-[16px] text-ink-500">{scheme.department}</p> : null}
       </header>
 
-      <section className="mt-6 rounded-[14px] bg-canvas px-5 py-5">
+      <section className="mt-6 rounded-[14px] bg-sage px-5 py-5">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <h4 className="text-[15px] font-semibold text-ink-900">{t.probabilityLabel}</h4>
           <p className="font-display text-[36px] font-extrabold leading-none tracking-tight text-navy-900">
@@ -82,6 +93,7 @@ export function SchemeCard({
           eligibleProbability: scheme.eligible_probability,
           officialSourceUrl: scheme.official_source_url,
           incompleteFields,
+          outcome,
         }}
       />
 
@@ -93,7 +105,7 @@ export function SchemeCard({
       <div className="mt-7 flex flex-wrap items-center gap-3">
         <Link
           to={`/schemes/${scheme.scheme_id}`}
-          className="btn-text inline-flex items-center justify-center rounded-[12px] border border-line bg-surface px-5 py-3 text-ink-900 hover:border-slate-300 hover:bg-canvas"
+          className="btn-text inline-flex items-center justify-center rounded-[12px] border border-line bg-surface px-5 py-3 text-ink-900 hover:border-[#C5CDC7] hover:bg-sage"
         >
           {t.viewDetails}
         </Link>
@@ -110,6 +122,12 @@ export function SchemeCard({
             {t.viewOfficialSource}
           </a>
         ) : null}
+        <Link
+          to={`/applications?scheme=${encodeURIComponent(scheme.scheme_id)}`}
+          className="btn-text inline-flex items-center justify-center rounded-[12px] border border-line bg-surface px-5 py-3 text-ink-900 hover:border-[#C5CDC7] hover:bg-sage"
+        >
+          {t.appSave}
+        </Link>
         {compareEnabled ? (
           <label className="inline-flex items-center gap-2 rounded-[12px] border border-line px-4 py-3 text-[16px] font-semibold text-ink-900">
             <input

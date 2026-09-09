@@ -7,7 +7,7 @@ interface DisclaimerProps {
 export function Disclaimer({ text }: DisclaimerProps) {
   if (text) {
     return (
-      <aside className="rounded-xl border border-line bg-blue-50/70 px-4 py-3 text-sm text-ink-700" role="note">
+      <aside className="rounded-[14px] border border-line bg-sage/80 px-5 py-4 text-[16px] leading-relaxed text-ink-700 sm:text-[17px]" role="note">
         <p>{text}</p>
       </aside>
     );

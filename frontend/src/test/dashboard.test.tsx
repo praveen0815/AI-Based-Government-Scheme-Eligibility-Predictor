@@ -115,6 +115,9 @@ function mockDashboardFetch(options?: {
         ),
       );
     }
+    if (path.includes("/api/v1/applications")) {
+      return Promise.resolve(jsonOk({ applications: [], count: 0, disclaimer: "" }));
+    }
     if (path.includes("/api/v1/readiness")) {
       return Promise.resolve(
         jsonOk(

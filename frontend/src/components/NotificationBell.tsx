@@ -28,12 +28,12 @@ export function NotificationBell() {
   return (
     <Link
       to="/notifications"
-      className="relative inline-flex h-11 w-11 items-center justify-center rounded-[12px] border border-line text-ink-900 transition duration-150 hover:bg-canvas"
+      className="relative inline-flex h-12 w-12 items-center justify-center rounded-[12px] border border-line text-ink-900 transition duration-150 hover:bg-sage"
       aria-label={t.notificationsBellLabel(unreadCount)}
     >
       <BellIcon />
       {unreadCount > 0 ? (
-        <span className="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-action px-1.5 py-0.5 text-[11px] font-bold text-white">
+        <span className="absolute -right-1 -top-1 inline-flex min-w-6 items-center justify-center rounded-full bg-action px-1.5 py-0.5 text-[12px] font-bold text-white">
           {unreadCount > 99 ? "99+" : unreadCount}
         </span>
       ) : null}

@@ -12,6 +12,7 @@ export interface WhyThisSchemeData {
   eligibleProbability?: number;
   officialSourceUrl?: string | null;
   incompleteFields?: string[];
+  outcome?: "eligible" | "not_eligible" | "incomplete";
 }
 
 export function WhyThisScheme({
@@ -33,8 +34,53 @@ export function WhyThisScheme({
   const reviewFields = data.incompleteFields ?? [];
   const hasReviewItems = reviewFields.length > 0;
 
+  const outcome = data.outcome ?? (data.ruleEligible === false ? "not_eligible" : hasReviewItems ? "incomplete" : "eligible");
+
   const body = (
     <div className="space-y-5">
+      {data.ruleEligible !== undefined || data.mlPrediction ? (
+        <section className="rounded-[12px] border border-line bg-surface px-4 py-4">
+          <h3 className="text-[16px] font-semibold text-ink-900">{t.whyDecisionSummary}</h3>
+          <ul className="mt-3 space-y-2 text-[16px] text-ink-700">
+            {data.ruleEligible !== undefined ? (
+              <li>
+                {t.whyRuleEngineLabel}: {data.ruleEligible ? t.catalogEligibilityEligible : t.catalogEligibilityNotEligible}
+              </li>
+            ) : null}
+            {data.mlPrediction ? (
+              <li>
+                {t.whyMlLabel}: {mlLabel}
+              </li>
+            ) : null}
+            {data.agreement !== undefined ? (
+              <li>
+                {t.whyAgreementLabel}: {data.agreement ? t.whyAgreementYes : t.whyAgreementNo}
+              </li>
+            ) : null}
+          </ul>
+        </section>
+      ) : null}
+
+      {outcome === "incomplete" || hasReviewItems ? (
+        <section className="rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-4" role="status">
+          <h3 className="text-[16px] font-semibold text-ink-900">{t.whyCannotEvaluate}</h3>
+          <p className="mt-1 text-[16px] leading-relaxed text-ink-700">{t.whyRequiredToEvaluate}</p>
+          {hasReviewItems ? (
+            <>
+              <p className="mt-3 text-[16px] font-semibold text-ink-900">{t.whyMissingInformation}</p>
+              <ul className="mt-2 space-y-2 text-[17px] text-ink-700">
+                {reviewFields.map((field) => (
+                  <li key={field} className="flex gap-2">
+                    <span aria-hidden="true">⚠</span>
+                    <span>{profileFieldLabel(field, t)}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+        </section>
+      ) : null}
+
       <section>
         <h3 className="text-[16px] font-semibold text-ink-900">{t.whyRulesChecked}</h3>
         <p className="mt-1 text-[16px] leading-relaxed text-ink-500">{t.whyRulesCheckedLead}</p>
@@ -43,7 +89,7 @@ export function WhyThisScheme({
             {data.ruleReasons.map((reason) => (
               <li key={reason} className="flex gap-2">
                 <span className="mt-1 text-accent" aria-hidden="true">
-                  ✓
+                  {data.ruleEligible === false ? "✕" : "✓"}
                 </span>
                 <span>{reason}</span>
               </li>
@@ -93,6 +139,7 @@ export function WhyThisScheme({
       <section>
         <h3 className="text-[16px] font-semibold text-ink-900">{t.whyThingsToReview}</h3>
         <p className="mt-1 text-[16px] leading-relaxed text-ink-500">{t.whyThingsToReviewLead}</p>
+        <p className="mt-2 text-[16px] leading-relaxed text-ink-500">{t.whyRequiredToEvaluate}</p>
         {hasReviewItems ? (
           <ul className="mt-3 space-y-2 text-[17px] text-ink-500">
             {reviewFields.map((field) => (
@@ -129,7 +176,7 @@ export function WhyThisScheme({
   }
 
   return (
-    <section className="mt-6 rounded-[14px] border border-line bg-canvas">
+    <section className="mt-6 rounded-[14px] border border-line bg-sage">
       <button
         type="button"
         className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"

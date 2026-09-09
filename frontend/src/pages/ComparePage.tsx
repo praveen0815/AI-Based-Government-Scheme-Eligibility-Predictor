@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { ComparisonTable } from "../components/ComparisonTable";
 import { ErrorState } from "../components/ErrorState";
 import { LoadingState } from "../components/LoadingState";
 import { ResearchNotice } from "../components/ResearchNotice";
 import { Button } from "../components/ui/Button";
+import { EmptyState } from "../components/ui/EmptyState";
 import { PageHeader } from "../components/ui/PageHeader";
 import { useAuth } from "../context/AuthContext";
 import { useI18n } from "../context/LanguageContext";
@@ -55,7 +56,20 @@ export function ComparePage() {
     return <Navigate to="/login" replace />;
   }
   if (schemeIds.length < 2 || schemeIds.length > 3) {
-    return <Navigate to="/results" replace />;
+    return (
+      <div className="page-stack">
+        <PageHeader title={t.compareTitle} description={t.compareSubtitle} />
+        <ResearchNotice compact />
+        <EmptyState title={t.compareEmptyTitle} description={t.compareEmptyLead}>
+          <Link to="/results" className="btn-text inline-flex rounded-[12px] bg-action px-5 py-3 text-white">
+            {t.backToRecommendations}
+          </Link>
+          <Link to="/schemes" className="btn-text inline-flex rounded-[12px] border border-line px-5 py-3 text-ink-900">
+            {t.navSchemes}
+          </Link>
+        </EmptyState>
+      </div>
+    );
   }
 
   async function handleDownload() {
@@ -71,7 +85,7 @@ export function ComparePage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="page-stack">
       <PageHeader title={t.compareTitle} description={t.compareSubtitle} />
       <ResearchNotice compact />
       <p className="text-[15px] text-ink-500">{t.compareWalletNote}</p>

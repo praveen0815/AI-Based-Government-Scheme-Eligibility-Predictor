@@ -15,6 +15,7 @@ from app.models import history as _history_model  # noqa: F401
 from app.models import readiness as _readiness_model  # noqa: F401
 from app.models import notifications as _notifications_model  # noqa: F401
 from app.models import uploads as _uploads_model  # noqa: F401
+from app.models import applications as _applications_model  # noqa: F401
 from app.models import user as _user_model  # noqa: F401
 
 
