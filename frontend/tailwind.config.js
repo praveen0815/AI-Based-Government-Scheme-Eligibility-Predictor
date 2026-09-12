@@ -32,6 +32,11 @@ export default {
           700: "#3F4D47",
           500: "#66736D",
         },
+        admin: {
+          canvas: "#E8EDF4",
+          sidebar: "#0B1220",
+          accent: "#1D4ED8",
+        },
       },
       fontFamily: {
         sans: ["Inter", "Manrope", "Segoe UI", "system-ui", "sans-serif"],

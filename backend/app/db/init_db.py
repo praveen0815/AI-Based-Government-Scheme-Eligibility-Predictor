@@ -17,6 +17,7 @@ from app.models import notifications as _notifications_model  # noqa: F401
 from app.models import uploads as _uploads_model  # noqa: F401
 from app.models import applications as _applications_model  # noqa: F401
 from app.models import user as _user_model  # noqa: F401
+from app.models import voice_audit as _voice_audit_model  # noqa: F401
 
 
 def ensure_wallet_ownership_column(engine) -> None:
@@ -73,9 +74,30 @@ def ensure_google_auth_columns(engine) -> None:
             connection.execute(text(statement))
 
 
+def ensure_admin_role_column(engine) -> None:
+    """Add the admin role flag without destroying existing users."""
+    with engine.begin() as connection:
+        connection.execute(
+            text("ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN NOT NULL DEFAULT FALSE")
+        )
+
+
+def ensure_upload_review_status_column(engine) -> None:
+    """Add document review status. This is not an eligibility decision."""
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                "ALTER TABLE supporting_uploads "
+                "ADD COLUMN IF NOT EXISTS review_status VARCHAR(20) NOT NULL DEFAULT 'pending'"
+            )
+        )
+
+
 def ensure_application_schema(engine) -> None:
     ensure_wallet_ownership_column(engine)
     ensure_google_auth_columns(engine)
+    ensure_admin_role_column(engine)
+    ensure_upload_review_status_column(engine)
 
 
 def init_db() -> None:

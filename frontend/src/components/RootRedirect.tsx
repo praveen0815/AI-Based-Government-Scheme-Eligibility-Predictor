@@ -1,12 +1,13 @@
 import { Navigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { signedInHomePath } from "../utils/homePath";
 
 export function RootRedirect() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [searchParams] = useSearchParams();
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={signedInHomePath(user)} replace />;
   }
 
   const search = searchParams.toString();

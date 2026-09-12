@@ -4,7 +4,7 @@ Final-year academic research prototype. Citizens store a socio-economic profile 
 
 The citizen portal is branded **Scheme Predictor** / **SchemeWise AI**. Predictions are research results only. They are not government approval, identity verification, or a final eligibility decision.
 
-This repository is at **Phase 43: final integration, QA, and demo-readiness**. Phases 1–38 remain in place. The Hybrid Rule + ML engine remains the only eligibility authority. Phase 43 adds regression coverage, compare empty-state handling, and clearer simulator temporary-copy labels. Authentication, eligibility scoring, and database schemas were not rewritten. No new ML algorithms, datasets, payment, Aadhaar, government application APIs, or messaging services were added.
+This repository is at **Phase 44: administrator portal**. Phases 1–43 remain in place. The Hybrid Rule + ML engine remains the only eligibility authority. Phase 44 adds a JWT role-checked `/admin` portal for user, document, and eligibility monitoring. Document review does not change predictions. No new ML algorithms, datasets, payment, Aadhaar, government application APIs, or messaging services were added.
 
 ## Stack
 
@@ -112,7 +112,7 @@ Public routes include `/predict`, `/recommend`, `/schemes`, `/catalog`, `/evalua
 
 ## Phase status
 
-Phases 1–38 are complete. Phase 43 is the final QA and demo-readiness pass: protected-route coverage, JWT expiry (session clear, no refresh token), income voice CTA, wallet-safe simulation labels, and compare empty state. Business logic, ML, ranking, authentication implementation, and existing API contracts were not rewritten.
+Phases 1–43 are complete. Phase 44 adds an administrator portal on the existing JWT: role-checked `/admin` pages and `/api/v1/admin/*` APIs. Citizens cannot open admin routes. Document verification is separate from eligibility. Hybrid scoring, ranking, and citizen API contracts were not rewritten.
 
 Still out of scope:
 

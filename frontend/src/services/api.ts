@@ -36,6 +36,17 @@ import type {
   CatalogSearchResponse,
   SchemeEvaluationResponse,
   SystemEvaluationResponse,
+  AdminOverviewResponse,
+  AdminUserListResponse,
+  AdminUserDetailResponse,
+  AdminDocumentListResponse,
+  AdminDocumentItem,
+  AdminEligibilityListResponse,
+  AdminVoiceAuditCreate,
+  AdminVoiceAuditResponse,
+  DocumentReviewStatus,
+  VoiceStatusResponse,
+  VoiceTranscribeResponse,
 } from "../types/api";
 
 const REQUEST_TIMEOUT_MS = 20000;
@@ -120,7 +131,7 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
       signal: controller.signal,
       headers: {
         Accept: "application/json",
-        ...(init?.body ? { "Content-Type": "application/json" } : {}),
+        ...(init?.body && !(init.body instanceof FormData) ? { "Content-Type": "application/json" } : {}),
         ...authHeaders(),
         ...init?.headers,
       },
@@ -592,6 +603,63 @@ export async function fetchEvaluationBundle(): Promise<EvaluationBundle> {
     requestJson<HybridEvaluationResponse>("/api/v1/evaluation/hybrid"),
   ]);
   return { overview, models, schemes, features, confusion, limitations, hybrid };
+}
+
+export async function fetchAdminOverview(): Promise<AdminOverviewResponse> {
+  return requestJson<AdminOverviewResponse>("/api/v1/admin/overview");
+}
+
+export async function fetchAdminUsers(query?: string): Promise<AdminUserListResponse> {
+  const search = query?.trim() ? `?q=${encodeURIComponent(query.trim())}` : "";
+  return requestJson<AdminUserListResponse>(`/api/v1/admin/users${search}`);
+}
+
+export async function fetchAdminUser(userId: string): Promise<AdminUserDetailResponse> {
+  return requestJson<AdminUserDetailResponse>(`/api/v1/admin/users/${userId}`);
+}
+
+export async function fetchAdminDocuments(): Promise<AdminDocumentListResponse> {
+  return requestJson<AdminDocumentListResponse>("/api/v1/admin/documents");
+}
+
+export async function updateAdminDocumentStatus(
+  uploadId: string,
+  reviewStatus: DocumentReviewStatus,
+): Promise<AdminDocumentItem> {
+  return requestJson<AdminDocumentItem>(`/api/v1/admin/documents/${uploadId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ review_status: reviewStatus }),
+  });
+}
+
+export async function fetchAdminEligibility(): Promise<AdminEligibilityListResponse> {
+  return requestJson<AdminEligibilityListResponse>("/api/v1/admin/eligibility");
+}
+
+export async function createAdminVoiceAudit(
+  payload: AdminVoiceAuditCreate,
+): Promise<AdminVoiceAuditResponse> {
+  return requestJson<AdminVoiceAuditResponse>("/api/v1/admin/audit/voice", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function fetchVoiceStatus(): Promise<VoiceStatusResponse> {
+  return requestJson<VoiceStatusResponse>("/api/v1/voice/status");
+}
+
+export async function transcribeVoiceAudio(
+  file: Blob,
+  language: string,
+): Promise<VoiceTranscribeResponse> {
+  const body = new FormData();
+  body.append("file", file, "speech.webm");
+  body.append("language", language);
+  return requestJson<VoiceTranscribeResponse>("/api/v1/voice/transcribe", {
+    method: "POST",
+    body,
+  });
 }
 
 export function walletToProfile(wallet: CitizenWallet): CitizenProfile {

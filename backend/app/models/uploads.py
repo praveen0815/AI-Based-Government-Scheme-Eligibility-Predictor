@@ -31,4 +31,5 @@ class SupportingUploadRecord(Base):
     content_type: Mapped[str] = mapped_column(String(80), nullable=False)
     size_bytes: Mapped[int] = mapped_column(Integer, nullable=False)
     scheme_id: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
+    review_status: Mapped[str] = mapped_column(String(20), default="pending", nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utc_now, nullable=False)

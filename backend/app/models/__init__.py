@@ -8,6 +8,7 @@ from app.models.readiness import ApplicationReadinessRecord
 from app.models.notifications import NotificationRecord
 from app.models.uploads import SupportingUploadRecord
 from app.models.user import UserRecord
+from app.models.voice_audit import VoiceAuditRecord
 
 __all__ = [
     "ApplicationReadinessRecord",
@@ -18,4 +19,5 @@ __all__ = [
     "RecommendationHistoryRecord",
     "SupportingUploadRecord",
     "UserRecord",
+    "VoiceAuditRecord",
 ]

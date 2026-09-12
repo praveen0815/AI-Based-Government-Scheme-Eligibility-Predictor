@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { AppShell } from "./components/AppShell";
+import { PortalLayout } from "./components/PortalLayout";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { RootRedirect } from "./components/RootRedirect";
 import { CheckPage } from "./pages/CheckPage";
@@ -26,10 +26,18 @@ import { WalletPage } from "./pages/WalletPage";
 import { EligibilitySimulatorPage } from "./pages/EligibilitySimulatorPage";
 import { ApplicationsPage } from "./pages/ApplicationsPage";
 import { ResearchDashboardPage } from "./pages/ResearchDashboardPage";
+import { AdminRoute } from "./components/AdminRoute";
+import { AdminDashboardPage } from "./pages/AdminDashboardPage";
+import { AdminUsersPage } from "./pages/AdminUsersPage";
+import { AdminUserDetailPage } from "./pages/AdminUserDetailPage";
+import { AdminDocumentsPage } from "./pages/AdminDocumentsPage";
+import { AdminEligibilityPage } from "./pages/AdminEligibilityPage";
+import { AdminApplicationsPage } from "./pages/AdminApplicationsPage";
+import { AdminSchemesPage } from "./pages/AdminSchemesPage";
 
 export default function App() {
   return (
-    <AppShell>
+    <PortalLayout>
       <Routes>
         <Route path="/" element={<RootRedirect />} />
         <Route path="/home" element={<HomePage />} />
@@ -168,8 +176,120 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminDashboardPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <AdminRoute>
+              <AdminUsersPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/users/:userId"
+          element={
+            <AdminRoute>
+              <AdminUserDetailPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/documents"
+          element={
+            <AdminRoute>
+              <AdminDocumentsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/eligibility"
+          element={
+            <AdminRoute>
+              <AdminEligibilityPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/applications"
+          element={
+            <AdminRoute>
+              <AdminApplicationsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/schemes"
+          element={
+            <AdminRoute>
+              <AdminSchemesPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/evaluation"
+          element={
+            <AdminRoute>
+              <EvaluationPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/system-evaluation"
+          element={
+            <AdminRoute>
+              <SystemEvaluationPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/research-dashboard"
+          element={
+            <AdminRoute>
+              <ResearchDashboardPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/notifications"
+          element={
+            <AdminRoute>
+              <NotificationsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/voice-assistant"
+          element={
+            <AdminRoute>
+              <VoiceAssistantPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/uploads"
+          element={
+            <AdminRoute>
+              <UploadsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/settings"
+          element={
+            <AdminRoute>
+              <AccountPage />
+            </AdminRoute>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-    </AppShell>
+    </PortalLayout>
   );
 }

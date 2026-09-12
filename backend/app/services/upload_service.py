@@ -103,6 +103,7 @@ def _to_item(row: SupportingUploadRecord) -> SupportingUpload:
         size_bytes=row.size_bytes,
         scheme_id=row.scheme_id,
         scheme_name=_scheme_name(row.scheme_id),
+        review_status=row.review_status if getattr(row, "review_status", None) in {"pending", "verified", "rejected"} else "pending",
         created_at=_iso(row.created_at),
         disclaimer=UPLOAD_DISCLAIMER,
     )
@@ -196,6 +197,7 @@ def create_upload(
         content_type=content_type,
         size_bytes=len(payload),
         scheme_id=linked,
+        review_status="pending",
     )
     try:
         session.add(row)

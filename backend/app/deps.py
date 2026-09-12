@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db, require_db
 from app.models.user import UserRecord
-from app.services.auth_service import get_user_by_id
+from app.services.auth_service import get_user_by_id, user_has_admin_access
 from app.services.token_service import TokenError, decode_access_token
 
 bearer_scheme = HTTPBearer(auto_error=False)
@@ -28,3 +28,9 @@ def get_current_user(
     if user is None:
         raise HTTPException(status_code=401, detail="Invalid token")
     return user
+
+
+def get_current_admin(current_user: UserRecord = Depends(get_current_user)) -> UserRecord:
+    if not user_has_admin_access(current_user):
+        raise HTTPException(status_code=403, detail="Administrator access is required.")
+    return current_user

@@ -12,10 +12,11 @@ import { useAuth } from "../context/AuthContext";
 import { useI18n } from "../context/LanguageContext";
 import { ApiError, loginAccount, loginWithGoogle } from "../services/api";
 import { consumeAccountDeleted } from "../utils/authStorage";
+import { signedInHomePath } from "../utils/homePath";
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, user, login } = useAuth();
   const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +31,7 @@ export function LoginPage() {
   );
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={signedInHomePath(user)} replace />;
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -46,7 +47,7 @@ export function LoginPage() {
     try {
       const result = await loginAccount(email.trim(), password);
       login(result.access_token, result.user);
-      navigate("/dashboard", { replace: true });
+      navigate(signedInHomePath(result.user), { replace: true });
     } catch (caught) {
       if (caught instanceof ApiError && caught.status === 401) {
         setError(t.invalidCredentials);
@@ -70,7 +71,7 @@ export function LoginPage() {
     try {
       const result = await loginWithGoogle(credential);
       login(result.access_token, result.user);
-      navigate("/dashboard", { replace: true });
+      navigate(signedInHomePath(result.user), { replace: true });
     } catch (caught) {
       if (caught instanceof ApiError && caught.status === 409) {
         setError(t.emailRegistered);
