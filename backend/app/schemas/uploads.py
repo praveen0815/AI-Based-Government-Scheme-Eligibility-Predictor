@@ -41,6 +41,9 @@ class UploadLinkUpdate(BaseModel):
     scheme_id: str | None = None
 
 
+UploadReviewStatus = Literal["pending", "verified", "rejected"]
+
+
 class SupportingUpload(BaseModel):
     id: str
     category: UploadCategory
@@ -50,6 +53,7 @@ class SupportingUpload(BaseModel):
     size_bytes: int = Field(..., ge=0)
     scheme_id: str | None = None
     scheme_name: str | None = None
+    review_status: UploadReviewStatus = "pending"
     created_at: str
     disclaimer: str
 

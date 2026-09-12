@@ -20,7 +20,7 @@ export function GoogleSignInButton({
 
   return (
     <div className={`space-y-4 ${disabled ? "pointer-events-none opacity-60" : ""}`}>
-      <div className="flex items-center gap-3 text-[13px] font-semibold uppercase tracking-wide text-ink-500">
+      <div className="flex items-center gap-3 text-[15px] font-semibold uppercase tracking-wide text-ink-500">
         <span className="h-px flex-1 bg-line" />
         {t.orContinueWith}
         <span className="h-px flex-1 bg-line" />

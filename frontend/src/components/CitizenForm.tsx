@@ -79,8 +79,8 @@ export function CitizenForm({
           {sections.map((section, index) => (
             <li
               key={section.title}
-              className={`rounded-[12px] px-3 py-2.5 text-[14px] font-semibold ${
-                completed > index ? "bg-brand-900 text-white" : "bg-canvas text-ink-500"
+              className={`rounded-[12px] px-3 py-3 text-[16px] font-semibold ${
+                completed > index ? "bg-brand-900 text-white" : "bg-sage text-ink-500"
               }`}
             >
               {String(index + 1).padStart(2, "0")} {section.short}
@@ -266,7 +266,7 @@ export function CitizenForm({
 
       {children}
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+      <div className="card-surface flex flex-col-reverse gap-3 p-5 sm:flex-row sm:justify-end sm:p-6">
         {onReset ? (
           <Button type="button" variant="secondary" onClick={onReset}>
             {t.reset}

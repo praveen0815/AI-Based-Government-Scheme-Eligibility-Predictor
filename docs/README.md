@@ -53,5 +53,33 @@ Project notes, data-source records, and later design documents.
 | `phase22_results.md` | 22 | Personalized dashboard implementation results |
 | `document_upload_design.md` | 23 | Optional non-sensitive supporting document uploads |
 | `phase23_results.md` | 23 | Supporting document upload implementation results |
+| `notifications_design.md` | 24 | Owner-only in-app reminders from existing prototype activity |
+| `phase24_results.md` | 24 | Notifications and reminders implementation results |
+| `catalog_search_design.md` | 25 | Catalog search and filters over the official 13 scheme rows |
+| `phase25_results.md` | 25 | Advanced scheme search implementation results |
+| `explainability_design.md` | 26 | Plain-language Why this scheme? view of hybrid results |
+| `phase26_results.md` | 26 | Explainable recommendation view implementation results |
+| `account_settings_design.md` | 27 | Account settings, password, wallet links, and owner-only deletion |
+| `phase27_results.md` | 27 | Account and profile management implementation results |
+| `performance_evaluation_design.md` | 29 | In-process API timings and research evaluation summary |
+| `phase29_results.md` | 29 | Performance and system evaluation implementation results |
+| `final_system_flow.md` | 30 | End-to-end architecture, demo flow, modules, and limits |
+| `phase30_results.md` | 30 | Final integration and demo-readiness results |
+| `voice_assistant_design.md` | 31–32 | Voice interaction layer over the existing eligibility APIs |
+| `phase31_results.md` | 31 | Voice assistant implementation results |
+| `phase32_results.md` | 32 | Voice assistant UX, reliability, and accessibility results |
+| `scheme_discovery_design.md` | 33 | Personalized catalog search, filters, sort, and compare discovery |
+| `phase33_results.md` | 33 | Scheme discovery and smart filtering implementation results |
+| `explainable_eligibility_design.md` | 35 | Why this result? using existing hybrid fields only |
+| `eligibility_simulator_design.md` | 36 | Temporary profile copy and public `/recommend` simulation |
+| `application_tracking_design.md` | 36 | Owner-only application tracking, no government submit |
+| `personalized_dashboard_design.md` | 37 | Dashboard snapshot and quick actions over existing APIs |
+| `research_dashboard_design.md` | 37 | Protected research summary of Phase 29 metrics |
+| `advanced_voice_assistant_design.md` | 38 | Conversational intents over existing capabilities |
+| `smart_notifications_design.md` | 38 | Incomplete-evaluation and application-tracking reminders |
+| `phase35_38_results.md` | 35–38 | Coordinated citizen-assistance enhancement results |
+| `phase43_results.md` | 43 | Final integration, QA, security, and demo-readiness results |
+| `admin_portal_design.md` | 44 | Administrator role, APIs, and document-review isolation |
+| `phase44_results.md` | 44 | Admin portal implementation results |
 
 Aadhaar, LLMs, and deployment remain out of scope.

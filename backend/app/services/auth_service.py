@@ -12,10 +12,13 @@ from app.db.session import DatabaseUnavailableError
 from app.models.citizen import CitizenProfileRecord
 from app.models.documents import DocumentChecklistProgressRecord
 from app.models.readiness import ApplicationReadinessRecord
+from app.models.applications import ApplicationTrackingRecord
 from app.models.history import RecommendationHistoryRecord
+from app.services.notification_service import delete_notifications_for_user
 from app.services.upload_service import delete_uploads_for_user
 from app.models.user import UserRecord
 from app.schemas.auth import UserPublic
+from app.settings import admin_bootstrap_emails
 from app.services.password_service import hash_password, verify_password
 
 
@@ -35,6 +38,12 @@ def normalize_email(email: str) -> str:
     return email.strip().lower()
 
 
+def user_has_admin_access(user: UserRecord) -> bool:
+    if bool(getattr(user, "is_admin", False)):
+        return True
+    return normalize_email(user.email) in admin_bootstrap_emails()
+
+
 def _to_public(user: UserRecord) -> UserPublic:
     created_at = user.created_at.isoformat() if user.created_at is not None else None
     return UserPublic(
@@ -43,6 +52,7 @@ def _to_public(user: UserRecord) -> UserPublic:
         email=user.email,
         has_password=bool(user.password_hash),
         has_google=bool(user.google_sub),
+        is_admin=user_has_admin_access(user),
         created_at=created_at,
     )
 
@@ -192,7 +202,11 @@ def delete_account(session: Session, user: UserRecord) -> None:
         session.query(ApplicationReadinessRecord).filter(
             ApplicationReadinessRecord.user_id == user.id
         ).delete(synchronize_session=False)
+        session.query(ApplicationTrackingRecord).filter(
+            ApplicationTrackingRecord.user_id == user.id
+        ).delete(synchronize_session=False)
         delete_uploads_for_user(session, user.id)
+        delete_notifications_for_user(session, user.id)
         session.query(CitizenProfileRecord).filter(CitizenProfileRecord.user_id == user.id).delete(
             synchronize_session=False
         )

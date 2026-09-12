@@ -17,6 +17,7 @@ from app.db.base import Base
 from app.db.init_db import ensure_application_schema
 from app.db.session import check_database, get_database_url, get_engine
 from app.logging_filters import install_secret_redacting_filter
+from app.performance import PerformanceMiddleware
 from app.rate_limit import AuthRateLimitMiddleware
 from app.safe_errors import public_validation_errors, safe_error_detail
 from app.security_headers import SecurityHeadersMiddleware
@@ -27,13 +28,19 @@ from app.settings import (
     validate_runtime_settings,
 )
 from app.routes.auth import router as auth_router
+from app.routes.catalog import router as catalog_router
 from app.routes.evaluation import router as evaluation_router
+from app.routes.performance import router as performance_router
 from app.routes.compare import router as compare_router
 from app.routes.dashboard import router as dashboard_router
 from app.routes.documents import router as documents_router
 from app.routes.history import router as history_router
 from app.routes.insights import router as insights_router
 from app.routes.readiness import router as readiness_router
+from app.routes.notifications import router as notifications_router
+from app.routes.admin import router as admin_router
+from app.routes.voice import router as voice_router
+from app.routes.applications import router as applications_router
 from app.routes.uploads import router as uploads_router
 from app.routes.reports import router as reports_router
 from app.routes.wallet import router as wallet_router
@@ -47,6 +54,9 @@ from app.services.google_token_service import GoogleAuthUnavailableError, Google
 from app.services.compare_service import CompareSelectionError
 from app.services.document_checklist_service import DocumentChecklistNotFoundError
 from app.services.readiness_service import ReadinessNotFoundError
+from app.services.notification_service import NotificationNotFoundError
+from app.services.admin_service import AdminUserNotFoundError
+from app.services.application_service import ApplicationConflictError, ApplicationNotFoundError
 from app.services.upload_service import UploadNotFoundError, UploadRejectedError
 from app.services.history_service import HistoryNotFoundError
 from app.services.wallet_service import (
@@ -120,6 +130,7 @@ app = FastAPI(
     openapi_url="/openapi.json" if _DOCS_ENABLED else None,
 )
 
+app.add_middleware(PerformanceMiddleware)
 app.add_middleware(AuthRateLimitMiddleware)
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(
@@ -132,6 +143,7 @@ app.add_middleware(
 
 app.include_router(prediction_router)
 app.include_router(recommendation_router)
+app.include_router(catalog_router)
 app.include_router(auth_router)
 app.include_router(wallet_router)
 app.include_router(history_router)
@@ -140,9 +152,14 @@ app.include_router(insights_router)
 app.include_router(readiness_router)
 app.include_router(dashboard_router)
 app.include_router(uploads_router)
+app.include_router(notifications_router)
+app.include_router(applications_router)
+app.include_router(admin_router)
+app.include_router(voice_router)
 app.include_router(compare_router)
 app.include_router(reports_router)
 app.include_router(evaluation_router)
+app.include_router(performance_router)
 
 
 @app.get("/health")
@@ -236,6 +253,34 @@ async def readiness_not_found_handler(
 @app.exception_handler(UploadNotFoundError)
 async def upload_not_found_handler(_request: Request, exc: UploadNotFoundError) -> JSONResponse:
     return JSONResponse(status_code=404, content={"detail": str(exc)})
+
+
+@app.exception_handler(NotificationNotFoundError)
+async def notification_not_found_handler(
+    _request: Request, exc: NotificationNotFoundError
+) -> JSONResponse:
+    return JSONResponse(status_code=404, content={"detail": str(exc)})
+
+
+@app.exception_handler(AdminUserNotFoundError)
+async def admin_user_not_found_handler(
+    _request: Request, exc: AdminUserNotFoundError
+) -> JSONResponse:
+    return JSONResponse(status_code=404, content={"detail": str(exc)})
+
+
+@app.exception_handler(ApplicationNotFoundError)
+async def application_not_found_handler(
+    _request: Request, exc: ApplicationNotFoundError
+) -> JSONResponse:
+    return JSONResponse(status_code=404, content={"detail": str(exc)})
+
+
+@app.exception_handler(ApplicationConflictError)
+async def application_conflict_handler(
+    _request: Request, exc: ApplicationConflictError
+) -> JSONResponse:
+    return JSONResponse(status_code=409, content={"detail": str(exc)})
 
 
 @app.exception_handler(UploadRejectedError)

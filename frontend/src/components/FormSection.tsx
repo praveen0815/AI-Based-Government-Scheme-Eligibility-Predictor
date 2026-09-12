@@ -7,8 +7,8 @@ interface FormSectionProps {
 
 export function FormSection({ title, children }: FormSectionProps) {
   return (
-    <fieldset className="space-y-4 rounded-xl border border-line bg-canvas p-4">
-      <legend className="px-1 text-base font-semibold text-ink-900">{title}</legend>
+    <fieldset className="space-y-5 rounded-[16px] border border-line bg-sage p-5">
+      <legend className="px-1 text-[18px] font-semibold text-ink-900">{title}</legend>
       {children}
     </fieldset>
   );

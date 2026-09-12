@@ -174,6 +174,32 @@ def using_development_jwt_fallback() -> bool:
     return not is_production() and (not secret or secret == ACADEMIC_FALLBACK_JWT_SECRET)
 
 
+def admin_bootstrap_emails() -> frozenset[str]:
+    """Optional comma-separated emails granted the admin role. Not a second login system."""
+    load_database_env()
+    emails: set[str] = set()
+    raw = os.environ.get("ADMIN_EMAILS") or os.environ.get("ADMIN_BOOTSTRAP_EMAIL") or ""
+    for item in raw.split(","):
+        email = item.strip().lower()
+        if email:
+            emails.add(email)
+    return frozenset(emails)
+
+
+def voice_stt_api_url() -> str:
+    load_database_env()
+    return (os.environ.get("VOICE_STT_API_URL") or "").strip()
+
+
+def voice_stt_api_key() -> str:
+    load_database_env()
+    return (os.environ.get("VOICE_STT_API_KEY") or "").strip()
+
+
+def voice_stt_configured() -> bool:
+    return bool(voice_stt_api_url() and voice_stt_api_key())
+
+
 def validate_runtime_settings() -> None:
     """Fail fast in production. Development keeps local academic defaults."""
     if not is_production():

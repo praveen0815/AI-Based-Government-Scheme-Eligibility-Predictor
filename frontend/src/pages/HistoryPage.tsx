@@ -82,7 +82,7 @@ export function HistoryPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl space-y-8">
+    <div className="mx-auto max-w-4xl page-stack">
       <PageHeader title={t.historyTitle} description={t.historySubtitle} />
       <aside className="rounded-[14px] border border-line bg-surface px-5 py-4 text-[16px] text-ink-500 shadow-card" role="note">
         {t.historyDisclaimer}
@@ -176,12 +176,12 @@ export function HistoryPage() {
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {walletSummaryGroups(detail.profile_snapshot, t).map((group) => (
-              <article key={group.title} className="rounded-[12px] border border-line bg-canvas p-5">
+              <article key={group.title} className="rounded-[12px] border border-line bg-sage p-5">
                 <h3 className="text-[18px] font-semibold text-ink-900">{group.title}</h3>
                 <dl className="mt-3 space-y-2">
                   {group.rows.map((row) => (
                     <div key={row.label}>
-                      <dt className="text-[14px] text-ink-500">{row.label}</dt>
+                      <dt className="text-[16px] text-ink-500">{row.label}</dt>
                       <dd className="text-[16px] text-ink-900">{row.value}</dd>
                     </div>
                   ))}

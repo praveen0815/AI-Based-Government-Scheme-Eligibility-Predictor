@@ -54,6 +54,9 @@ class ModelService:
             self._version = digest[:16]
             logger.info("Loaded Decision Tree artifact '%s' version %s", relative, self._version)
 
+    def is_loaded(self) -> bool:
+        return self._pipeline is not None
+
     def pipeline(self) -> Pipeline:
         if self._pipeline is None:
             self.load()

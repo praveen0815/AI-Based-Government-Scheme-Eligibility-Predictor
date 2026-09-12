@@ -109,7 +109,19 @@ describe("data wallet page", () => {
   it("handles wallet creation failure", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValueOnce({ ok: false, status: 404 }).mockResolvedValueOnce({ ok: false, status: 503 }),
+      vi.fn().mockImplementation((url: string, init?: RequestInit) => {
+        const path = String(url);
+        if (path.includes("/api/v1/notifications")) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({ notifications: [], unread_count: 0, disclaimer: "" }),
+          });
+        }
+        if ((init?.method ?? "GET") === "POST") {
+          return Promise.resolve({ ok: false, status: 503 });
+        }
+        return Promise.resolve({ ok: false, status: 404 });
+      }),
     );
     renderAuthenticatedApp(["/wallet"]);
     const user = userEvent.setup();
@@ -167,11 +179,7 @@ describe("data wallet page", () => {
     await user.click(screen.getByRole("button", { name: "Delete Wallet" }));
     expect(screen.getByText("Are you sure you want to delete your data wallet?")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Yes, delete wallet" }));
-    expect(
-      await screen.findByRole("heading", {
-        name: "Welcome 👋",
-      }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Welcome back, Test User" })).toBeInTheDocument();
     expect(fetchMock.mock.calls.some((call) => (call[1] as RequestInit | undefined)?.method === "DELETE")).toBe(true);
   });
 
@@ -208,10 +216,19 @@ describe("data wallet page", () => {
   it("handles a database or API error", async () => {
     vi.stubGlobal(
       "fetch",
-      vi
-        .fn()
-        .mockResolvedValueOnce({ ok: false, status: 404 })
-        .mockRejectedValueOnce(new TypeError("Failed to fetch")),
+      vi.fn().mockImplementation((url: string, init?: RequestInit) => {
+        const path = String(url);
+        if (path.includes("/api/v1/notifications")) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({ notifications: [], unread_count: 0, disclaimer: "" }),
+          });
+        }
+        if ((init?.method ?? "GET") === "POST") {
+          return Promise.reject(new TypeError("Failed to fetch"));
+        }
+        return Promise.resolve({ ok: false, status: 404 });
+      }),
     );
     renderAuthenticatedApp(["/wallet"]);
     const user = userEvent.setup();

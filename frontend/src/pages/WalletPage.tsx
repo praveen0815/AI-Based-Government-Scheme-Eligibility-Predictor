@@ -157,7 +157,7 @@ export function WalletPage() {
       setMode("empty");
       setNotice(null);
       setConfirmDelete(false);
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       setApiError(error instanceof ApiError ? error.message : t.deleteWalletError);
     } finally {
@@ -166,13 +166,13 @@ export function WalletPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
+    <div className="mx-auto max-w-5xl page-stack">
       <PageHeader title={t.walletTitle} description={t.walletDescription} />
       <ResearchNotice compact />
       <p className="text-[15px] text-ink-500">{t.walletNotIdentity}</p>
 
       {notice ? (
-        <p className="rounded-[12px] border border-line bg-teal-50 px-4 py-3 font-medium text-accent" role="status">
+        <p className="notice-success" role="status">
           {notice}
         </p>
       ) : null}
@@ -217,7 +217,7 @@ export function WalletPage() {
                 <dl className="mt-5 space-y-4">
                   {group.rows.map((row) => (
                     <div key={row.label} className="border-b border-line pb-3 last:border-0 last:pb-0">
-                      <dt className="text-[14px] font-medium uppercase tracking-wide text-ink-500">{row.label}</dt>
+                      <dt className="text-[15px] font-semibold uppercase tracking-wide text-ink-500">{row.label}</dt>
                       <dd className="mt-1 text-[17px] font-medium text-ink-900">{row.value}</dd>
                     </div>
                   ))}
@@ -242,7 +242,7 @@ export function WalletPage() {
             </Button>
             <Link
               to="/history"
-              className="btn-text inline-flex items-center justify-center rounded-[12px] border border-line bg-surface px-5 py-3 text-ink-900 hover:bg-canvas"
+              className="btn-text inline-flex items-center justify-center rounded-[12px] border border-line bg-surface px-5 py-3 text-ink-900 hover:bg-sage"
             >
               {t.navHistory}
             </Link>

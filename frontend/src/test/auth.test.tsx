@@ -182,9 +182,36 @@ describe("authentication pages", () => {
     expect(screen.getAllByText(TEST_USER.full_name).length).toBeGreaterThan(0);
   });
 
-  it("shows authenticated navigation and logs out", async () => {
+  it("sends an already signed-in visitor from login to the dashboard", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404 }));
+    renderAuthenticatedApp(["/login"]);
+    expect(await screen.findByRole("heading", { name: "Welcome back, Test User" })).toBeInTheDocument();
+  });
+
+  it("opens the login page for an unauthenticated visitor at the application root", () => {
+    renderApp(["/"]);
+    expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Register" })).toBeInTheDocument();
+  });
+
+  it("sends an already signed-in visitor from the application root to the dashboard", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404 }));
     renderAuthenticatedApp(["/"]);
+    expect(await screen.findByRole("heading", { name: "Welcome back, Test User" })).toBeInTheDocument();
+  });
+
+  it("sends an already signed-in visitor from register to the dashboard", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404 }));
+    renderAuthenticatedApp(["/register"]);
+    expect(await screen.findByRole("heading", { name: "Welcome back, Test User" })).toBeInTheDocument();
+  });
+
+  it("shows authenticated navigation and logs out to login", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404 }));
+    renderAuthenticatedApp(["/dashboard"]);
+    expect(await screen.findByRole("heading", { name: "Welcome back, Test User" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Dashboard$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^My Wallet$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^History$/ })).toBeInTheDocument();
@@ -192,23 +219,12 @@ describe("authentication pages", () => {
     expect(screen.getByRole("link", { name: /^Insights$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Application Readiness$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^My Documents$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Account$/ })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Account$/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Settings$/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Logout" })).toBeInTheDocument();
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Logout" }));
-    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Dashboard$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^My Wallet$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^History$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Documents$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Insights$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Application Readiness$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^My Documents$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Account$/ })).toBeInTheDocument();
-  });
-
-  it("shows unauthenticated navigation", () => {
-    renderApp(["/"]);
+    expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Register" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Dashboard$/ })).toBeInTheDocument();
@@ -218,6 +234,22 @@ describe("authentication pages", () => {
     expect(screen.getByRole("link", { name: /^Insights$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Application Readiness$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^My Documents$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Account$/ })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Account$/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Settings$/ })).toBeInTheDocument();
+  });
+
+  it("shows unauthenticated navigation", () => {
+    renderApp(["/login"]);
+    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Register" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Dashboard$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^My Wallet$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^History$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Documents$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Insights$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Application Readiness$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^My Documents$/ })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Account$/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Settings$/ })).toBeInTheDocument();
   });
 });

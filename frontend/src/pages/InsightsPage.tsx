@@ -28,7 +28,7 @@ function SchemeInsightCard({
 }) {
   const { t } = useI18n();
   return (
-    <article className="rounded-[12px] border border-line px-4 py-4">
+    <article className="rounded-[14px] border border-line bg-sage px-5 py-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <Badge tone={scheme.predicted_eligible ? "success" : "muted"}>
@@ -46,7 +46,7 @@ function SchemeInsightCard({
             href={scheme.official_source_url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center rounded-[12px] border border-line px-3 py-2 text-[15px] font-semibold text-ink-900 hover:bg-canvas"
+            className="inline-flex items-center justify-center rounded-[12px] border border-line px-3 py-2 text-[15px] font-semibold text-ink-900 hover:bg-sage"
           >
             {t.visitOfficialWebsite}
           </a>
@@ -104,7 +104,7 @@ export function InsightsPage() {
   const schemes = [...(insights?.recommended_schemes ?? []), ...(insights?.other_schemes ?? [])];
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
+    <div className="mx-auto max-w-5xl page-stack">
       <PageHeader title={t.insightsTitle} description={t.insightsLead} />
       <ResearchNotice compact />
 
@@ -126,13 +126,13 @@ export function InsightsPage() {
               {t.insightsOverview}
             </h2>
             <div className="grid gap-3 sm:grid-cols-3">
-              <article className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+              <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
                 <p className="text-[15px] font-medium text-ink-500">{t.insightsEvaluatedCount(insights.total_schemes_evaluated)}</p>
               </article>
-              <article className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+              <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
                 <p className="text-[15px] font-medium text-ink-500">{t.insightsEligibleCount(insights.predicted_eligible_count)}</p>
               </article>
-              <article className="rounded-[12px] border border-line bg-canvas px-4 py-4">
+              <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
                 <p className="text-[15px] font-medium text-ink-500">
                   {t.insightsNotRecommendedCount(insights.not_recommended_count)}
                 </p>

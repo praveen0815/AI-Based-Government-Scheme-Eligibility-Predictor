@@ -11,11 +11,12 @@ import { Button } from "../components/ui/Button";
 import { useAuth } from "../context/AuthContext";
 import { useI18n } from "../context/LanguageContext";
 import { ApiError, loginAccount, loginWithGoogle } from "../services/api";
-import { peekAccountDeleted } from "../utils/authStorage";
+import { consumeAccountDeleted } from "../utils/authStorage";
+import { signedInHomePath } from "../utils/homePath";
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { isAuthenticated, user, login } = useAuth();
   const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,9 +26,12 @@ export function LoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const registered = searchParams.get("registered") === "1";
+  const [accountDeleted] = useState(
+    () => searchParams.get("accountDeleted") === "1" || consumeAccountDeleted(),
+  );
 
-  if (peekAccountDeleted()) {
-    return <Navigate to="/?accountDeleted=1" replace />;
+  if (isAuthenticated) {
+    return <Navigate to={signedInHomePath(user)} replace />;
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -43,7 +47,7 @@ export function LoginPage() {
     try {
       const result = await loginAccount(email.trim(), password);
       login(result.access_token, result.user);
-      navigate("/dashboard", { replace: true });
+      navigate(signedInHomePath(result.user), { replace: true });
     } catch (caught) {
       if (caught instanceof ApiError && caught.status === 401) {
         setError(t.invalidCredentials);
@@ -67,7 +71,7 @@ export function LoginPage() {
     try {
       const result = await loginWithGoogle(credential);
       login(result.access_token, result.user);
-      navigate("/dashboard", { replace: true });
+      navigate(signedInHomePath(result.user), { replace: true });
     } catch (caught) {
       if (caught instanceof ApiError && caught.status === 409) {
         setError(t.emailRegistered);
@@ -80,55 +84,66 @@ export function LoginPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md">
-      <div className="card-surface space-y-7 p-7 sm:p-9">
-        <BrandMark />
-        <header className="space-y-3">
-          <h1 className="text-[34px] font-extrabold tracking-tight text-ink-900 sm:text-[38px]">{t.loginTitle}</h1>
-          <p className="text-[17px] leading-relaxed text-ink-500">{t.loginLead}</p>
-        </header>
-        <ResearchNotice compact />
-        {registered ? (
-          <p className="rounded-[12px] border border-line bg-teal-50 px-4 py-3 font-medium text-accent" role="status">
-            {t.accountCreated}
-          </p>
-        ) : null}
-        {error ? <ErrorState message={error} /> : null}
-        <form onSubmit={handleSubmit} noValidate className="space-y-5">
-          <FormField id="login-email" label={t.email} error={fieldErrors.email} required>
-            <input
-              id="login-email"
-              type="email"
-              autoComplete="email"
+    <div className="mx-auto max-w-5xl">
+      <div className="overflow-hidden rounded-[24px] border border-line bg-surface shadow-lift lg:grid lg:grid-cols-[0.92fr_1.08fr]">
+        <div className="bg-navy-900 px-8 py-10 text-white sm:px-10 lg:px-12 lg:py-14">
+          <BrandMark inverted />
+          <p className="mt-8 font-display text-[28px] font-bold leading-snug sm:text-[32px]">{t.productTagline}</p>
+          <p className="mt-8 text-[16px] leading-relaxed text-[#D5DDD8]">{t.notOfficialService}</p>
+        </div>
+        <div className="space-y-7 p-8 sm:p-10">
+          <header className="space-y-3">
+            <h1 className="page-title">{t.loginTitle}</h1>
+            <p className="body-copy">{t.loginLead}</p>
+          </header>
+          <ResearchNotice compact />
+          {registered ? (
+            <p className="notice-success" role="status">
+              {t.accountCreated}
+            </p>
+          ) : null}
+          {accountDeleted ? (
+            <p className="notice-success" role="status">
+              {t.accountDeleted}
+            </p>
+          ) : null}
+          {error ? <ErrorState message={error} /> : null}
+          <form onSubmit={handleSubmit} noValidate className="space-y-6">
+            <FormField id="login-email" label={t.email} error={fieldErrors.email} required>
+              <input
+                id="login-email"
+                type="email"
+                autoComplete="email"
+                required
+                aria-invalid={Boolean(fieldErrors.email)}
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="field-input"
+              />
+            </FormField>
+            <PasswordField
+              id="login-password"
+              label={t.password}
+              autoComplete="current-password"
               required
-              aria-invalid={Boolean(fieldErrors.email)}
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="field-input"
+              value={password}
+              error={fieldErrors.password}
+              onChange={setPassword}
             />
-          </FormField>
-          <PasswordField
-            id="login-password"
-            label={t.password}
-            autoComplete="current-password"
-            required
-            value={password}
-            error={fieldErrors.password}
-            onChange={setPassword}
-          />
-          {loading ? <LoadingState message={t.signingIn} /> : null}
-          {googleLoading ? <LoadingState message={t.signingInGoogle} /> : null}
-          <Button type="submit" disabled={loading || googleLoading} className="w-full">
-            {t.loginSubmit}
-          </Button>
-          <GoogleSignInButton onCredential={(value) => void handleGoogleCredential(value)} disabled={loading || googleLoading} />
-          <p className="text-[16px] text-ink-500">
-            {t.needAccount}{" "}
-            <Link to="/register" className="font-semibold text-action">
-              {t.createAnAccount}
-            </Link>
-          </p>
-        </form>
+            {loading ? <LoadingState message={t.signingIn} /> : null}
+            {googleLoading ? <LoadingState message={t.signingInGoogle} /> : null}
+            <Button type="submit" disabled={loading || googleLoading} className="w-full">
+              {t.loginSubmit}
+            </Button>
+            <GoogleSignInButton onCredential={(value) => void handleGoogleCredential(value)} disabled={loading || googleLoading} />
+            <p className="text-[16px] text-ink-500">
+              {t.needAccount}{" "}
+              <Link to="/register" className="font-semibold text-action">
+                {t.createAnAccount}
+              </Link>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );

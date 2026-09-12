@@ -24,11 +24,29 @@ import type {
   SupportingUpload,
   SupportingUploadCategory,
   SupportingUploadListResponse,
+  NotificationItem,
+  NotificationListResponse,
+  ApplicationItem,
+  ApplicationListResponse,
+  ApplicationStatus,
   RecommendResponse,
   RecommendationHistoryItem,
   RecommendationHistoryListResponse,
   SchemeCatalogResponse,
+  CatalogSearchResponse,
   SchemeEvaluationResponse,
+  SystemEvaluationResponse,
+  AdminOverviewResponse,
+  AdminUserListResponse,
+  AdminUserDetailResponse,
+  AdminDocumentListResponse,
+  AdminDocumentItem,
+  AdminEligibilityListResponse,
+  AdminVoiceAuditCreate,
+  AdminVoiceAuditResponse,
+  DocumentReviewStatus,
+  VoiceStatusResponse,
+  VoiceTranscribeResponse,
 } from "../types/api";
 
 const REQUEST_TIMEOUT_MS = 20000;
@@ -113,7 +131,7 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
       signal: controller.signal,
       headers: {
         Accept: "application/json",
-        ...(init?.body ? { "Content-Type": "application/json" } : {}),
+        ...(init?.body && !(init.body instanceof FormData) ? { "Content-Type": "application/json" } : {}),
         ...authHeaders(),
         ...init?.headers,
       },
@@ -169,6 +187,10 @@ export async function recommendSchemes(citizenProfile: CitizenProfile): Promise<
 
 export async function fetchCoreSchemes(): Promise<SchemeCatalogResponse> {
   return requestJson<SchemeCatalogResponse>("/api/v1/schemes");
+}
+
+export async function fetchSchemeCatalog(): Promise<CatalogSearchResponse> {
+  return requestJson<CatalogSearchResponse>("/api/v1/catalog");
 }
 
 export async function registerAccount(payload: {
@@ -315,6 +337,53 @@ export async function fetchReadinessProgress(): Promise<ReadinessProgressRespons
 
 export async function fetchDashboardOverview(): Promise<DashboardOverviewResponse> {
   return requestJson<DashboardOverviewResponse>("/api/v1/dashboard");
+}
+
+export async function fetchApplications(): Promise<ApplicationListResponse> {
+  return requestJson<ApplicationListResponse>("/api/v1/applications");
+}
+
+export async function createApplication(
+  schemeId: string,
+  status: ApplicationStatus = "planning",
+  applicationDate?: string | null,
+): Promise<ApplicationItem> {
+  return requestJson<ApplicationItem>("/api/v1/applications", {
+    method: "POST",
+    body: JSON.stringify({
+      scheme_id: schemeId,
+      status,
+      application_date: applicationDate || null,
+    }),
+  });
+}
+
+export async function updateApplication(
+  applicationId: string,
+  payload: { status?: ApplicationStatus; application_date?: string | null },
+): Promise<ApplicationItem> {
+  return requestJson<ApplicationItem>(`/api/v1/applications/${applicationId}`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function deleteApplication(applicationId: string): Promise<void> {
+  await requestNoContent(`/api/v1/applications/${applicationId}`, { method: "DELETE" });
+}
+
+export async function fetchNotifications(): Promise<NotificationListResponse> {
+  return requestJson<NotificationListResponse>("/api/v1/notifications");
+}
+
+export async function markNotificationRead(notificationId: string): Promise<NotificationItem> {
+  return requestJson<NotificationItem>(`/api/v1/notifications/${notificationId}/read`, {
+    method: "PATCH",
+  });
+}
+
+export async function deleteNotification(notificationId: string): Promise<void> {
+  await requestNoContent(`/api/v1/notifications/${notificationId}`, { method: "DELETE" });
 }
 
 export async function fetchSupportingUploads(schemeId?: string): Promise<SupportingUploadListResponse> {
@@ -519,6 +588,10 @@ export async function recommendFromWallet(citizenId: string): Promise<RecommendR
   return body;
 }
 
+export async function fetchSystemEvaluation(): Promise<SystemEvaluationResponse> {
+  return requestJson<SystemEvaluationResponse>("/api/v1/system-evaluation");
+}
+
 export async function fetchEvaluationBundle(): Promise<EvaluationBundle> {
   const [overview, models, schemes, features, confusion, limitations, hybrid] = await Promise.all([
     requestJson<EvaluationOverview>("/api/v1/evaluation/overview"),
@@ -530,6 +603,63 @@ export async function fetchEvaluationBundle(): Promise<EvaluationBundle> {
     requestJson<HybridEvaluationResponse>("/api/v1/evaluation/hybrid"),
   ]);
   return { overview, models, schemes, features, confusion, limitations, hybrid };
+}
+
+export async function fetchAdminOverview(): Promise<AdminOverviewResponse> {
+  return requestJson<AdminOverviewResponse>("/api/v1/admin/overview");
+}
+
+export async function fetchAdminUsers(query?: string): Promise<AdminUserListResponse> {
+  const search = query?.trim() ? `?q=${encodeURIComponent(query.trim())}` : "";
+  return requestJson<AdminUserListResponse>(`/api/v1/admin/users${search}`);
+}
+
+export async function fetchAdminUser(userId: string): Promise<AdminUserDetailResponse> {
+  return requestJson<AdminUserDetailResponse>(`/api/v1/admin/users/${userId}`);
+}
+
+export async function fetchAdminDocuments(): Promise<AdminDocumentListResponse> {
+  return requestJson<AdminDocumentListResponse>("/api/v1/admin/documents");
+}
+
+export async function updateAdminDocumentStatus(
+  uploadId: string,
+  reviewStatus: DocumentReviewStatus,
+): Promise<AdminDocumentItem> {
+  return requestJson<AdminDocumentItem>(`/api/v1/admin/documents/${uploadId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ review_status: reviewStatus }),
+  });
+}
+
+export async function fetchAdminEligibility(): Promise<AdminEligibilityListResponse> {
+  return requestJson<AdminEligibilityListResponse>("/api/v1/admin/eligibility");
+}
+
+export async function createAdminVoiceAudit(
+  payload: AdminVoiceAuditCreate,
+): Promise<AdminVoiceAuditResponse> {
+  return requestJson<AdminVoiceAuditResponse>("/api/v1/admin/audit/voice", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function fetchVoiceStatus(): Promise<VoiceStatusResponse> {
+  return requestJson<VoiceStatusResponse>("/api/v1/voice/status");
+}
+
+export async function transcribeVoiceAudio(
+  file: Blob,
+  language: string,
+): Promise<VoiceTranscribeResponse> {
+  const body = new FormData();
+  body.append("file", file, "speech.webm");
+  body.append("language", language);
+  return requestJson<VoiceTranscribeResponse>("/api/v1/voice/transcribe", {
+    method: "POST",
+    body,
+  });
 }
 
 export function walletToProfile(wallet: CitizenWallet): CitizenProfile {

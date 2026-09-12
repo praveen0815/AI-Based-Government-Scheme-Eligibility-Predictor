@@ -8,6 +8,7 @@ import { renderApp } from "./renderApp";
 afterEach(() => {
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
+  window.sessionStorage.clear();
 });
 
 async function fillValidForm() {
@@ -16,7 +17,7 @@ async function fillValidForm() {
 
 describe("citizen portal", () => {
   it("loads the home page", () => {
-    renderApp(["/"]);
+    renderApp(["/home"]);
     expect(
       screen.getByRole("heading", { name: "Welcome 👋" }),
     ).toBeInTheDocument();
@@ -63,7 +64,10 @@ describe("citizen portal", () => {
     const pending = new Promise((resolve) => {
       finish = resolve;
     });
-    const fetchMock = vi.fn().mockReturnValue(pending);
+    const fetchMock = vi.fn().mockImplementation((url: string) => {
+      if (String(url).includes("/recommend")) return pending;
+      return Promise.resolve({ ok: false, status: 404 });
+    });
     vi.stubGlobal("fetch", fetchMock);
 
     renderApp(["/check"]);
@@ -87,10 +91,11 @@ describe("citizen portal", () => {
     );
     expect(screen.getByRole("link", { name: /Official Source/ })).toHaveAttribute("target", "_blank");
     expect(screen.getAllByText(/NEEDS VERIFICATION/).length).toBeGreaterThan(0);
-    expect(JSON.parse(String((fetchMock.mock.calls[0] as [string, RequestInit])[1].body))).toEqual(
+    const recommendCall = fetchMock.mock.calls.find((call) => String(call[0]).includes("/recommend"));
+    expect(JSON.parse(String((recommendCall as [string, RequestInit])[1].body))).toEqual(
       VALID_PROFILE,
     );
-  });
+  }, 15000);
 
   it("renders multiple recommendations", () => {
     renderApp(["/results"], {

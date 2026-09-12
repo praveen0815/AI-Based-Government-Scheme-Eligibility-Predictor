@@ -240,6 +240,14 @@ Fields come from the catalog: `scheme_id`, `scheme_name`, `department`, `scheme_
 
 Empty catalog cells are returned as `null`. The literal text `NEEDS VERIFICATION` is returned unchanged.
 
+## `GET /api/v1/catalog`
+
+Additive read-only search over all 13 rows in `schemes.csv`. Independent from `/predict` and `/recommend`. Does not accept client-supplied eligibility results.
+
+Optional query parameters: `q` (name or scheme ID), `ml_scope`, `department`, `gender`, `student`, `category`. `gender=unspecified` and `student=unspecified` match empty catalog cells. Filter values are exact catalog strings; the API does not invent eligibility conditions.
+
+Unfiltered `GET /api/v1/schemes` is unchanged and still returns the six CORE schemes only.
+
 ## `POST /api/v1/recommend`
 
 Personalized **eligibility-based** scheme recommendation. The request is a citizen profile only. The API evaluates all six CORE schemes with the same saved Decision Tree used by `/predict`.

@@ -13,7 +13,7 @@ export function EmptyRecommendations({ onEditProfile }: { onEditProfile: () => v
       </Button>
       <Link
         to="/schemes"
-        className="inline-flex rounded-lg border border-line bg-surface px-4 py-2.5 text-sm font-medium text-ink-900 hover:bg-canvas"
+        className="btn-text inline-flex items-center justify-center rounded-[12px] border border-line bg-surface px-5 py-3 text-ink-900 hover:bg-sage"
       >
         {t.emptyExplore}
       </Link>
