@@ -38,6 +38,8 @@ from app.routes.history import router as history_router
 from app.routes.insights import router as insights_router
 from app.routes.readiness import router as readiness_router
 from app.routes.notifications import router as notifications_router
+from app.routes.admin import router as admin_router
+from app.routes.voice import router as voice_router
 from app.routes.applications import router as applications_router
 from app.routes.uploads import router as uploads_router
 from app.routes.reports import router as reports_router
@@ -53,6 +55,7 @@ from app.services.compare_service import CompareSelectionError
 from app.services.document_checklist_service import DocumentChecklistNotFoundError
 from app.services.readiness_service import ReadinessNotFoundError
 from app.services.notification_service import NotificationNotFoundError
+from app.services.admin_service import AdminUserNotFoundError
 from app.services.application_service import ApplicationConflictError, ApplicationNotFoundError
 from app.services.upload_service import UploadNotFoundError, UploadRejectedError
 from app.services.history_service import HistoryNotFoundError
@@ -151,6 +154,8 @@ app.include_router(dashboard_router)
 app.include_router(uploads_router)
 app.include_router(notifications_router)
 app.include_router(applications_router)
+app.include_router(admin_router)
+app.include_router(voice_router)
 app.include_router(compare_router)
 app.include_router(reports_router)
 app.include_router(evaluation_router)
@@ -253,6 +258,13 @@ async def upload_not_found_handler(_request: Request, exc: UploadNotFoundError) 
 @app.exception_handler(NotificationNotFoundError)
 async def notification_not_found_handler(
     _request: Request, exc: NotificationNotFoundError
+) -> JSONResponse:
+    return JSONResponse(status_code=404, content={"detail": str(exc)})
+
+
+@app.exception_handler(AdminUserNotFoundError)
+async def admin_user_not_found_handler(
+    _request: Request, exc: AdminUserNotFoundError
 ) -> JSONResponse:
     return JSONResponse(status_code=404, content={"detail": str(exc)})
 

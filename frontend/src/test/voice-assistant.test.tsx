@@ -3,6 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ProfileCompleteness } from "../types/api";
 import { detectVoiceIntent } from "../utils/voiceIntent";
+import { displayFirstName, isLowSpeechConfidence, isNoiseTranscript } from "../utils/niraIdentity";
+import { niraVoiceLabel, pickBestTranscript, pickNiraVoice } from "../utils/niraSpeech";
+import { hashTranscript, maskEmail } from "../services/voiceAdminService";
 import { buildIncomeWhatIfMessage } from "../services/voiceAssistantService";
 import { en } from "../i18n/en";
 import { extractProfileFields } from "../utils/voiceProfileExtract";
@@ -90,6 +93,156 @@ function mockVoiceFetch(options?: {
     if (path.includes("/wallets/me") || path.includes("/wallets/")) {
       if (options?.wallet === null) return jsonError(404);
       return jsonOk(options?.wallet ?? WALLET);
+    }
+    return jsonOk({});
+  });
+}
+
+const KAMAL = {
+  user_id: "bbbbbbbb-bbbb-cccc-dddd-eeeeeeeeeeee",
+  full_name: "Kamal Nath",
+  email: "kamal@example.com",
+  has_wallet: true,
+  is_admin: false,
+  created_at: "2026-09-01T10:00:00+00:00",
+  last_activity_at: "2026-09-12T04:00:00+00:00",
+};
+
+const KAMAL_RAJ = {
+  ...KAMAL,
+  user_id: "cccccccc-bbbb-cccc-dddd-eeeeeeeeeeee",
+  full_name: "Kamal Raj",
+  email: "kamal.raj@example.com",
+};
+
+function mockAdminVoiceFetch(options?: { multiple?: boolean }) {
+  return vi.fn().mockImplementation(async (url: string, init?: RequestInit) => {
+    const path = String(url);
+    const method = String(init?.method ?? "GET").toUpperCase();
+    if (path.includes("/notifications")) {
+      return jsonOk({ items: [], unread_count: 0, unread_reminder_count: 0 });
+    }
+    if (path.includes("/api/v1/admin/overview")) {
+      return jsonOk({
+        total_users: 4,
+        active_users: 2,
+        total_document_uploads: 3,
+        pending_document_reviews: 1,
+        verified_documents: 1,
+        rejected_documents: 1,
+        eligible_scheme_results: 5,
+        not_eligible_scheme_results: 7,
+        cannot_fully_evaluate_users: 1,
+        recent_activity: [],
+        disclaimer: "Administrator monitoring for this academic research prototype.",
+      });
+    }
+    if (/\/api\/v1\/admin\/users\/[^/?]+/.test(path)) {
+      return jsonOk({
+        user: KAMAL,
+        wallet: { citizen_id: WALLET.citizen_id, ...VALID_PROFILE },
+        completeness: COMPLETE_PROFILE,
+        eligibility: {
+          has_wallet: true,
+          prediction_label: "eligible",
+          eligible_scheme_count: 2,
+          evaluated_schemes: [],
+          incomplete_fields: [],
+          last_checked_at: "2026-09-12T04:00:00+00:00",
+          disclaimer: "Administrator monitoring for this academic research prototype.",
+        },
+        applications: [],
+        history: [],
+        disclaimer: "Administrator monitoring for this academic research prototype.",
+      });
+    }
+    if (path.includes("/api/v1/admin/users")) {
+      const users = options?.multiple ? [KAMAL, KAMAL_RAJ] : [KAMAL];
+      return jsonOk({
+        users,
+        count: users.length,
+        disclaimer: "Administrator monitoring for this academic research prototype.",
+      });
+    }
+    if (path.includes("/api/v1/admin/audit/voice") && method === "POST") {
+      const body = init?.body ? JSON.parse(String(init.body)) : {};
+      return jsonOk({
+        id: "audit-1",
+        admin_user_id: TEST_USER.user_id,
+        intent: body.intent,
+        outcome: body.outcome,
+        target_user_id: body.target_user_id ?? null,
+        transcript_hash: body.transcript_hash,
+        created_at: "2026-09-12T16:00:00+00:00",
+        disclaimer: "Administrator monitoring for this academic research prototype.",
+      });
+    }
+    if (path.includes("/api/v1/admin/documents/") && method === "PATCH") {
+      const body = init?.body ? JSON.parse(String(init.body)) : {};
+      return jsonOk({
+        id: "upload-1",
+        owner_user_id: KAMAL.user_id,
+        owner_name: KAMAL.full_name,
+        owner_email: KAMAL.email,
+        category: "education_certificate",
+        display_name: "school-certificate.pdf",
+        content_type: "application/pdf",
+        size_bytes: 128,
+        scheme_id: null,
+        scheme_name: null,
+        review_status: body.review_status ?? "verified",
+        created_at: "2026-09-12T04:00:00+00:00",
+      });
+    }
+    if (path.includes("/api/v1/admin/documents") && method === "GET") {
+      return jsonOk({
+        documents: [
+          {
+            id: "upload-1",
+            owner_user_id: KAMAL.user_id,
+            owner_name: KAMAL.full_name,
+            owner_email: KAMAL.email,
+            category: "education_certificate",
+            display_name: "school-certificate.pdf",
+            content_type: "application/pdf",
+            size_bytes: 128,
+            scheme_id: null,
+            scheme_name: null,
+            review_status: "pending",
+            created_at: "2026-09-12T04:00:00+00:00",
+          },
+          {
+            id: "upload-2",
+            owner_user_id: KAMAL.user_id,
+            owner_name: KAMAL.full_name,
+            owner_email: KAMAL.email,
+            category: "income_proof",
+            display_name: "income-note.pdf",
+            content_type: "application/pdf",
+            size_bytes: 64,
+            scheme_id: null,
+            scheme_name: null,
+            review_status: "verified",
+            created_at: "2026-09-12T04:00:00+00:00",
+          },
+          {
+            id: "upload-3",
+            owner_user_id: KAMAL.user_id,
+            owner_name: KAMAL.full_name,
+            owner_email: KAMAL.email,
+            category: "other",
+            display_name: "extra.pdf",
+            content_type: "application/pdf",
+            size_bytes: 32,
+            scheme_id: null,
+            scheme_name: null,
+            review_status: "rejected",
+            created_at: "2026-09-12T04:00:00+00:00",
+          },
+        ],
+        count: 3,
+        disclaimer: "Administrator monitoring for this academic research prototype.",
+      });
     }
     return jsonOk({});
   });
@@ -190,6 +343,9 @@ describe("voice intent and profile extraction", () => {
     expect(detectVoiceIntent("Explain this scheme").intent).toBe("SCHEME_QUESTION");
     expect(detectVoiceIntent("What schemes are available for students?").intent).toBe("SCHEME_QUESTION");
     expect(detectVoiceIntent("I am a student").intent).toBe("UPDATE_PROFILE");
+    expect(detectVoiceIntent("Who are you?").intent).toBe("WHO_ARE_YOU");
+    expect(detectVoiceIntent("What can you help with?").intent).toBe("HELP");
+    expect(detectVoiceIntent("Hi Nira").intent).toBe("GREET");
     expect(detectVoiceIntent("Tell me a joke").intent).toBe("UNSUPPORTED");
     expect(detectVoiceIntent("My income is 50000").intent).toBe("UNSUPPORTED");
     expect(detectVoiceIntent("What happens if my income changes?").intent).toBe("WHAT_IF");
@@ -208,11 +364,63 @@ describe("voice intent and profile extraction", () => {
     expect(detectVoiceIntent("Open the eligibility simulator").navigateTo).toBe("simulator");
     expect(detectVoiceIntent("Open my applications").navigateTo).toBe("applications");
     expect(detectVoiceIntent("Check what schemes I can get").intent).toBe("CHECK_ELIGIBILITY");
+    expect(detectVoiceIntent("Open documents").intent).toBe("NAVIGATE");
+    expect(detectVoiceIntent("Show Kamal Nath's documents").intent).toBe("ADMIN_USER_DOCUMENTS");
+    expect(detectVoiceIntent("Show Kamal Nath's documents").personQuery).toBe("Kamal Nath");
+    expect(detectVoiceIntent("Find user Kamal Nath").intent).toBe("ADMIN_LOOKUP_USER");
+    expect(detectVoiceIntent("Summarize Kamal Nath").intent).toBe("ADMIN_USER_SUMMARY");
+    expect(maskEmail("kamal@example.com")).toBe("k***@example.com");
+    expect(maskEmail("kamal.raj@example.com")).toBe("k***@example.com");
+    expect(detectVoiceIntent("How many pending reviews?").intent).toBe("ADMIN_PENDING_REVIEWS");
+    expect(detectVoiceIntent("How many documents are waiting").intent).toBe("ADMIN_PENDING_REVIEWS");
+    expect(detectVoiceIntent("Please see if I qualify").intent).toBe("CHECK_ELIGIBILITY");
+    expect(detectVoiceIntent("What's left to fill in my profile").intent).toBe("PROFILE_COMPLETENESS");
+    expect(detectVoiceIntent("Why was this scheme recommended").intent).toBe("EXPLAIN_RESULT");
+    expect(detectVoiceIntent("Take me to my papers").navigateTo).toBe("documents");
+    expect(detectVoiceIntent("Which scheme pays the most").intent).toBe("HIGHEST_BENEFIT");
+    expect(detectVoiceIntent("Verify Kamal Nath's document").intent).toBe("ADMIN_REVIEW_DOCUMENT");
+    expect(detectVoiceIntent("Verify Kamal Nath's document").personQuery).toBe("Kamal Nath");
+    expect(detectVoiceIntent("Verify Kamal Nath's document").reviewStatus).toBe("verified");
+    expect(detectVoiceIntent("Reject Kamal Nath's education certificate").reviewStatus).toBe("rejected");
+    expect(detectVoiceIntent("Open users").adminNavigateTo).toBe("users");
     expect(extractProfileFields("My age is 21. I am a student.").fields).toEqual({
       age: 21,
       is_student: true,
     });
     expect(extractProfileFields("My annual income is 2 lakh.").unsupportedMentions).toContain("income");
+  });
+
+  it("picks a named neural Nira voice and the best transcript alternative", () => {
+    const voices = [
+      { name: "Android Local", lang: "en-US", localService: true, voiceURI: "local", default: false },
+      { name: "Microsoft Heera Neural", lang: "en-IN", localService: false, voiceURI: "heera", default: false },
+    ] as SpeechSynthesisVoice[];
+    const chosen = pickNiraVoice("en", voices);
+    expect(chosen?.name).toBe("Microsoft Heera Neural");
+    expect(niraVoiceLabel(chosen)).toBe("Nira · Microsoft Heera Neural");
+    expect(pickBestTranscript([{ transcript: "weak", confidence: 0.2 }, { transcript: "strong", confidence: 0.9 }])).toEqual({
+      transcript: "strong",
+      confidence: 0.9,
+    });
+  });
+
+  it("hashes transcripts and masks emails without keeping raw speech", async () => {
+    expect(maskEmail("kamal@example.com")).toBe("k***@example.com");
+    const hashed = await hashTranscript("  Show Kamal Nath's documents  ");
+    expect(hashed).toMatch(/^[a-f0-9]{64}$/);
+    expect(hashed).toBe(await hashTranscript("Show Kamal Nath's documents"));
+    expect(hashed).not.toMatch(/kamal|documents/i);
+  });
+
+  it("treats filler and low-confidence speech as unsafe to act on", () => {
+    expect(displayFirstName("Praveen Kumar", "other@example.com")).toBe("Praveen");
+    expect(displayFirstName("", "kamal@example.com")).toBe("kamal");
+    expect(isNoiseTranscript("um")).toBe(true);
+    expect(isNoiseTranscript("ahh")).toBe(true);
+    expect(isNoiseTranscript("Check my eligibility")).toBe(false);
+    expect(isLowSpeechConfidence(0.2)).toBe(true);
+    expect(isLowSpeechConfidence(0)).toBe(false);
+    expect(isLowSpeechConfidence(undefined)).toBe(false);
   });
 });
 
@@ -225,13 +433,16 @@ describe("voice assistant page", () => {
   it("renders the authenticated voice assistant page", () => {
     vi.stubGlobal("fetch", mockVoiceFetch());
     renderAuthenticatedApp(["/voice-assistant"]);
-    expect(screen.getByRole("heading", { name: "Voice Eligibility Assistant" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Nira" })).toBeInTheDocument();
+    expect(screen.getAllByText("Hi, I'm Nira. What can I help you with?").length).toBeGreaterThan(0);
+    expect(screen.getByText("Signed in as Test · Citizen portal")).toBeInTheDocument();
+    expect(screen.getAllByText("Hi, I'm Nira. How can I help you today, Test?").length).toBeGreaterThan(0);
     expect(screen.getByText("Ready")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Start Speaking" })).toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: "Type your question" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Voice Assistant" })).toHaveAttribute("href", "/voice-assistant");
     expect(screen.getByRole("button", { name: "Check my eligibility" })).toBeInTheDocument();
-    expect(screen.getByText("No messages in this session yet. Speak or type a question to begin.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Who are you?" })).toBeInTheDocument();
   });
 
   it("starts and stops recognition without continuous recording", async () => {
@@ -403,7 +614,7 @@ describe("voice assistant page", () => {
   it("renders English and Tamil voice assistant copy from the existing i18n dictionaries", () => {
     vi.stubGlobal("fetch", mockVoiceFetch());
     renderApp(["/voice-assistant"], { user: TEST_USER, token: "test-token", language: "ta" });
-    expect(screen.getByRole("heading", { name: "குரல் தகுதி உதவியாளர்" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "நிரா" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "பேசத் தொடங்கு" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "குரல் உதவியாளர்" })).toBeInTheDocument();
   });
@@ -537,7 +748,7 @@ describe("voice assistant page", () => {
     await sendTyped("What happens if my income changes?");
     expect((await screen.findAllByText(en.voiceIncomeWhatIfExplanation)).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("button", { name: "Open Eligibility Simulator" }).length).toBeGreaterThan(0);
-    expect(screen.getByRole("heading", { name: "Voice Eligibility Assistant" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Nira" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Eligibility What-If Simulator" })).not.toBeInTheDocument();
     expect(
       fetchMock.mock.calls.some(
@@ -575,11 +786,14 @@ describe("voice assistant page", () => {
     await waitFor(() => {
       expect(tts.speak).toHaveBeenCalled();
     });
-    const utterance = tts.speak.mock.calls[0][0] as { text: string; onend: (() => void) | null };
-    expect(utterance.text).toContain("Income is not stored");
+    const utterance = tts.speak.mock.calls
+      .map((call) => call[0] as { text: string; onend: (() => void) | null })
+      .find((item) => item.text.includes("Income is not stored"));
+    expect(utterance).toBeTruthy();
+    expect(utterance?.text).toContain("Income is not stored");
     expect(screen.getAllByRole("button", { name: "Open Eligibility Simulator" })[0]).toBeDisabled();
     await act(async () => {
-      utterance.onend?.();
+      utterance?.onend?.();
     });
     expect(
       fetchMock.mock.calls.some(
@@ -603,5 +817,203 @@ describe("voice assistant page", () => {
     expect((await screen.findAllByText(/Required documents come from the official catalog/i)).length).toBeGreaterThan(0);
     await sendTyped("Which one gives the highest benefit?");
     expect((await screen.findAllByText(/Catalog benefit text for your predicted-eligible schemes/i)).length).toBeGreaterThan(0);
+  });
+
+  it("answers identity and help questions without calling eligibility APIs", async () => {
+    const fetchMock = mockVoiceFetch();
+    vi.stubGlobal("fetch", fetchMock);
+    renderAuthenticatedApp(["/voice-assistant"]);
+    await sendTyped("Who are you?");
+    expect((await screen.findAllByText(/I'm Nira, a research voice assistant/i)).length).toBeGreaterThan(0);
+    await sendTyped("What can you help with?");
+    expect((await screen.findAllByText(/I can check eligibility/i)).length).toBeGreaterThan(0);
+    expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/recommend"))).toBe(false);
+  });
+
+  it("does not run skills for filler noise", async () => {
+    const fetchMock = mockVoiceFetch();
+    vi.stubGlobal("fetch", fetchMock);
+    renderAuthenticatedApp(["/voice-assistant"]);
+    await sendTyped("um");
+    expect((await screen.findAllByText(/I didn't catch a clear question/i)).length).toBeGreaterThan(0);
+    expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/recommend"))).toBe(false);
+    expect(fetchMock.mock.calls.some((call) => String(call[1]?.method ?? "GET").toUpperCase() === "PUT")).toBe(false);
+  });
+
+  it("asks for confirmation instead of acting on low-confidence speech", async () => {
+    installSpeechRecognition();
+    const fetchMock = mockVoiceFetch();
+    vi.stubGlobal("fetch", fetchMock);
+    renderAuthenticatedApp(["/voice-assistant"]);
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "Start Speaking" }));
+    const active = recognitionInstances.at(-1);
+    await act(async () => {
+      active?.onresult?.({
+        resultIndex: 0,
+        results: [Object.assign([{ transcript: "Check my eligibility", confidence: 0.2 }], { isFinal: true })],
+      });
+      active?.onend?.();
+    });
+    expect((await screen.findAllByText(/I heard something like "Check my eligibility"/i)).length).toBeGreaterThan(0);
+    expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/recommend"))).toBe(false);
+  });
+
+  it("greets an administrator by name on the admin voice page", () => {
+    vi.stubGlobal("fetch", mockVoiceFetch());
+    renderApp(["/admin/voice-assistant"], {
+      user: { ...TEST_USER, is_admin: true },
+      token: "test-token",
+    });
+    expect(screen.getByRole("heading", { name: "Nira" })).toBeInTheDocument();
+    expect(
+      screen.getAllByText("Hi, I'm Nira. You're in the Admin Console. How can I help you today, Test?").length,
+    ).toBeGreaterThan(0);
+    expect(screen.getByText("Signed in as Test · Administrator")).toBeInTheDocument();
+  });
+
+  it("refuses another person's records for a citizen", async () => {
+    const fetchMock = mockVoiceFetch();
+    vi.stubGlobal("fetch", fetchMock);
+    renderAuthenticatedApp(["/voice-assistant"]);
+    await sendTyped("Show Kamal Nath's documents");
+    expect((await screen.findAllByText(/I can't open another person's records/i)).length).toBeGreaterThan(0);
+    expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/admin/"))).toBe(false);
+    expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/audit/voice"))).toBe(false);
+  });
+
+  it("asks an admin to confirm before fetching Kamal Nath's document statuses", async () => {
+    const fetchMock = mockAdminVoiceFetch();
+    vi.stubGlobal("fetch", fetchMock);
+    renderApp(["/admin/voice-assistant"], {
+      user: { ...TEST_USER, is_admin: true },
+      token: "admin-token",
+    });
+    await sendTyped("Show Kamal Nath's documents");
+    expect((await screen.findAllByText(/look up document statuses for Kamal Nath/i)).length).toBeGreaterThan(0);
+    expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/admin/users"))).toBe(false);
+    await userEvent.click(screen.getByRole("button", { name: "Confirm" }));
+    await waitFor(() => {
+      expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/admin/users"))).toBe(true);
+    });
+    await waitFor(() => {
+      expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/admin/audit/voice"))).toBe(true);
+    });
+    expect((await screen.findAllByText(/Kamal Nath has 3 uploads/i)).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/1 pending, 1 verified, 1 rejected/i).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/school-certificate\.pdf/i)).not.toBeInTheDocument();
+    expect(fetchMock.mock.calls.some((call) => String(call[1]?.method ?? "GET").toUpperCase() === "PATCH")).toBe(false);
+    const auditCall = fetchMock.mock.calls.find(
+      (call) => String(call[0]).includes("/admin/audit/voice") && String(call[1]?.method).toUpperCase() === "POST",
+    );
+    expect(auditCall).toBeTruthy();
+    const auditBody = JSON.parse(String(auditCall?.[1]?.body));
+    expect(auditBody.intent).toBe("ADMIN_USER_DOCUMENTS");
+    expect(auditBody.outcome).toBe("ok");
+    expect(auditBody.transcript_hash).toBe(await hashTranscript("Show Kamal Nath's documents"));
+    expect(auditBody.transcript).toBeUndefined();
+    expect(JSON.stringify(auditBody)).not.toMatch(/kamal nath's documents/i);
+    await userEvent.click(screen.getByRole("button", { name: "Open full record" }));
+    expect(await screen.findByRole("heading", { name: en.adminDocumentVerification })).toBeInTheDocument();
+  });
+
+  it("lets an admin cancel a lookup without calling admin APIs", async () => {
+    const fetchMock = mockAdminVoiceFetch();
+    vi.stubGlobal("fetch", fetchMock);
+    renderApp(["/admin/voice-assistant"], {
+      user: { ...TEST_USER, is_admin: true },
+      token: "admin-token",
+    });
+    await sendTyped("Find user Kamal Nath");
+    expect((await screen.findAllByText(/look up Kamal Nath in the admin user list/i)).length).toBeGreaterThan(0);
+    await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    expect((await screen.findAllByText(en.voiceAdminCancelled)).length).toBeGreaterThan(0);
+    expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/admin/users"))).toBe(false);
+    await waitFor(() => {
+      expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/admin/audit/voice"))).toBe(true);
+    });
+    const cancelAudit = fetchMock.mock.calls.find((call) => String(call[0]).includes("/admin/audit/voice"));
+    const cancelBody = JSON.parse(String(cancelAudit?.[1]?.body));
+    expect(cancelBody.outcome).toBe("cancelled");
+    expect(cancelBody.transcript_hash).toBe(await hashTranscript("Find user Kamal Nath"));
+    expect(cancelBody.transcript).toBeUndefined();
+  });
+
+  it("asks which person when more than one user matches", async () => {
+    const fetchMock = mockAdminVoiceFetch({ multiple: true });
+    vi.stubGlobal("fetch", fetchMock);
+    renderApp(["/admin/voice-assistant"], {
+      user: { ...TEST_USER, is_admin: true },
+      token: "admin-token",
+    });
+    await sendTyped("Find user Kamal");
+    await userEvent.click(screen.getByRole("button", { name: "Confirm" }));
+    expect((await screen.findAllByText(/Kamal Nath \(k\*\*\*@example\.com\)/i)).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText(/Kamal Raj \(k\*\*\*@example\.com\)/i)).length).toBeGreaterThan(0);
+    await sendTyped("Kamal Nath");
+    expect((await screen.findAllByText(/Kamal Nath has a saved wallet/i)).length).toBeGreaterThan(0);
+  });
+
+  it("answers pending review counts from the admin overview API", async () => {
+    const fetchMock = mockAdminVoiceFetch();
+    vi.stubGlobal("fetch", fetchMock);
+    renderApp(["/admin/voice-assistant"], {
+      user: { ...TEST_USER, is_admin: true },
+      token: "admin-token",
+    });
+    await sendTyped("How many pending reviews?");
+    expect((await screen.findAllByText(/There is 1 pending document review/i)).length).toBeGreaterThan(0);
+    expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/admin/overview"))).toBe(true);
+    await waitFor(() => {
+      expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/admin/audit/voice"))).toBe(true);
+    });
+    const pendingAudit = fetchMock.mock.calls.find((call) => String(call[0]).includes("/admin/audit/voice"));
+    const pendingBody = JSON.parse(String(pendingAudit?.[1]?.body));
+    expect(pendingBody.intent).toBe("ADMIN_PENDING_REVIEWS");
+    expect(pendingBody.outcome).toBe("ok");
+    expect(pendingBody.transcript).toBeUndefined();
+  });
+
+  it("refuses a citizen who asks to change another person's review status", async () => {
+    const fetchMock = mockVoiceFetch();
+    vi.stubGlobal("fetch", fetchMock);
+    renderAuthenticatedApp(["/voice-assistant"]);
+    await sendTyped("Verify Kamal Nath's document");
+    expect((await screen.findAllByText(/I can't open another person's records/i)).length).toBeGreaterThan(0);
+    expect(fetchMock.mock.calls.some((call) => String(call[1]?.method ?? "GET").toUpperCase() === "PATCH")).toBe(false);
+    expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/admin/"))).toBe(false);
+  });
+
+  it("changes a review status only after two admin confirms and an audit hash", async () => {
+    const fetchMock = mockAdminVoiceFetch();
+    vi.stubGlobal("fetch", fetchMock);
+    renderApp(["/admin/voice-assistant"], {
+      user: { ...TEST_USER, is_admin: true },
+      token: "admin-token",
+    });
+    await sendTyped("Verify Kamal Nath's document");
+    expect((await screen.findAllByText(/set Kamal Nath's supporting document review status to verified/i)).length).toBeGreaterThan(0);
+    expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/admin/users"))).toBe(false);
+    expect(fetchMock.mock.calls.some((call) => String(call[1]?.method ?? "GET").toUpperCase() === "PATCH")).toBe(false);
+    await userEvent.click(screen.getByRole("button", { name: "Confirm" }));
+    expect((await screen.findAllByText(/Last check: change Kamal Nath's education certificate to verified/i)).length).toBeGreaterThan(0);
+    expect(fetchMock.mock.calls.some((call) => String(call[1]?.method ?? "GET").toUpperCase() === "PATCH")).toBe(false);
+    await userEvent.click(screen.getByRole("button", { name: "Confirm" }));
+    await waitFor(() => {
+      expect(
+        fetchMock.mock.calls.some(
+          (call) => String(call[0]).includes("/admin/documents/") && String(call[1]?.method).toUpperCase() === "PATCH",
+        ),
+      ).toBe(true);
+    });
+    expect((await screen.findAllByText(/review status is now verified/i)).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText(/Eligibility was not changed/i)).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/school-certificate\.pdf/i)).not.toBeInTheDocument();
+    const reviewAudit = fetchMock.mock.calls.find((call) => String(call[0]).includes("/admin/audit/voice"));
+    const reviewBody = JSON.parse(String(reviewAudit?.[1]?.body));
+    expect(reviewBody.intent).toBe("ADMIN_REVIEW_DOCUMENT");
+    expect(reviewBody.outcome).toBe("ok");
+    expect(reviewBody.transcript_hash).toBe(await hashTranscript("Verify Kamal Nath's document"));
+    expect(reviewBody.transcript).toBeUndefined();
   });
 });

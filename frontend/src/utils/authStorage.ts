@@ -19,6 +19,7 @@ function publicAuthUser(value: AuthUser): AuthUser {
     email: value.email,
     has_password: value.has_password,
     has_google: value.has_google,
+    is_admin: value.is_admin,
     created_at: value.created_at,
   };
 }

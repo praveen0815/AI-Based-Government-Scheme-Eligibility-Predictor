@@ -75,6 +75,7 @@ class UserPublic(BaseModel):
     email: EmailStr
     has_password: bool = False
     has_google: bool = False
+    is_admin: bool = False
     created_at: str | None = None
 
 

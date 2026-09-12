@@ -69,6 +69,7 @@ Public pages remain available without a session: Home, Check Eligibility, Result
 | Notifications | In-app reminders from profile, eligibility completeness, and application tracking |
 | Voice assistant | Speech or typed intents over wallet, recommend, catalog, and navigation |
 | Research dashboard | Protected Phase 29 / evaluation summary; not an admin console |
+| Admin portal | JWT + `is_admin` monitoring of users, uploads, and existing predictions |
 | Catalog search | Read-only search, filters, and sort over the 13 official scheme rows |
 | Scheme discovery | Client-side search/filter/compare using the catalog plus an existing recommendation |
 | Settings | Name, password (if any), completeness, owner-only delete |

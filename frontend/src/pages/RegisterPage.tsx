@@ -11,10 +11,11 @@ import { Button } from "../components/ui/Button";
 import { useAuth } from "../context/AuthContext";
 import { useI18n } from "../context/LanguageContext";
 import { ApiError, loginWithGoogle, registerAccount } from "../services/api";
+import { signedInHomePath } from "../utils/homePath";
 
 export function RegisterPage() {
   const navigate = useNavigate();
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, user, login } = useAuth();
   const { t } = useI18n();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -67,7 +68,7 @@ export function RegisterPage() {
     try {
       const result = await loginWithGoogle(credential);
       login(result.access_token, result.user);
-      navigate("/dashboard", { replace: true });
+      navigate(signedInHomePath(result.user), { replace: true });
     } catch (caught) {
       if (caught instanceof ApiError && caught.status === 409) {
         setError(t.emailRegistered);
@@ -80,7 +81,7 @@ export function RegisterPage() {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={signedInHomePath(user)} replace />;
   }
 
   return (

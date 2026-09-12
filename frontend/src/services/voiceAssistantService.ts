@@ -282,6 +282,7 @@ export function highestBenefitSpeech(result: RecommendResponse | null, t: Messag
 export function friendlyVoiceError(error: unknown, t: Messages): string {
   if (error instanceof ApiError) {
     if (error.status === 401) return t.sessionExpired;
+    if (error.status === 403) return t.voiceAdminRefuseCitizen;
     if (error.message === "NO_WALLET" || error.status === 404) return t.voiceNoWallet;
     if (error.status === 503 || error.status === 500) return t.voiceEligibilityError;
     return error.message || t.voiceEligibilityError;

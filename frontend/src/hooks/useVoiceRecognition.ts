@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Language } from "../i18n/types";
+import { pickBestTranscript, recognitionLanguage, recognitionTimeoutMs } from "../utils/niraSpeech";
 
 export type VoiceRecognitionError =
   | "permission"
@@ -13,6 +14,7 @@ type BrowserSpeechRecognition = {
   lang: string;
   continuous: boolean;
   interimResults: boolean;
+  maxAlternatives?: number;
   onresult: ((event: SpeechRecognitionEventLike) => void) | null;
   onerror: ((event: { error: string }) => void) | null;
   onend: (() => void) | null;
@@ -23,14 +25,13 @@ type BrowserSpeechRecognition = {
 
 interface SpeechRecognitionEventLike {
   resultIndex: number;
-  results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal?: boolean }>;
+  results: ArrayLike<ArrayLike<{ transcript: string; confidence?: number }> & { isFinal?: boolean }>;
 }
 
 interface SpeechRecognitionCtor {
   new (): BrowserSpeechRecognition;
 }
 
-const RECOGNITION_TIMEOUT_MS = 8000;
 
 function getSpeechRecognitionCtor(): SpeechRecognitionCtor | null {
   const speechWindow = window as Window & {
@@ -45,7 +46,7 @@ export function useVoiceRecognition({
   onFinalTranscript,
 }: {
   language: Language;
-  onFinalTranscript?: (transcript: string) => void;
+  onFinalTranscript?: (transcript: string, meta?: { confidence?: number }) => void;
 }) {
   const [listening, setListening] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -53,6 +54,7 @@ export function useVoiceRecognition({
   const [error, setError] = useState<VoiceRecognitionError | null>(null);
   const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
   const finalRef = useRef("");
+  const confidenceRef = useRef<number | undefined>(undefined);
   const stoppedByUserRef = useRef(false);
   const timeoutRef = useRef<number | null>(null);
   const mountedRef = useRef(true);
@@ -112,10 +114,12 @@ export function useVoiceRecognition({
     }
     detachRecognition();
     const recognition = new Ctor();
-    recognition.lang = language === "ta" ? "ta-IN" : "en-IN";
+    recognition.lang = recognitionLanguage(language);
     recognition.continuous = false;
     recognition.interimResults = true;
+    recognition.maxAlternatives = 3;
     finalRef.current = "";
+    confidenceRef.current = undefined;
     stoppedByUserRef.current = false;
     setTranscript("");
     setInterimTranscript("");
@@ -128,14 +132,14 @@ export function useVoiceRecognition({
       let finalText = finalRef.current;
       for (let index = event.resultIndex; index < event.results.length; index += 1) {
         const piece = event.results[index];
-        const spoken = Array.from(piece)
-          .map((item) => item.transcript)
-          .join(" ")
-          .trim();
+        const spoken = pickBestTranscript(Array.from(piece));
         if (piece.isFinal) {
-          finalText = `${finalText} ${spoken}`.trim();
+          finalText = `${finalText} ${spoken.transcript}`.trim();
+          if (typeof spoken.confidence === "number") {
+            confidenceRef.current = spoken.confidence;
+          }
         } else {
-          interim = `${interim} ${spoken}`.trim();
+          interim = `${interim} ${spoken.transcript}`.trim();
         }
       }
       finalRef.current = finalText;
@@ -174,7 +178,7 @@ export function useVoiceRecognition({
       const spoken = finalRef.current.trim();
       detachRecognition();
       if (spoken) {
-        onFinalRef.current?.(spoken);
+        onFinalRef.current?.(spoken, { confidence: confidenceRef.current });
         return;
       }
       if (stoppedByUserRef.current) {
@@ -192,7 +196,7 @@ export function useVoiceRecognition({
         stoppedByUserRef.current = true;
         recognition.stop();
         setListening(false);
-      }, RECOGNITION_TIMEOUT_MS);
+      }, recognitionTimeoutMs(language));
     } catch {
       setListening(false);
       setError("recognition");

@@ -124,6 +124,7 @@ export interface AuthUser {
   email: string;
   has_password?: boolean;
   has_google?: boolean;
+  is_admin?: boolean;
   created_at?: string | null;
 }
 
@@ -394,6 +395,7 @@ export interface SupportingUpload {
   size_bytes: number;
   scheme_id: string | null;
   scheme_name: string | null;
+  review_status?: DocumentReviewStatus;
   created_at: string;
   disclaimer: string;
 }
@@ -598,4 +600,158 @@ export interface SystemEvaluationResponse {
   hybrid: HybridEvaluationResponse;
   api_performance: ApiPerformanceSummary;
   health: SystemHealth;
+}
+
+export type DocumentReviewStatus = "pending" | "verified" | "rejected";
+export type AdminEligibilityLabel = "eligible" | "not_eligible" | "cannot_fully_evaluate" | "not_evaluated";
+export type AdminActivityType = "history" | "upload" | "application" | "wallet";
+
+export interface AdminActivityItem {
+  activity_type: AdminActivityType;
+  occurred_at: string;
+  user_id: string;
+  user_name: string;
+  user_email: string;
+  summary: string;
+}
+
+export interface AdminOverviewResponse {
+  total_users: number;
+  active_users: number;
+  total_document_uploads: number;
+  pending_document_reviews: number;
+  verified_documents: number;
+  rejected_documents: number;
+  eligible_scheme_results: number;
+  not_eligible_scheme_results: number;
+  cannot_fully_evaluate_users: number;
+  recent_activity: AdminActivityItem[];
+  disclaimer: string;
+}
+
+export interface AdminUserSummary {
+  user_id: string;
+  full_name: string;
+  email: string;
+  has_wallet: boolean;
+  is_admin: boolean;
+  created_at?: string | null;
+  last_activity_at?: string | null;
+}
+
+export interface AdminUserListResponse {
+  users: AdminUserSummary[];
+  count: number;
+  disclaimer: string;
+}
+
+export interface AdminWalletView {
+  citizen_id: string;
+  age: number;
+  gender: string;
+  is_student: boolean;
+  first_higher_education_course: boolean;
+  school_background: string;
+  marital_status: string;
+  is_orphan: boolean;
+  is_destitute: boolean;
+  occupation_category: string;
+  wet_land_acres: number;
+  dry_land_acres: number;
+}
+
+export interface AdminEligibilityView {
+  has_wallet: boolean;
+  prediction_label: AdminEligibilityLabel;
+  eligible_scheme_count: number;
+  evaluated_schemes: EvaluatedScheme[];
+  incomplete_fields: string[];
+  last_checked_at: string | null;
+  disclaimer: string;
+}
+
+export interface AdminUserDetailResponse {
+  user: AdminUserSummary;
+  wallet: AdminWalletView | null;
+  completeness: ProfileCompleteness | null;
+  eligibility: AdminEligibilityView;
+  applications: ApplicationItem[];
+  history: RecommendationHistoryItem[];
+  disclaimer: string;
+}
+
+export interface AdminDocumentItem {
+  id: string;
+  owner_user_id: string;
+  owner_name: string;
+  owner_email: string;
+  category: string;
+  display_name: string;
+  content_type: string;
+  size_bytes: number;
+  scheme_id: string | null;
+  scheme_name: string | null;
+  review_status: DocumentReviewStatus;
+  created_at: string;
+}
+
+export interface AdminDocumentListResponse {
+  documents: AdminDocumentItem[];
+  count: number;
+  disclaimer: string;
+}
+
+export interface AdminEligibilityRow {
+  user_id: string;
+  full_name: string;
+  email: string;
+  has_wallet: boolean;
+  prediction_label: AdminEligibilityLabel;
+  eligible_scheme_count: number;
+  evaluated_schemes: EvaluatedScheme[];
+  incomplete_fields: string[];
+  last_checked_at: string | null;
+}
+
+export interface AdminEligibilityListResponse {
+  users: AdminEligibilityRow[];
+  count: number;
+  disclaimer: string;
+}
+
+export type AdminVoiceAuditOutcome = "ok" | "denied" | "ambiguous" | "error" | "cancelled" | "not_found";
+
+export interface AdminVoiceAuditCreate {
+  intent: string;
+  outcome: AdminVoiceAuditOutcome;
+  target_user_id?: string | null;
+  transcript_hash: string;
+}
+
+export interface AdminVoiceAuditResponse {
+  id: string;
+  admin_user_id: string;
+  intent: string;
+  outcome: AdminVoiceAuditOutcome;
+  target_user_id: string | null;
+  transcript_hash: string;
+  created_at: string;
+  disclaimer: string;
+}
+
+export interface VoiceStatusResponse {
+  stt_provider: "browser" | "cloud";
+  tts_provider: "browser_neural";
+  cloud_stt_available: boolean;
+  https_required: boolean;
+  audio_retained: boolean;
+  disclaimer: string;
+}
+
+export interface VoiceTranscribeResponse {
+  transcript: string;
+  language: string;
+  provider: string;
+  audio_retained: boolean;
+  disclaimer: string;
 }

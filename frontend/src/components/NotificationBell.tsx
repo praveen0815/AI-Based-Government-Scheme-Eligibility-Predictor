@@ -4,7 +4,13 @@ import { useI18n } from "../context/LanguageContext";
 import { fetchNotifications } from "../services/api";
 import { BellIcon } from "./icons";
 
-export function NotificationBell() {
+export function NotificationBell({
+  to = "/notifications",
+  className,
+}: {
+  to?: string;
+  className?: string;
+}) {
   const { t } = useI18n();
   const location = useLocation();
   const [unreadCount, setUnreadCount] = useState(0);
@@ -27,8 +33,11 @@ export function NotificationBell() {
 
   return (
     <Link
-      to="/notifications"
-      className="relative inline-flex h-12 w-12 items-center justify-center rounded-[12px] border border-line text-ink-900 transition duration-150 hover:bg-sage"
+      to={to}
+      className={
+        className ??
+        "relative inline-flex h-12 w-12 items-center justify-center rounded-[12px] border border-line text-ink-900 transition duration-150 hover:bg-sage"
+      }
       aria-label={t.notificationsBellLabel(unreadCount)}
     >
       <BellIcon />

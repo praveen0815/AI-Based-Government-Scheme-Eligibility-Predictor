@@ -79,5 +79,7 @@ Project notes, data-source records, and later design documents.
 | `smart_notifications_design.md` | 38 | Incomplete-evaluation and application-tracking reminders |
 | `phase35_38_results.md` | 35–38 | Coordinated citizen-assistance enhancement results |
 | `phase43_results.md` | 43 | Final integration, QA, security, and demo-readiness results |
+| `admin_portal_design.md` | 44 | Administrator role, APIs, and document-review isolation |
+| `phase44_results.md` | 44 | Admin portal implementation results |
 
 Aadhaar, LLMs, and deployment remain out of scope.

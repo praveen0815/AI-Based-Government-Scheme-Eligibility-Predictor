@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { useI18n } from "../context/LanguageContext";
 import { BrandMark } from "./BrandMark";
 import {
@@ -39,6 +40,7 @@ export function Sidebar({
   onClose: () => void;
 }) {
   const { t } = useI18n();
+  const { user } = useAuth();
 
   return (
     <>
@@ -108,6 +110,16 @@ export function Sidebar({
               {t.navVoiceAssistant}
             </NavLink>
           </nav>
+
+          {user?.is_admin ? (
+            <nav aria-label={t.navAdminPortal} className="space-y-1.5 border-t border-white/10 pt-6">
+              <p className="nav-label px-3 pb-2">{t.adminNav}</p>
+              <NavLink to="/admin" className={itemClass} onClick={onClose}>
+                <EvaluationIcon />
+                {t.navAdminPortal}
+              </NavLink>
+            </nav>
+          ) : null}
 
           <nav aria-label={t.navSectionResearch} className="space-y-1.5 border-t border-white/10 pt-6">
             <p className="nav-label px-3 pb-2">{t.navSectionResearch}</p>
