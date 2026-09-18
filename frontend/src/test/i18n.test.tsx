@@ -6,9 +6,9 @@ import { renderApp } from "./renderApp";
 
 describe("English / Tamil language switcher", () => {
   it("defaults to English and keeps the existing home copy", () => {
-    renderApp(["/home"]);
+    renderApp(["/login"]);
     expect(
-      screen.getByRole("heading", { name: "Welcome 👋" }),
+      screen.getByRole("heading", { name: "Welcome Back" }),
     ).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /English/ }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("button", { name: "தமிழ்" }).length).toBeGreaterThan(0);
@@ -16,11 +16,11 @@ describe("English / Tamil language switcher", () => {
   });
 
   it("switches the visible UI to Tamil without changing page structure", async () => {
-    renderApp(["/home"]);
+    renderApp(["/login"]);
     const user = userEvent.setup();
     await user.click(screen.getAllByRole("button", { name: "தமிழ்" })[0]);
     expect(
-      screen.getByRole("heading", { name: "வணக்கம் 👋" }),
+      screen.getByRole("heading", { name: "மீண்டும் வருக" }),
     ).toBeInTheDocument();
     expect(window.localStorage.getItem(LANGUAGE_STORAGE_KEY)).toBe("ta");
     expect(document.documentElement.lang).toBe("ta");
@@ -28,7 +28,7 @@ describe("English / Tamil language switcher", () => {
 
   it("restores the stored language after a new render", () => {
     window.localStorage.setItem(LANGUAGE_STORAGE_KEY, "ta");
-    renderApp(["/home"], { persistLanguage: true });
-    expect(screen.getByRole("heading", { name: "வணக்கம் 👋" })).toBeInTheDocument();
+    renderApp(["/login"], { persistLanguage: true });
+    expect(screen.getByRole("heading", { name: "மீண்டும் வருக" })).toBeInTheDocument();
   });
 });

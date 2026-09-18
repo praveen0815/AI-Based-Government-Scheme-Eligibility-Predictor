@@ -3,11 +3,39 @@ import { useI18n } from "../context/LanguageContext";
 export function LanguageSwitcher({
   variant = "light",
 }: {
-  variant?: "light" | "sidebar" | "dark";
+  variant?: "light" | "sidebar" | "dark" | "login";
 }) {
   const { language, setLanguage, t } = useI18n();
   const sidebar = variant === "sidebar";
   const dark = variant === "dark";
+  const login = variant === "login";
+
+  if (login) {
+    return (
+      <div className="inline-flex items-center gap-3 text-[15px] text-[#6B7C93]" role="group" aria-label={t.languageLabel}>
+        <span aria-hidden="true" className="text-[16px]">
+          🌐
+        </span>
+        <button
+          type="button"
+          aria-pressed={language === "en"}
+          className={`font-medium transition ${language === "en" ? "text-[#0B1F4B]" : "hover:text-[#0B1F4B]"}`}
+          onClick={() => setLanguage("en")}
+        >
+          {t.languageEnglish}
+        </button>
+        <span aria-hidden="true">|</span>
+        <button
+          type="button"
+          aria-pressed={language === "ta"}
+          className={`font-medium transition ${language === "ta" ? "text-[#0B1F4B]" : "hover:text-[#0B1F4B]"}`}
+          onClick={() => setLanguage("ta")}
+        >
+          {t.languageTamil}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div

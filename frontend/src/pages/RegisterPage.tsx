@@ -1,17 +1,25 @@
 import { useState, type FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { BrandMark } from "../components/BrandMark";
+import {
+  AuthSplitLayout,
+  EyeGlyph,
+  LockGlyph,
+  MailGlyph,
+  PhoneGlyph,
+  UserGlyph,
+} from "../components/AuthSplitLayout";
 import { ErrorState } from "../components/ErrorState";
-import { FormField } from "../components/FormField";
 import { GoogleSignInButton } from "../components/GoogleSignInButton";
+import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { LoadingState } from "../components/LoadingState";
-import { PasswordField } from "../components/PasswordField";
-import { ResearchNotice } from "../components/ResearchNotice";
-import { Button } from "../components/ui/Button";
 import { useAuth } from "../context/AuthContext";
 import { useI18n } from "../context/LanguageContext";
 import { ApiError, loginWithGoogle, registerAccount } from "../services/api";
 import { signedInHomePath } from "../utils/homePath";
+
+function isValidMobile(value: string): boolean {
+  return /^\+?[0-9]{10,15}$/.test(value.replace(/[\s-]/g, ""));
+}
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -21,6 +29,10 @@ export function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -33,6 +45,8 @@ export function RegisterPage() {
     if (!email.trim() || !email.includes("@")) nextErrors.email = t.emailInvalid;
     if (password.length < 8) nextErrors.password = t.passwordLength;
     if (password !== confirmPassword) nextErrors.confirmPassword = t.passwordMismatch;
+    if (!isValidMobile(mobile.trim())) nextErrors.mobile = t.mobileRequired;
+    if (!acceptedTerms) nextErrors.terms = t.termsRequired;
     setFieldErrors(nextErrors);
     setError(null);
     if (Object.keys(nextErrors).length > 0) return;
@@ -85,77 +99,206 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl">
-      <div className="overflow-hidden rounded-[24px] border border-line bg-surface shadow-lift lg:grid lg:grid-cols-[0.92fr_1.08fr]">
-        <div className="bg-navy-900 px-8 py-10 text-white sm:px-10 lg:px-12 lg:py-14">
-          <BrandMark inverted />
-          <p className="mt-8 font-display text-[28px] font-bold leading-snug sm:text-[32px]">{t.productTagline}</p>
-          <p className="mt-8 text-[16px] leading-relaxed text-[#D5DDD8]">{t.notOfficialService}</p>
-        </div>
-        <div className="space-y-7 p-8 sm:p-10">
-          <header className="space-y-3">
-            <h1 className="page-title">{t.registerTitle}</h1>
-            <p className="body-copy">{t.registerLead}</p>
-          </header>
-          <ResearchNotice compact />
-          {error ? <ErrorState message={error} /> : null}
-          <form onSubmit={handleSubmit} noValidate className="space-y-6">
-            <FormField id="register-name" label={t.fullName} error={fieldErrors.fullName} required>
-              <input
-                id="register-name"
-                required
-                aria-invalid={Boolean(fieldErrors.fullName)}
-                value={fullName}
-                onChange={(event) => setFullName(event.target.value)}
-                className="field-input"
-              />
-            </FormField>
-            <FormField id="register-email" label={t.email} error={fieldErrors.email} required>
-              <input
-                id="register-email"
-                type="email"
-                autoComplete="email"
-                required
-                aria-invalid={Boolean(fieldErrors.email)}
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                className="field-input"
-              />
-            </FormField>
-            <PasswordField
-              id="register-password"
-              label={t.password}
-              hint={t.passwordHint}
-              autoComplete="new-password"
+    <AuthSplitLayout cardLabel={t.registerTitle} tall>
+      <header className="login-heading">
+        <h1>{t.registerTitle}</h1>
+        <p>{t.registerLead}</p>
+      </header>
+      {error ? <ErrorState message={error} /> : null}
+      <form onSubmit={handleSubmit} noValidate className="login-form">
+        <div>
+          <label htmlFor="register-name" className="sr-only">
+            {t.fullName}
+          </label>
+          <div className="login-field">
+            <span className="login-field-icon">
+              <UserGlyph />
+            </span>
+            <input
+              id="register-name"
               required
-              value={password}
-              error={fieldErrors.password}
-              onChange={setPassword}
+              aria-invalid={Boolean(fieldErrors.fullName)}
+              placeholder={`${t.fullName} *`}
+              value={fullName}
+              onChange={(event) => setFullName(event.target.value)}
             />
-            <PasswordField
-              id="register-confirm"
-              label={t.confirmPassword}
-              autoComplete="new-password"
-              required
-              value={confirmPassword}
-              error={fieldErrors.confirmPassword}
-              onChange={setConfirmPassword}
-            />
-            {loading ? <LoadingState message={t.creatingAccount} /> : null}
-            {googleLoading ? <LoadingState message={t.signingInGoogle} /> : null}
-            <Button type="submit" disabled={loading || googleLoading} className="w-full">
-              {t.createAccount}
-            </Button>
-            <GoogleSignInButton onCredential={(value) => void handleGoogleCredential(value)} disabled={loading || googleLoading} />
-            <p className="text-[16px] text-ink-500">
-              {t.alreadyHaveAccount}{" "}
-              <Link to="/login" className="font-semibold text-action">
-                {t.signIn}
-              </Link>
+          </div>
+          {fieldErrors.fullName ? (
+            <p className="login-field-error" role="alert">
+              {fieldErrors.fullName}
             </p>
-          </form>
+          ) : null}
         </div>
+
+        <div>
+          <label htmlFor="register-email" className="sr-only">
+            {t.email}
+          </label>
+          <div className="login-field">
+            <span className="login-field-icon">
+              <MailGlyph />
+            </span>
+            <input
+              id="register-email"
+              type="email"
+              autoComplete="email"
+              required
+              aria-invalid={Boolean(fieldErrors.email)}
+              placeholder={`${t.emailAddress} *`}
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </div>
+          {fieldErrors.email ? (
+            <p className="login-field-error" role="alert">
+              {fieldErrors.email}
+            </p>
+          ) : null}
+        </div>
+
+        <div>
+          <label htmlFor="register-password" className="sr-only">
+            {t.password}
+          </label>
+          <div className="login-field">
+            <span className="login-field-icon">
+              <LockGlyph />
+            </span>
+            <input
+              id="register-password"
+              type={passwordVisible ? "text" : "password"}
+              autoComplete="new-password"
+              required
+              aria-invalid={Boolean(fieldErrors.password)}
+              placeholder={`${t.password} *`}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+            <button
+              type="button"
+              className="login-eye"
+              onClick={() => setPasswordVisible((current) => !current)}
+              aria-label={passwordVisible ? `Hide ${t.password.toLowerCase()}` : `Show ${t.password.toLowerCase()}`}
+            >
+              <EyeGlyph off={passwordVisible} />
+            </button>
+          </div>
+          <p className="login-field-hint">{t.passwordHint}</p>
+          {fieldErrors.password ? (
+            <p className="login-field-error" role="alert">
+              {fieldErrors.password}
+            </p>
+          ) : null}
+        </div>
+
+        <div>
+          <label htmlFor="register-confirm" className="sr-only">
+            {t.confirmPassword}
+          </label>
+          <div className="login-field">
+            <span className="login-field-icon">
+              <LockGlyph />
+            </span>
+            <input
+              id="register-confirm"
+              type={confirmVisible ? "text" : "password"}
+              autoComplete="new-password"
+              required
+              aria-invalid={Boolean(fieldErrors.confirmPassword)}
+              placeholder={`${t.confirmPassword} *`}
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+            />
+            <button
+              type="button"
+              className="login-eye"
+              onClick={() => setConfirmVisible((current) => !current)}
+              aria-label={confirmVisible ? `Hide ${t.confirmPassword.toLowerCase()}` : `Show ${t.confirmPassword.toLowerCase()}`}
+            >
+              <EyeGlyph off={confirmVisible} />
+            </button>
+          </div>
+          {fieldErrors.confirmPassword ? (
+            <p className="login-field-error" role="alert">
+              {fieldErrors.confirmPassword}
+            </p>
+          ) : null}
+        </div>
+
+        <div>
+          <label htmlFor="register-mobile" className="sr-only">
+            {t.mobileNumber}
+          </label>
+          <div className="login-field">
+            <span className="login-field-icon">
+              <PhoneGlyph />
+            </span>
+            <input
+              id="register-mobile"
+              type="tel"
+              autoComplete="tel"
+              required
+              aria-invalid={Boolean(fieldErrors.mobile)}
+              placeholder={`${t.mobileNumber} *`}
+              value={mobile}
+              onChange={(event) => setMobile(event.target.value)}
+            />
+          </div>
+          {fieldErrors.mobile ? (
+            <p className="login-field-error" role="alert">
+              {fieldErrors.mobile}
+            </p>
+          ) : null}
+        </div>
+
+        <div>
+          <label className="login-remember">
+            <input
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={(event) => setAcceptedTerms(event.target.checked)}
+            />
+            {t.termsAgree}
+          </label>
+          {fieldErrors.terms ? (
+            <p className="login-field-error" role="alert">
+              {fieldErrors.terms}
+            </p>
+          ) : null}
+        </div>
+
+        {loading ? <LoadingState message={t.creatingAccount} /> : null}
+        {googleLoading ? <LoadingState message={t.signingInGoogle} /> : null}
+
+        <button type="submit" className="login-submit" disabled={loading || googleLoading} aria-label={t.createAccount}>
+          <span aria-hidden="true">
+            {t.createAccount} <span className="login-submit-arrow">→</span>
+          </span>
+        </button>
+
+        <div className="login-or">
+          <span />
+          {t.loginOr}
+          <span />
+        </div>
+
+        <GoogleSignInButton
+          onCredential={(value) => void handleGoogleCredential(value)}
+          disabled={loading || googleLoading}
+          variant="login"
+        />
+      </form>
+
+      <p className="login-register">
+        {t.alreadyHaveAccount}{" "}
+        <Link to="/login" className="login-register-link">
+          {t.signIn}
+        </Link>
+      </p>
+
+      <div className="login-lang">
+        <LanguageSwitcher variant="login" />
       </div>
-    </div>
+    </AuthSplitLayout>
   );
 }

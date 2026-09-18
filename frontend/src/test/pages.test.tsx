@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { recommendResponse, SAMPLE_SCHEME, SECOND_SCHEME, VALID_PROFILE } from "./fixtures";
 import { fillCitizenForm } from "./formHelpers";
-import { renderApp } from "./renderApp";
+import { renderApp, renderAuthenticatedApp } from "./renderApp";
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -15,9 +15,24 @@ async function fillValidForm() {
   return fillCitizenForm();
 }
 
+function emptyNotifications() {
+  return {
+    ok: true as const,
+    json: async () => ({ notifications: [], unread_count: 0, unread_reminder_count: 0, disclaimer: "" }),
+  };
+}
+
+function isNotificationUrl(url: unknown) {
+  return String(url).includes("/notifications");
+}
+
+function calledRecommend(fetchMock: { mock: { calls: unknown[][] } }) {
+  return fetchMock.mock.calls.some((call) => String(call[0]).includes("/recommend"));
+}
+
 describe("citizen portal", () => {
   it("loads the home page", () => {
-    renderApp(["/home"]);
+    renderAuthenticatedApp(["/home"]);
     expect(
       screen.getByRole("heading", { name: "Welcome 👋" }),
     ).toBeInTheDocument();
@@ -27,7 +42,7 @@ describe("citizen portal", () => {
   });
 
   it("loads the form page with required fields", () => {
-    renderApp(["/check"]);
+    renderAuthenticatedApp(["/check"]);
     expect(screen.getByLabelText("Age")).toBeInTheDocument();
     expect(screen.getByLabelText("Gender")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Check Eligible Schemes →" })).toBeInTheDocument();
@@ -36,27 +51,33 @@ describe("citizen portal", () => {
   });
 
   it("rejects an invalid age before calling the API", async () => {
-    const fetchMock = vi.fn();
+    const fetchMock = vi.fn().mockImplementation((url: string) => {
+      if (isNotificationUrl(url)) return Promise.resolve(emptyNotifications());
+      return Promise.resolve({ ok: false, status: 404 });
+    });
     vi.stubGlobal("fetch", fetchMock);
-    renderApp(["/check"]);
+    renderAuthenticatedApp(["/check"]);
     const user = userEvent.setup();
     await user.type(screen.getByLabelText("Age"), "150");
     await user.selectOptions(screen.getByLabelText("Gender"), "female");
     await user.click(screen.getByRole("button", { name: "Check Eligible Schemes →" }));
     expect(screen.getByText("Age must be between 0 and 120.")).toBeInTheDocument();
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(calledRecommend(fetchMock)).toBe(false);
   });
 
   it("rejects negative land before calling the API", async () => {
-    const fetchMock = vi.fn();
+    const fetchMock = vi.fn().mockImplementation((url: string) => {
+      if (isNotificationUrl(url)) return Promise.resolve(emptyNotifications());
+      return Promise.resolve({ ok: false, status: 404 });
+    });
     vi.stubGlobal("fetch", fetchMock);
-    renderApp(["/check"]);
+    renderAuthenticatedApp(["/check"]);
     const user = await fillValidForm();
     await user.clear(screen.getByLabelText("Wet land owned (acres)"));
     await user.type(screen.getByLabelText("Wet land owned (acres)"), "-2");
     await user.click(screen.getByRole("button", { name: "Check Eligible Schemes →" }));
     expect(screen.getByText("Land area cannot be negative.")).toBeInTheDocument();
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(calledRecommend(fetchMock)).toBe(false);
   });
 
   it("submits a valid citizen and shows loading then recommendations", async () => {
@@ -65,12 +86,13 @@ describe("citizen portal", () => {
       finish = resolve;
     });
     const fetchMock = vi.fn().mockImplementation((url: string) => {
+      if (isNotificationUrl(url)) return Promise.resolve(emptyNotifications());
       if (String(url).includes("/recommend")) return pending;
       return Promise.resolve({ ok: false, status: 404 });
     });
     vi.stubGlobal("fetch", fetchMock);
 
-    renderApp(["/check"]);
+    renderAuthenticatedApp(["/check"]);
     const user = await fillValidForm();
     await user.click(screen.getByRole("button", { name: "Check Eligible Schemes →" }));
 
@@ -98,7 +120,7 @@ describe("citizen portal", () => {
   }, 15000);
 
   it("renders multiple recommendations", () => {
-    renderApp(["/results"], {
+    renderAuthenticatedApp(["/results"], {
       profile: VALID_PROFILE,
       result: recommendResponse([SAMPLE_SCHEME, SECOND_SCHEME]),
     });
@@ -110,43 +132,87 @@ describe("citizen portal", () => {
   });
 
   it("renders the zero-recommendation state", async () => {
-    renderApp(["/results"], {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation((url: string) => {
+        if (isNotificationUrl(url)) return Promise.resolve(emptyNotifications());
+        return Promise.resolve({ ok: false, status: 404 });
+      }),
+    );
+    renderAuthenticatedApp(["/results"], {
       profile: VALID_PROFILE,
       result: recommendResponse([]),
     });
     expect(screen.getByText("No Matching Schemes Found")).toBeInTheDocument();
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Edit Profile" }));
-    expect(screen.getByLabelText("Age")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "My Socio-Economic Wallet" })).toBeInTheDocument();
   });
 
-  it("returns to the form with preserved values from Edit Profile", async () => {
-    renderApp(["/results"], {
+  it("returns to the wallet with preserved values from Edit Profile", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation((url: string) => {
+        if (isNotificationUrl(url)) return Promise.resolve(emptyNotifications());
+        if (String(url).includes("/completeness")) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({
+              percentage: 100,
+              completed_fields: 11,
+              total_fields: 11,
+              incomplete_fields: [],
+            }),
+          });
+        }
+        if (String(url).includes("/wallets")) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({
+              citizen_id: "11111111-2222-3333-4444-555555555555",
+              ...VALID_PROFILE,
+              created_at: "2026-08-14T12:00:00+00:00",
+              updated_at: "2026-08-14T12:00:00+00:00",
+            }),
+          });
+        }
+        return Promise.resolve({ ok: false, status: 404 });
+      }),
+    );
+    renderAuthenticatedApp(["/results"], {
       profile: VALID_PROFILE,
       result: recommendResponse([SAMPLE_SCHEME]),
     });
     const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "Edit Profile" }));
+    expect(await screen.findByRole("heading", { name: "My Socio-Economic Wallet" })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Edit Profile" }));
     expect(screen.getByLabelText("Age")).toHaveValue(20);
     expect(screen.getByLabelText("Gender")).toHaveValue("female");
   });
 
   it("redirects /results to the form when there is no recommendation data", () => {
-    renderApp(["/results"]);
+    renderAuthenticatedApp(["/results"]);
     expect(screen.getByLabelText("Age")).toBeInTheDocument();
   });
 
   it("handles a backend error and allows retry", async () => {
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValueOnce({ ok: false, status: 500 })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => recommendResponse([SAMPLE_SCHEME]),
-      });
+    let recommendAttempts = 0;
+    const fetchMock = vi.fn().mockImplementation((url: string) => {
+      if (isNotificationUrl(url)) return Promise.resolve(emptyNotifications());
+      if (String(url).includes("/recommend")) {
+        recommendAttempts += 1;
+        if (recommendAttempts === 1) return Promise.resolve({ ok: false, status: 500 });
+        return Promise.resolve({
+          ok: true,
+          json: async () => recommendResponse([SAMPLE_SCHEME]),
+        });
+      }
+      return Promise.resolve({ ok: false, status: 404 });
+    });
     vi.stubGlobal("fetch", fetchMock);
 
-    renderApp(["/check"]);
+    renderAuthenticatedApp(["/check"]);
     const user = await fillValidForm();
     await user.click(screen.getByRole("button", { name: "Check Eligible Schemes →" }));
     expect(
@@ -158,15 +224,21 @@ describe("citizen portal", () => {
   });
 
   it("handles HTTP 422 from the API", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 422 }));
-    renderApp(["/check"]);
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation((url: string) => {
+        if (isNotificationUrl(url)) return Promise.resolve(emptyNotifications());
+        return Promise.resolve({ ok: false, status: 422 });
+      }),
+    );
+    renderAuthenticatedApp(["/check"]);
     const user = await fillValidForm();
     await user.click(screen.getByRole("button", { name: "Check Eligible Schemes →" }));
     expect(await screen.findByText(/Please check the information entered/)).toBeInTheDocument();
   });
 
   it("keeps the form usable in a narrow layout", () => {
-    renderApp(["/check"]);
+    renderAuthenticatedApp(["/check"]);
     const form = screen.getByRole("button", { name: "Check Eligible Schemes →" }).closest("form");
     expect(form).toBeInTheDocument();
     expect(within(form as HTMLElement).getByLabelText("Age")).toBeVisible();
@@ -183,7 +255,7 @@ describe("citizen portal", () => {
 describe("loading schemes catalog", () => {
   it("shows a catalog error when the backend is down", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch")));
-    renderApp(["/schemes"]);
+    renderAuthenticatedApp(["/schemes"]);
     expect(await screen.findByText(/Unable to connect to SchemeWise AI/)).toBeInTheDocument();
   });
 });

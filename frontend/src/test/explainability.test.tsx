@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { RecommendResponse } from "../types/api";
 import { recommendResponse, SAMPLE_SCHEME, VALID_PROFILE } from "./fixtures";
-import { renderApp } from "./renderApp";
+import { renderAuthenticatedApp } from "./renderApp";
 
 function disagreeingResult(): RecommendResponse {
   const scheme = {
@@ -22,7 +22,7 @@ afterEach(() => {
 
 describe("explainable recommendation view", () => {
   it("keeps result cards clean until Why this result? is opened", async () => {
-    renderApp(["/results"], {
+    renderAuthenticatedApp(["/results"], {
       profile: VALID_PROFILE,
       result: recommendResponse([SAMPLE_SCHEME]),
     });
@@ -49,7 +49,7 @@ describe("explainable recommendation view", () => {
   });
 
   it("states that the documented rule is the reference when Rule and ML differ", async () => {
-    renderApp(["/results"], {
+    renderAuthenticatedApp(["/results"], {
       profile: VALID_PROFILE,
       result: disagreeingResult(),
     });
@@ -62,7 +62,7 @@ describe("explainable recommendation view", () => {
   });
 
   it("lists incomplete profile fields as review items without telling the user to change them", async () => {
-    renderApp(["/results"], {
+    renderAuthenticatedApp(["/results"], {
       profile: { ...VALID_PROFILE, occupation_category: "" as never },
       result: recommendResponse([SAMPLE_SCHEME]),
     });
@@ -93,7 +93,7 @@ describe("explainable recommendation view", () => {
         },
       ],
     };
-    renderApp(["/results"], { profile: VALID_PROFILE, result });
+    renderAuthenticatedApp(["/results"], { profile: VALID_PROFILE, result });
     expect(screen.getByRole("heading", { name: "Not predicted eligible" })).toBeInTheDocument();
     expect(screen.getByText("Example Not Eligible Scheme")).toBeInTheDocument();
     const user = userEvent.setup();
@@ -104,7 +104,7 @@ describe("explainable recommendation view", () => {
   });
 
   it("shows cannot-fully-evaluate copy for incomplete profile fields", () => {
-    renderApp(["/results"], {
+    renderAuthenticatedApp(["/results"], {
       profile: { ...VALID_PROFILE, occupation_category: "" as never },
       result: recommendResponse([SAMPLE_SCHEME]),
     });

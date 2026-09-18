@@ -242,7 +242,7 @@ describe("data wallet page", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 401 }));
     renderAuthenticatedApp(["/wallet"]);
     expect(await screen.findByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument();
   });
 
   it("shows a complete profile completeness card", async () => {

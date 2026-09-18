@@ -66,7 +66,7 @@ FastAPI `12.0.0`. Public routes: `/health`, `/predict`, `/recommend`, `/schemes`
 
 ## 8. Frontend
 
-React + TypeScript + Vite + Tailwind. Routes: `/`, `/check`, `/results`, `/schemes`, `/evaluation`, `/login`, `/register`, `/wallet` (protected). API base URL is `VITE_API_BASE_URL`.
+React + TypeScript + Vite + Tailwind. The Login Page is the first public entry. Unauthenticated visits to `/` or any main-website route redirect to `/login`. After sign-in, citizens open `/dashboard` and administrators open `/admin`. API base URL is `VITE_API_BASE_URL`.
 
 ## 9. Database
 

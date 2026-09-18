@@ -8,6 +8,11 @@ import { recommendResponse, SAMPLE_SCHEME, VALID_PROFILE } from "./fixtures";
 import { renderApp, renderAuthenticatedApp, TEST_USER } from "./renderApp";
 
 const PROTECTED_ROUTES = [
+  "/home",
+  "/check",
+  "/results",
+  "/schemes",
+  "/evaluation",
   "/dashboard",
   "/wallet",
   "/compare",
@@ -82,7 +87,7 @@ describe("phase 43 eligibility presentation", () => {
         },
       ],
     };
-    renderApp(["/results"], {
+    renderAuthenticatedApp(["/results"], {
       profile: { ...VALID_PROFILE, occupation_category: "" as never },
       result,
     });

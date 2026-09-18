@@ -40,9 +40,30 @@ export default function App() {
     <PortalLayout>
       <Routes>
         <Route path="/" element={<RootRedirect />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/check" element={<CheckPage />} />
-        <Route path="/results" element={<ResultsPage />} />
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/check"
+          element={
+            <ProtectedRoute>
+              <CheckPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/results"
+          element={
+            <ProtectedRoute>
+              <ResultsPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/compare"
           element={
@@ -51,9 +72,30 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/schemes" element={<SchemesPage />} />
-        <Route path="/schemes/:schemeId" element={<SchemeDetailPage />} />
-        <Route path="/evaluation" element={<EvaluationPage />} />
+        <Route
+          path="/schemes"
+          element={
+            <ProtectedRoute>
+              <SchemesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/schemes/:schemeId"
+          element={
+            <ProtectedRoute>
+              <SchemeDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/evaluation"
+          element={
+            <ProtectedRoute>
+              <EvaluationPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/system-evaluation"
           element={
@@ -288,7 +330,14 @@ export default function App() {
             </AdminRoute>
           }
         />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route
+          path="*"
+          element={
+            <ProtectedRoute>
+              <NotFoundPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </PortalLayout>
   );

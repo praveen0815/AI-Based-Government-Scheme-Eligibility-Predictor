@@ -49,11 +49,15 @@ export function renderAuthenticatedApp(
   initial?: {
     profile?: CitizenProfile | null;
     result?: RecommendResponse | null;
+    language?: Language;
+    persistLanguage?: boolean;
+    user?: AuthUser | null;
+    token?: string | null;
   },
 ) {
   return renderApp(initialEntries, {
     ...initial,
-    user: TEST_USER,
-    token: "test-token",
+    user: initial?.user ?? TEST_USER,
+    token: initial?.token ?? "test-token",
   });
 }

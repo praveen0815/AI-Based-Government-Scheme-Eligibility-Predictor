@@ -22,7 +22,7 @@ cd frontend
 npm run dev
 ```
 
-4. Open [http://localhost:5173](http://localhost:5173).
+4. Open [http://localhost:5173](http://localhost:5173). The Login Page is the first screen. The Dashboard, Navbar, and Sidebar stay hidden until sign-in succeeds.
 
 ## Demo account
 
