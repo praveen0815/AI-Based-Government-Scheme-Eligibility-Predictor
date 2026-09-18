@@ -10,19 +10,21 @@ The system combines a **documented rule engine** with a **Machine Learning Decis
 
 # 🌟 What Makes This Project Unique
 
-* 🤖 Hybrid **Rule Engine + Machine Learning** eligibility prediction
-* 📋 Uses documented scheme conditions for transparent decisions
-* 🎯 Personalized scheme recommendations
-* 📊 ML performance and system evaluation
-* 🔍 Explainable "Why this result?" recommendations
-* 🧾 PDF eligibility reports
-* 📚 Recommendation history
-* ⚖️ Scheme comparison
-* 📄 Document checklist
-* 📈 Profile readiness and insights
-* 🔔 Personalized notifications and reminders
-* 🌐 English and Tamil language support
-* 🔐 Secure authentication and user-owned data
+- 🤖 Hybrid **Rule Engine + Machine Learning** eligibility prediction
+- 📋 Uses documented scheme conditions for transparent decisions
+- 🎯 Personalized scheme recommendations
+- 📊 ML performance and system evaluation
+- 🔍 Explainable "Why this result?" recommendations
+- 🧾 PDF eligibility reports
+- 📚 Recommendation history
+- ⚖️ Scheme comparison
+- 📄 Document checklist
+- 📈 Profile readiness and insights
+- 🔔 Personalized notifications and reminders
+- 🌐 English and Tamil language support
+- 🎙️ Voice Assistant
+- 🔐 Secure authentication and user-owned data
+- 🛡️ Separate Admin Console for platform monitoring and management
 
 ---
 
@@ -30,16 +32,16 @@ The system combines a **documented rule engine** with a **Machine Learning Decis
 
 Government welfare schemes often have different eligibility requirements related to:
 
-* Age
-* Income
-* Caste/category
-* Occupation
-* Education
-* Land ownership
-* Employment status
-* Family characteristics
-* Location
-* Other socio-economic conditions
+- Age
+- Income
+- Caste/category
+- Occupation
+- Education
+- Land ownership
+- Employment status
+- Family characteristics
+- Location
+- Other socio-economic conditions
 
 Citizens may find it difficult to determine which schemes are relevant to them.
 
@@ -55,15 +57,15 @@ Users can maintain their socio-economic information through a centralized profil
 
 The wallet can contain information such as:
 
-* Personal details
-* Age
-* Income
-* Occupation
-* Education
-* Category
-* Family information
-* Location
-* Other eligibility-related attributes
+- Personal details
+- Age
+- Income
+- Occupation
+- Education
+- Category
+- Family information
+- Location
+- Other eligibility-related attributes
 
 The profile completeness system helps users identify missing information.
 
@@ -89,7 +91,7 @@ Required category satisfied
 Required occupation satisfied
         ↓
 Rule Engine Result
-```
+````
 
 The rule engine provides transparent reasons for eligibility.
 
@@ -258,11 +260,218 @@ No email, SMS, WhatsApp, push notification, or external messaging system is used
 
 ---
 
+# 🎙️ Voice Assistant
+
+The portal includes a voice assistant designed to help users interact with the platform.
+
+Supported capabilities include:
+
+* Voice-based navigation
+* Eligibility-related queries
+* Scheme-related questions
+* Profile completeness queries
+* Supported profile information extraction
+* Typed-input fallback
+* English and Tamil interaction
+
+The voice assistant works as an interaction layer and does not independently calculate eligibility.
+
+Eligibility decisions continue to use the existing **Hybrid Rule + ML engine**.
+
+---
+
+# 🛡️ Admin Portal
+
+The project includes a separate **Admin Console** for authorized administrators to monitor and manage the platform.
+
+The Admin Console is visually and functionally separated from the citizen portal.
+
+## 📊 Admin Overview
+
+Provides platform-level information such as:
+
+* Total users
+* Total applications
+* Pending documents
+* Total schemes
+* Eligibility distribution
+* Recent activity
+
+---
+
+## 👥 User Management
+
+Administrators can:
+
+* Search users
+* View user information
+* View wallet completeness
+* View associated documents
+* View associated applications
+
+User information remains access-controlled through server-side authorization.
+
+---
+
+## 📄 Document Verification
+
+Administrators can:
+
+* View pending documents
+* Verify documents
+* Reject documents
+* Track document review status
+
+Document review only updates the document review status and does not directly determine scheme eligibility.
+
+---
+
+## 📋 Application Management
+
+Administrators can:
+
+* View applications across users
+* Review application statuses
+* Monitor application progress
+
+---
+
+## 🏛️ Scheme Management
+
+Administrators can:
+
+* View the scheme catalog
+* Review available scheme information
+
+Eligibility logic remains controlled by the existing eligibility engine.
+
+---
+
+## 📈 Eligibility Monitoring
+
+Administrators can monitor eligibility results using the existing recommendation system.
+
+The admin monitoring layer:
+
+* Uses existing recommendation logic
+* Does not modify eligibility predictions
+* Does not create separate eligibility rules
+* Does not alter citizen recommendation history
+
+---
+
+## 📊 Scheme Evaluation
+
+Provides analytical information about scheme-level results.
+
+This analytical evaluation is kept separate from the official/documented eligibility determination.
+
+---
+
+## 🧪 System Evaluation
+
+Provides system-level research metrics such as:
+
+* Request count
+* Error count
+* Minimum response time
+* Average response time
+* Maximum response time
+* System health
+
+---
+
+## 🔬 Research Dashboard
+
+Provides research-oriented evaluation information including:
+
+* ML metrics
+* Dataset information
+* Rule vs ML agreement
+* Dataset summary
+* System evaluation information
+
+---
+
+## 🔔 Admin Notifications
+
+Provides admin-specific platform notifications and relevant administrative information.
+
+---
+
+## 🎙️ Admin Voice Assistant
+
+The Admin Console includes a dedicated voice-assistant area for supported administrative commands and navigation.
+
+Administrative actions remain protected by the existing server-side authorization system.
+
+---
+
+## 📁 My Documents
+
+Administrators can access their own documents separately from citizen documents.
+
+---
+
+## ⚙️ Settings
+
+Provides available administrator account and application settings.
+
+---
+
+## 🔐 Admin Security
+
+Admin access uses the existing authentication system with server-side role authorization.
+
+Security controls include:
+
+* JWT-based authentication
+* Server-side admin role verification
+* Protected admin routes
+* Unauthenticated requests → `401`
+* Authenticated non-admin requests → `403`
+* User and admin access separation
+* Owner-scoped user data
+* Sensitive information is not displayed in the Admin Console
+
+The project is an academic prototype and does not currently implement full production infrastructure such as a dedicated WAF/firewall or field-level encryption for every database field.
+
+---
+
+## Admin Navigation
+
+```text
+Admin Console
+│
+├── Overview
+│   └── Admin Overview
+│
+├── Management
+│   ├── Users
+│   ├── Document Verification
+│   ├── Applications
+│   └── Scheme Management
+│
+├── Analytics
+│   ├── Eligibility Monitoring
+│   ├── Scheme Evaluation
+│   ├── System Evaluation
+│   └── Research Dashboard
+│
+├── Tools
+│   ├── Notifications
+│   └── Voice Assistant
+│
+└── Account
+    ├── My Documents
+    └── Settings
+```
+
+---
+
 # 📊 System Evaluation
 
 The project includes a dedicated research evaluation dashboard.
-
-It provides:
 
 ### ML Performance
 
@@ -315,7 +524,9 @@ The application provides authenticated access using:
 * Google Sign-In
 * JWT-based authorization
 * Protected routes
+* Role-based authorization
 * User-owned data access
+* Owner-scoped APIs
 
 User-specific APIs use the authenticated user's identity to ensure that one user cannot access another user's wallet, history, or notifications.
 
@@ -326,6 +537,10 @@ Sensitive information such as:
 * Google access tokens
 
 is not displayed in the application.
+
+Passwords are handled using secure password hashing rather than storing plain-text passwords.
+
+> Database field-level encryption and dedicated firewall/WAF infrastructure are not currently implemented as part of this academic prototype.
 
 ---
 
@@ -345,6 +560,7 @@ The project follows a layered web application architecture.
 │              FastAPI Backend             │
 │                                          │
 │  Authentication                          │
+│  Authorization                           │
 │  Wallet                                  │
 │  Scheme Catalog                           │
 │  Eligibility                              │
@@ -357,6 +573,8 @@ The project follows a layered web application architecture.
 │  Readiness                                │
 │  Insights                                 │
 │  Notifications                            │
+│  Applications                             │
+│  Admin Console                            │
 │  System Evaluation                        │
 └────────────────────┬─────────────────────┘
                      │
@@ -369,6 +587,8 @@ The project follows a layered web application architecture.
 │  Eligibility History                      │
 │  Notifications                            │
 │  Scheme Information                       │
+│  Application Data                         │
+│  Document Data                            │
 │  Other Application Data                   │
 └──────────────────────────────────────────┘
 ```
@@ -380,6 +600,7 @@ The project follows a layered web application architecture.
 The frontend is responsible for:
 
 * User interaction
+* Authentication screens
 * Profile management
 * Scheme search
 * Eligibility checking
@@ -387,9 +608,11 @@ The frontend is responsible for:
 * Scheme comparison
 * PDF generation interface
 * History
+* Applications
 * Notifications
+* Voice Assistant
+* Admin Console
 * System evaluation
-* Authentication screens
 
 ### Technologies
 
@@ -412,7 +635,10 @@ The FastAPI backend handles:
 * ML prediction
 * Recommendation ranking
 * History management
+* Application management
+* Document management
 * Notifications
+* Admin operations
 * System evaluation
 
 The backend acts as the bridge between the web portal, eligibility logic, ML model, and database.
@@ -458,6 +684,8 @@ The database supports information required for:
 * Scheme information
 * Eligibility history
 * Notifications
+* Applications
+* Documents
 * Other application entities
 
 Relationships between entities are maintained using relational database constraints.
@@ -473,7 +701,19 @@ User
 Login / Google Sign-In
  │
  ↓
-Dashboard
+Authentication & Role Check
+ │
+ ├──────────────→ Admin Console
+ │                     │
+ │                     ├── Users
+ │                     ├── Documents
+ │                     ├── Applications
+ │                     ├── Schemes
+ │                     ├── Eligibility Monitoring
+ │                     └── Evaluation
+ │
+ ↓
+User Dashboard
  │
  ↓
 Complete Socio-Economic Wallet
@@ -508,6 +748,7 @@ Results
  ├──→ PDF Report
  ├──→ History
  ├──→ Documents
+ ├──→ Applications
  ├──→ Readiness
  ├──→ Insights
  └──→ Notifications
@@ -527,9 +768,11 @@ Results
 | 🕒 History           | View previous checks            |
 | ⚖️ Compare           | Compare schemes                 |
 | 📄 Documents         | Track required documents        |
+| 📋 Applications      | Track application records       |
 | 📈 Readiness         | Check profile readiness         |
 | 💡 Insights          | Display useful profile insights |
 | 🔔 Notifications     | Display reminders               |
+| 🎙️ Voice Assistant  | Voice-based interaction         |
 | 📊 System Evaluation | Research/system metrics         |
 | ⚙️ Settings          | Manage account                  |
 
@@ -551,11 +794,13 @@ Testing covers:
 * Hybrid recommendations
 * History
 * Notifications
+* Applications
+* Admin authorization
 * Frontend components
 * Protected routes
 * UI behavior
 
-The project was developed incrementally through multiple implementation phases, with automated tests used to verify functionality after each major phase.
+Automated tests are used to verify functionality after major implementation phases.
 
 ---
 
@@ -589,6 +834,8 @@ Prediction
 ```
 
 The dataset also supports evaluation of agreement between the documented rule engine and the ML model.
+
+> The dataset is intended for academic/research use and does not represent a real government citizen database.
 
 ---
 
@@ -690,11 +937,14 @@ Potential future improvements include:
 * 📱 Mobile application
 * ☁️ Cloud deployment
 * 🔔 External notification services
-* 🗣️ Voice-based eligibility assistant
+* 🗣️ Advanced voice-based interaction
 * 🌐 Integration with official government APIs
 * 📊 Advanced analytics
 * 🧠 More sophisticated recommendation algorithms
 * 🔄 Automatic government scheme data updates
+* 🛡️ Production-grade WAF/firewall infrastructure
+* 🔐 Database encryption at rest and field-level encryption for sensitive data
+* 🔑 Centralized production key management
 
 ---
 
@@ -722,32 +972,4 @@ Users should always verify the final eligibility requirements through the respec
 **PRAVEENKUMAR R**
 
 Mechanical Engineering
-Bannari Amman Institute of Technology
 
----
-
-# 📜 License
-
-Academic Project — Developed for educational and research purposes.
-
----
-
-## 🏛️ Project Summary
-
-**State Government Sponsored Scheme Eligibility Predictor Engine** provides a centralized platform for identifying potentially relevant government schemes using a combination of **documented eligibility rules, Machine Learning, hybrid evaluation, and explainable recommendations**.
-
-```text
-Citizen Profile
-      ↓
-Eligibility Rules + ML
-      ↓
-Hybrid Evaluation
-      ↓
-Explainable Recommendation
-      ↓
-Compare / History / PDF
-      ↓
-Readiness / Insights / Notifications
-```
-
-**Goal:** Make government scheme discovery **simpler, more transparent, explainable, and accessible to citizens.**
