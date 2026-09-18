@@ -40,6 +40,7 @@ export default function App() {
     <PortalLayout>
       <Routes>
         <Route path="/" element={<RootRedirect />} />
+<<<<<<< HEAD
         <Route
           path="/home"
           element={
@@ -64,6 +65,11 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+=======
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/check" element={<CheckPage />} />
+        <Route path="/results" element={<ResultsPage />} />
+>>>>>>> origin/main
         <Route
           path="/compare"
           element={
@@ -72,6 +78,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+<<<<<<< HEAD
         <Route
           path="/schemes"
           element={
@@ -96,6 +103,11 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+=======
+        <Route path="/schemes" element={<SchemesPage />} />
+        <Route path="/schemes/:schemeId" element={<SchemeDetailPage />} />
+        <Route path="/evaluation" element={<EvaluationPage />} />
+>>>>>>> origin/main
         <Route
           path="/system-evaluation"
           element={
@@ -330,6 +342,7 @@ export default function App() {
             </AdminRoute>
           }
         />
+<<<<<<< HEAD
         <Route
           path="*"
           element={
@@ -338,6 +351,9 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+=======
+        <Route path="*" element={<NotFoundPage />} />
+>>>>>>> origin/main
       </Routes>
     </PortalLayout>
   );

@@ -14,7 +14,11 @@ import { signedInHomePath } from "../utils/homePath";
 export function LoginPage() {
   const navigate = useNavigate();
   const { isAuthenticated, user, login } = useAuth();
+<<<<<<< HEAD
   const { language, t } = useI18n();
+=======
+  const { t } = useI18n();
+>>>>>>> origin/main
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -86,6 +90,7 @@ export function LoginPage() {
   }
 
   return (
+<<<<<<< HEAD
     <AuthSplitLayout cardLabel={t.loginTitle}>
       <header className="login-heading">
         <h1>
@@ -229,6 +234,68 @@ export function LoginPage() {
 
       <div className="login-lang">
         <LanguageSwitcher variant="login" />
+=======
+    <div className="mx-auto max-w-5xl">
+      <div className="overflow-hidden rounded-[24px] border border-line bg-surface shadow-lift lg:grid lg:grid-cols-[0.92fr_1.08fr]">
+        <div className="bg-navy-900 px-8 py-10 text-white sm:px-10 lg:px-12 lg:py-14">
+          <BrandMark inverted />
+          <p className="mt-8 font-display text-[28px] font-bold leading-snug sm:text-[32px]">{t.productTagline}</p>
+          <p className="mt-8 text-[16px] leading-relaxed text-[#D5DDD8]">{t.notOfficialService}</p>
+        </div>
+        <div className="space-y-7 p-8 sm:p-10">
+          <header className="space-y-3">
+            <h1 className="page-title">{t.loginTitle}</h1>
+            <p className="body-copy">{t.loginLead}</p>
+          </header>
+          <ResearchNotice compact />
+          {registered ? (
+            <p className="notice-success" role="status">
+              {t.accountCreated}
+            </p>
+          ) : null}
+          {accountDeleted ? (
+            <p className="notice-success" role="status">
+              {t.accountDeleted}
+            </p>
+          ) : null}
+          {error ? <ErrorState message={error} /> : null}
+          <form onSubmit={handleSubmit} noValidate className="space-y-6">
+            <FormField id="login-email" label={t.email} error={fieldErrors.email} required>
+              <input
+                id="login-email"
+                type="email"
+                autoComplete="email"
+                required
+                aria-invalid={Boolean(fieldErrors.email)}
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="field-input"
+              />
+            </FormField>
+            <PasswordField
+              id="login-password"
+              label={t.password}
+              autoComplete="current-password"
+              required
+              value={password}
+              error={fieldErrors.password}
+              onChange={setPassword}
+            />
+            {loading ? <LoadingState message={t.signingIn} /> : null}
+            {googleLoading ? <LoadingState message={t.signingInGoogle} /> : null}
+            <Button type="submit" disabled={loading || googleLoading} className="w-full">
+              {t.loginSubmit}
+            </Button>
+            <GoogleSignInButton onCredential={(value) => void handleGoogleCredential(value)} disabled={loading || googleLoading} />
+            <p className="text-[16px] text-ink-500">
+              {t.needAccount}{" "}
+              <Link to="/register" className="font-semibold text-action">
+                {t.createAnAccount}
+              </Link>
+            </p>
+          </form>
+        </div>
+>>>>>>> origin/main
       </div>
     </AuthSplitLayout>
   );

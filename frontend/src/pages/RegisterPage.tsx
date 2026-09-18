@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import {
   AuthSplitLayout,
   EyeGlyph,
@@ -8,6 +9,9 @@ import {
   PhoneGlyph,
   UserGlyph,
 } from "../components/AuthSplitLayout";
+=======
+import { BrandMark } from "../components/BrandMark";
+>>>>>>> origin/main
 import { ErrorState } from "../components/ErrorState";
 import { GoogleSignInButton } from "../components/GoogleSignInButton";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
@@ -16,10 +20,13 @@ import { useAuth } from "../context/AuthContext";
 import { useI18n } from "../context/LanguageContext";
 import { ApiError, loginWithGoogle, registerAccount } from "../services/api";
 import { signedInHomePath } from "../utils/homePath";
+<<<<<<< HEAD
 
 function isValidMobile(value: string): boolean {
   return /^\+?[0-9]{10,15}$/.test(value.replace(/[\s-]/g, ""));
 }
+=======
+>>>>>>> origin/main
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -99,6 +106,7 @@ export function RegisterPage() {
   }
 
   return (
+<<<<<<< HEAD
     <AuthSplitLayout cardLabel={t.registerTitle} tall>
       <header className="login-heading">
         <h1>{t.registerTitle}</h1>
@@ -298,6 +306,78 @@ export function RegisterPage() {
 
       <div className="login-lang">
         <LanguageSwitcher variant="login" />
+=======
+    <div className="mx-auto max-w-5xl">
+      <div className="overflow-hidden rounded-[24px] border border-line bg-surface shadow-lift lg:grid lg:grid-cols-[0.92fr_1.08fr]">
+        <div className="bg-navy-900 px-8 py-10 text-white sm:px-10 lg:px-12 lg:py-14">
+          <BrandMark inverted />
+          <p className="mt-8 font-display text-[28px] font-bold leading-snug sm:text-[32px]">{t.productTagline}</p>
+          <p className="mt-8 text-[16px] leading-relaxed text-[#D5DDD8]">{t.notOfficialService}</p>
+        </div>
+        <div className="space-y-7 p-8 sm:p-10">
+          <header className="space-y-3">
+            <h1 className="page-title">{t.registerTitle}</h1>
+            <p className="body-copy">{t.registerLead}</p>
+          </header>
+          <ResearchNotice compact />
+          {error ? <ErrorState message={error} /> : null}
+          <form onSubmit={handleSubmit} noValidate className="space-y-6">
+            <FormField id="register-name" label={t.fullName} error={fieldErrors.fullName} required>
+              <input
+                id="register-name"
+                required
+                aria-invalid={Boolean(fieldErrors.fullName)}
+                value={fullName}
+                onChange={(event) => setFullName(event.target.value)}
+                className="field-input"
+              />
+            </FormField>
+            <FormField id="register-email" label={t.email} error={fieldErrors.email} required>
+              <input
+                id="register-email"
+                type="email"
+                autoComplete="email"
+                required
+                aria-invalid={Boolean(fieldErrors.email)}
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="field-input"
+              />
+            </FormField>
+            <PasswordField
+              id="register-password"
+              label={t.password}
+              hint={t.passwordHint}
+              autoComplete="new-password"
+              required
+              value={password}
+              error={fieldErrors.password}
+              onChange={setPassword}
+            />
+            <PasswordField
+              id="register-confirm"
+              label={t.confirmPassword}
+              autoComplete="new-password"
+              required
+              value={confirmPassword}
+              error={fieldErrors.confirmPassword}
+              onChange={setConfirmPassword}
+            />
+            {loading ? <LoadingState message={t.creatingAccount} /> : null}
+            {googleLoading ? <LoadingState message={t.signingInGoogle} /> : null}
+            <Button type="submit" disabled={loading || googleLoading} className="w-full">
+              {t.createAccount}
+            </Button>
+            <GoogleSignInButton onCredential={(value) => void handleGoogleCredential(value)} disabled={loading || googleLoading} />
+            <p className="text-[16px] text-ink-500">
+              {t.alreadyHaveAccount}{" "}
+              <Link to="/login" className="font-semibold text-action">
+                {t.signIn}
+              </Link>
+            </p>
+          </form>
+        </div>
+>>>>>>> origin/main
       </div>
     </AuthSplitLayout>
   );

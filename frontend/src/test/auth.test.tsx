@@ -207,6 +207,7 @@ describe("authentication pages", () => {
     expect(await screen.findByRole("heading", { name: "Welcome back, Test User" })).toBeInTheDocument();
   });
 
+<<<<<<< HEAD
   it("sends an already signed-in administrator from login to the admin dashboard", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404 }));
     renderAuthenticatedApp(["/login"], { user: { ...TEST_USER, is_admin: true } });
@@ -222,12 +223,19 @@ describe("authentication pages", () => {
     expect(screen.queryByRole("link", { name: /^Dashboard$/ })).not.toBeInTheDocument();
   });
 
+=======
+>>>>>>> origin/main
   it("opens the login page for an unauthenticated visitor at the application root", () => {
     renderApp(["/"]);
     expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument();
+<<<<<<< HEAD
     expect(screen.getByRole("link", { name: "Create an account" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /^Dashboard$/ })).not.toBeInTheDocument();
+=======
+    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Register" })).toBeInTheDocument();
+>>>>>>> origin/main
   });
 
   it("sends an already signed-in visitor from the application root to the dashboard", async () => {
@@ -259,6 +267,7 @@ describe("authentication pages", () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Logout" }));
     expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
+<<<<<<< HEAD
     expect(screen.getByRole("link", { name: "Create an account" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /^Dashboard$/ })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /^My Wallet$/ })).not.toBeInTheDocument();
@@ -273,5 +282,33 @@ describe("authentication pages", () => {
     expect(screen.queryByRole("link", { name: /^Dashboard$/ })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /^My Wallet$/ })).not.toBeInTheDocument();
     expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
+=======
+    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Register" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Dashboard$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^My Wallet$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^History$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Documents$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Insights$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Application Readiness$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^My Documents$/ })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Account$/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Settings$/ })).toBeInTheDocument();
+  });
+
+  it("shows unauthenticated navigation", () => {
+    renderApp(["/login"]);
+    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Register" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Dashboard$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^My Wallet$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^History$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Documents$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Insights$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Application Readiness$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^My Documents$/ })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Account$/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Settings$/ })).toBeInTheDocument();
+>>>>>>> origin/main
   });
 });

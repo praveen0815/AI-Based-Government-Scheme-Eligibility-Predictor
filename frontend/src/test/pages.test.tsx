@@ -32,7 +32,11 @@ function calledRecommend(fetchMock: { mock: { calls: unknown[][] } }) {
 
 describe("citizen portal", () => {
   it("loads the home page", () => {
+<<<<<<< HEAD
     renderAuthenticatedApp(["/home"]);
+=======
+    renderApp(["/home"]);
+>>>>>>> origin/main
     expect(
       screen.getByRole("heading", { name: "Welcome 👋" }),
     ).toBeInTheDocument();
@@ -86,7 +90,10 @@ describe("citizen portal", () => {
       finish = resolve;
     });
     const fetchMock = vi.fn().mockImplementation((url: string) => {
+<<<<<<< HEAD
       if (isNotificationUrl(url)) return Promise.resolve(emptyNotifications());
+=======
+>>>>>>> origin/main
       if (String(url).includes("/recommend")) return pending;
       return Promise.resolve({ ok: false, status: 404 });
     });

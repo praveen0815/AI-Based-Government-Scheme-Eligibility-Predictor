@@ -959,6 +959,7 @@ html:has(.admin-console) #root {
     min-width: 640px;
   }
 }
+<<<<<<< HEAD
 
 .login-stage {
   min-height: 100vh;
@@ -1382,3 +1383,5 @@ html:has(.admin-console) #root {
     font-size: 32px;
   }
 }
+=======
+>>>>>>> origin/main

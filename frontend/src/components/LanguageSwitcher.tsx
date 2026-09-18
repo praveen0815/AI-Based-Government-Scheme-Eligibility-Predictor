@@ -3,11 +3,16 @@ import { useI18n } from "../context/LanguageContext";
 export function LanguageSwitcher({
   variant = "light",
 }: {
+<<<<<<< HEAD
   variant?: "light" | "sidebar" | "dark" | "login";
+=======
+  variant?: "light" | "sidebar" | "dark";
+>>>>>>> origin/main
 }) {
   const { language, setLanguage, t } = useI18n();
   const sidebar = variant === "sidebar";
   const dark = variant === "dark";
+<<<<<<< HEAD
   const login = variant === "login";
 
   if (login) {
@@ -36,6 +41,8 @@ export function LanguageSwitcher({
       </div>
     );
   }
+=======
+>>>>>>> origin/main
 
   return (
     <div

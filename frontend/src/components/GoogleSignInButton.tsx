@@ -86,6 +86,7 @@ export function GoogleSignInButton({
   }
 
   return (
+<<<<<<< HEAD
     <div className={`${login ? "space-y-0" : "space-y-4"} ${disabled ? "pointer-events-none opacity-60" : ""}`}>
       {login ? null : (
         <div className="flex items-center gap-3 text-[15px] font-semibold uppercase tracking-wide text-ink-500">
@@ -95,6 +96,15 @@ export function GoogleSignInButton({
         </div>
       )}
       <div className={login ? "login-google-slot" : "flex justify-center"}>
+=======
+    <div className={`space-y-4 ${disabled ? "pointer-events-none opacity-60" : ""}`}>
+      <div className="flex items-center gap-3 text-[15px] font-semibold uppercase tracking-wide text-ink-500">
+        <span className="h-px flex-1 bg-line" />
+        {t.orContinueWith}
+        <span className="h-px flex-1 bg-line" />
+      </div>
+      <div className="flex justify-center">
+>>>>>>> origin/main
         <GoogleLogin
           onSuccess={handleGoogle}
           onError={() => handleGoogle()}
