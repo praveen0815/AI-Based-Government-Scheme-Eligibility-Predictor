@@ -1,3 +1,4 @@
+<<<<<<< feature/platform-enhancements
 # AI-Based Government Scheme Eligibility Predictor
 
 Final-year academic research prototype. Citizens store a socio-economic profile in a unified data wallet. FastAPI scores six CORE Tamil Nadu welfare schemes with a saved Decision Tree, compares that prediction with documented rules, and explains why a scheme was recommended.
@@ -10,25 +11,27 @@ This repository is at **Phase 44: administrator portal**. Phases 1–43 remain i
 
 | Layer | Technology |
 | --- | --- |
-| ML / data | Python, Pandas, NumPy, Scikit-learn |
-| Backend | Python, FastAPI |
-| Database | PostgreSQL (owner-scoped application data) |
-| Frontend | React, TypeScript, Vite, Tailwind CSS |
+| ML / data | Python,
 
-## Repository layout
+# 🌟 What Makes This Project Unique
 
-```
-.
-├── dataset/          # Official catalog and synthetic CORE eligibility rows
-├── ml/               # Rules, generators, validators, and baseline models
-├── backend/          # FastAPI application
-├── frontend/         # React citizen portal
-├── docs/             # Project documentation
-└── README.md
-```
+* 🤖 Hybrid **Rule Engine + Machine Learning** eligibility prediction
+* 📋 Uses documented scheme conditions for transparent decisions
+* 🎯 Personalized scheme recommendations
+* 📊 ML performance and system evaluation
+* 🔍 Explainable "Why this result?" recommendations
+* 🧾 PDF eligibility reports
+* 📚 Recommendation history
+* ⚖️ Scheme comparison
+* 📄 Document checklist
+* 📈 Profile readiness and insights
+* 🔔 Personalized notifications and reminders
+* 🌐 English and Tamil language support
+* 🔐 Secure authentication and user-owned data
 
-## Current status
+---
 
+<<<<<<< feature/platform-enhancements
 - `dataset/raw/schemes.csv` holds 13 official Tamil Nadu scheme rows. Six are CORE for ML.
 - Synthetic CORE citizens and rule-derived labels are in `dataset/raw/citizens.csv` and `dataset/processed/eligibility_dataset.csv`.
 - The selected prototype model is the Decision Tree at `ml/models/baseline/decision_tree.joblib`.
@@ -37,51 +40,594 @@ This repository is at **Phase 44: administrator portal**. Phases 1–43 remain i
 - English and Tamil use the existing `useI18n()` dictionaries.
 
 See `docs/final_system_flow.md` for the complete architecture and user flow. Phase 43 QA notes are in `docs/phase43_results.md`.
+=======
+# 🎯 Problem Statement
+>>>>>>> main
 
-## Setup
+Government welfare schemes often have different eligibility requirements related to:
 
-Requires **Python 3.12**. Use `py -3.12` when more than one Python version is installed. Do not use 3.13 for ML runs. Recorded ML environment: Python 3.12.10, scikit-learn 1.9.0, pandas 3.0.5, numpy 2.5.2.
+* Age
+* Income
+* Caste/category
+* Occupation
+* Education
+* Land ownership
+* Employment status
+* Family characteristics
+* Location
+* Other socio-economic conditions
 
-### Backend
+Citizens may find it difficult to determine which schemes are relevant to them.
 
-```powershell
-cd backend
-py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-uvicorn app.main:app --reload --app-dir .
-```
+This project provides a centralized platform where a citizen can enter their socio-economic information and receive a ranked list of potentially eligible government schemes.
 
-Health check: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
+---
 
+# 🚀 Core Features
+
+## 👤 Citizen Profile / Socio-Economic Wallet
+
+Users can maintain their socio-economic information through a centralized profile.
+
+<<<<<<< feature/platform-enhancements
 ### Frontend
+=======
+The wallet can contain information such as:
 
-```powershell
-cd frontend
-npm install
-npm run dev
+* Personal details
+* Age
+* Income
+* Occupation
+* Education
+* Category
+* Family information
+* Location
+* Other eligibility-related attributes
+
+The profile completeness system helps users identify missing information.
+
+---
+
+# 🤖 Hybrid Eligibility Prediction
+
+The core of the system combines two approaches:
+
+### 1. 📋 Rule Engine
+
+The documented scheme conditions are evaluated against the user's profile.
+
+For example:
+
+```text
+User Income ≤ Scheme Income Limit
+        ↓
+Age satisfies requirement
+        ↓
+Required category satisfied
+        ↓
+Required occupation satisfied
+        ↓
+Rule Engine Result
 ```
 
-Portal: [http://localhost:5173](http://localhost:5173)
+The rule engine provides transparent reasons for eligibility.
+>>>>>>> main
 
-Copy `frontend/.env.example` to `frontend/.env` if needed. Default API base URL is `http://127.0.0.1:8000`.
+---
 
+### 2. 🌳 Machine Learning
+
+A **Decision Tree classifier** is used to learn eligibility patterns from the prepared citizen–scheme dataset.
+
+The model predicts whether a citizen is likely to satisfy the eligibility pattern for a scheme.
+
+---
+
+### 3. 🔀 Hybrid Decision
+
+The system combines:
+
+```text
+Citizen Profile
+       ↓
+Documented Rule Engine
+       ↓
+Machine Learning Model
+       ↓
+Rule + ML Agreement
+       ↓
+Ranking
+       ↓
+Recommended Schemes
+```
+
+When the rule engine and ML model disagree, the **documented rule remains the reference for explanation**.
+
+---
+
+# 🔍 Explainable Recommendations
+
+Every recommendation provides a **"Why this result?"** section.
+
+It explains:
+
+* Which documented conditions were checked
+* Why the rule engine considered the profile eligible/not eligible
+* What the Decision Tree predicted
+* Whether Rule and ML agree
+* What the ML probability represents
+* Which profile fields are incomplete
+
+This improves transparency and makes the ML-based recommendation easier to understand.
+
+---
+
+# 📊 Scheme Recommendation & Ranking
+
+The system evaluates available schemes and produces personalized recommendations.
+
+Users can:
+
+* View recommended schemes
+* Search schemes
+* Filter by category
+* Filter by department
+* View result counts
+* Clear filters
+* Compare schemes
+* Open scheme details
+* Access official scheme sources
+
+---
+
+# ⚖️ Scheme Comparison
+
+Users can select schemes and compare them side-by-side.
+
+Comparison can help users understand:
+
+* Scheme name
+* Department
+* Category
+* Eligibility requirements
+* Benefits
+* Important conditions
+* Official source information
+
+---
+
+# 📜 Recommendation History
+
+Previous eligibility checks are stored for the authenticated user.
+
+Users can:
+
+* View previous checks
+* Review previous recommendations
+* Open previous results
+* Track their recommendation activity
+
+Each user's history is isolated using their authenticated account.
+
+---
+
+# 📄 PDF Report Generation
+
+Users can generate a PDF report containing their eligibility results.
+
+The report can be used to:
+
+* Review recommendations
+* Save results
+* Share results
+* Maintain a personal record
+
+> The generated report is informational and does not constitute official government approval.
+
+---
+
+# 📁 Document Checklist
+
+The system provides document-related guidance associated with schemes.
+
+Users can identify documents that may be required for a scheme and track their preparation status.
+
+This helps users understand what they may need before applying through the appropriate official channel.
+
+---
+
+# 📈 Profile Readiness & Insights
+
+The system provides additional guidance based on existing profile information.
+
+### Profile Readiness
+
+Shows whether the user's profile contains the information required for meaningful eligibility evaluation.
+
+### Insights
+
+Provides summarized information about:
+
+* Profile completeness
+* Eligibility results
+* Recommendation patterns
+* Areas requiring attention
+
+The system does **not** instruct users to manipulate their personal information to obtain eligibility.
+
+<<<<<<< feature/platform-enhancements
 ### PostgreSQL (Windows)
 
 1. Install PostgreSQL or run a local container. Replace `USERNAME` and `PASSWORD` with values you choose. Do not commit them.
+=======
+---
 
-```powershell
-docker run --name scheme-predictor-pg -e POSTGRES_USER=USERNAME -e POSTGRES_PASSWORD=PASSWORD -e POSTGRES_DB=scheme_predictor -p 5432:5432 -d postgres:16
+# 🔔 Notifications & Reminders
+
+Authenticated users receive lightweight in-portal reminders derived from existing system information.
+
+Notifications can relate to:
+
+* Profile completeness
+* Missing documents
+* Eligibility checks
+* Readiness-related information
+
+Users can:
+
+* View notifications
+* Mark notifications as read
+* Delete notifications
+
+No email, SMS, WhatsApp, push notification, or external messaging system is used.
+
+---
+
+# 📊 System Evaluation
+
+The project includes a dedicated research evaluation dashboard.
+
+It provides:
+
+### ML Performance
+
+* Model metrics
+* Dataset information
+* Evaluation results
+
+### Hybrid Agreement
+
+* Rule Engine vs ML agreement
+
+### Dataset Summary
+
+* Dataset size
+* Eligible samples
+* Non-eligible samples
+
+### API Performance
+
+* Request count
+* Error count
+* Minimum response time
+* Average response time
+* Maximum response time
+
+### System Health
+
+Provides an overview of the running API/system status.
+
+> API performance counters are maintained in memory and reset when the application restarts.
+
+---
+
+# 🌐 Multilingual Support
+
+The portal supports:
+
+* 🇬🇧 English
+* 🇮🇳 Tamil
+
+The interface uses the existing internationalization system so that UI text can be displayed in both languages.
+
+---
+
+# 🔐 Authentication & Security
+
+The application provides authenticated access using:
+
+* Email/password authentication
+* Google Sign-In
+* JWT-based authorization
+* Protected routes
+* User-owned data access
+
+User-specific APIs use the authenticated user's identity to ensure that one user cannot access another user's wallet, history, or notifications.
+
+Sensitive information such as:
+
+* Passwords
+* JWT tokens
+* Google access tokens
+
+is not displayed in the application.
+
+---
+
+# 🏗️ System Architecture
+
+The project follows a layered web application architecture.
+
+```text
+┌──────────────────────────────────────────┐
+│              Web Portal                  │
+│        React + TypeScript + UI           │
+└────────────────────┬─────────────────────┘
+                     │
+                     │ REST API
+                     ↓
+┌──────────────────────────────────────────┐
+│              FastAPI Backend             │
+│                                          │
+│  Authentication                          │
+│  Wallet                                  │
+│  Scheme Catalog                           │
+│  Eligibility                              │
+│  Rule Engine                              │
+│  ML Prediction                            │
+│  Recommendation                           │
+│  History                                  │
+│  Comparison                               │
+│  Documents                                │
+│  Readiness                                │
+│  Insights                                 │
+│  Notifications                            │
+│  System Evaluation                        │
+└────────────────────┬─────────────────────┘
+                     │
+                     ↓
+┌──────────────────────────────────────────┐
+│             PostgreSQL                   │
+│                                          │
+│  User Data                               │
+│  Wallet Data                              │
+│  Eligibility History                      │
+│  Notifications                            │
+│  Scheme Information                       │
+│  Other Application Data                   │
+└──────────────────────────────────────────┘
 ```
 
-If Docker Desktop was stopped, start it and then:
+---
 
-```powershell
-docker start scheme-predictor-pg
+# 🖥️ Presentation Layer
+
+The frontend is responsible for:
+
+* User interaction
+* Profile management
+* Scheme search
+* Eligibility checking
+* Results visualization
+* Scheme comparison
+* PDF generation interface
+* History
+* Notifications
+* System evaluation
+* Authentication screens
+
+### Technologies
+
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+
+---
+
+# ⚙️ Application Layer
+
+The FastAPI backend handles:
+
+* Authentication
+* Authorization
+* API requests
+* Eligibility evaluation
+* Rule Engine execution
+* ML prediction
+* Recommendation ranking
+* History management
+* Notifications
+* System evaluation
+
+The backend acts as the bridge between the web portal, eligibility logic, ML model, and database.
+
+---
+
+# 🧠 Intelligence Layer
+
+The intelligence layer consists of:
+
+```text
+                  Citizen Profile
+                        │
+              ┌─────────┴─────────┐
+              ↓                   ↓
+       Rule Engine          ML Model
+              │                   │
+              ↓                   ↓
+       Rule Result          ML Prediction
+              │                   │
+              └─────────┬─────────┘
+                        ↓
+                  Hybrid Result
+                        ↓
+                    Ranking
+                        ↓
+                Recommendation
 ```
 
-Auth, Google sign-in, wallet, and history return HTTP 503 until this container is running. From the project root you can also use `docker compose up -d`.
+The **Decision Tree** provides an interpretable ML prediction while the documented rule engine provides explicit eligibility reasoning.
 
+---
+
+# 🗄️ Data Layer
+
+PostgreSQL is used for persistent application data.
+
+The database supports information required for:
+
+* Users
+* Authentication-related application records
+* Citizen wallets
+* Scheme information
+* Eligibility history
+* Notifications
+* Other application entities
+
+Relationships between entities are maintained using relational database constraints.
+
+---
+
+# 🔄 Complete System Flow
+
+```text
+User
+ │
+ ↓
+Login / Google Sign-In
+ │
+ ↓
+Dashboard
+ │
+ ↓
+Complete Socio-Economic Wallet
+ │
+ ↓
+Check Eligibility
+ │
+ ↓
+FastAPI
+ │
+ ├──────────────→ Documented Rule Engine
+ │                         │
+ │                         ↓
+ │                    Rule Result
+ │
+ └──────────────→ Decision Tree ML
+                           │
+                           ↓
+                      ML Prediction
+ │
+ ↓
+Hybrid Evaluation
+ │
+ ↓
+Recommendation Ranking
+ │
+ ↓
+Results
+ │
+ ├──→ Why This Result?
+ ├──→ Compare
+ ├──→ PDF Report
+ ├──→ History
+ ├──→ Documents
+ ├──→ Readiness
+ ├──→ Insights
+ └──→ Notifications
+```
+
+---
+
+# 📚 Main Portal Modules
+
+| Module               | Purpose                         |
+| -------------------- | ------------------------------- |
+| 🏠 Dashboard         | Central user overview           |
+| 👤 Wallet            | Store socio-economic profile    |
+| 🔍 Check             | Run eligibility evaluation      |
+| 🎯 Results           | Display recommended schemes     |
+| 📚 Schemes           | Browse and search schemes       |
+| 🕒 History           | View previous checks            |
+| ⚖️ Compare           | Compare schemes                 |
+| 📄 Documents         | Track required documents        |
+| 📈 Readiness         | Check profile readiness         |
+| 💡 Insights          | Display useful profile insights |
+| 🔔 Notifications     | Display reminders               |
+| 📊 System Evaluation | Research/system metrics         |
+| ⚙️ Settings          | Manage account                  |
+
+---
+
+# 🧪 Testing & Validation
+
+The project includes backend and frontend testing.
+
+Testing covers:
+
+* API functionality
+* Authentication
+* Authorization
+* Wallet ownership
+* Eligibility prediction
+* Rule Engine
+* ML prediction
+* Hybrid recommendations
+* History
+* Notifications
+* Frontend components
+* Protected routes
+* UI behavior
+
+The project was developed incrementally through multiple implementation phases, with automated tests used to verify functionality after each major phase.
+
+---
+
+# 📊 Machine Learning Dataset
+
+The project uses a prepared citizen–scheme dataset for model development and evaluation.
+
+The dataset contains:
+
+* Citizen profiles
+* Scheme information
+* Eligibility-related attributes
+* Eligibility labels
+
+The ML pipeline includes:
+
+```text
+Raw Data
+   ↓
+Data Preparation
+   ↓
+Feature Processing
+   ↓
+Train/Test Split
+   ↓
+Decision Tree Training
+   ↓
+Model Evaluation
+   ↓
+Prediction
+```
+
+The dataset also supports evaluation of agreement between the documented rule engine and the ML model.
+>>>>>>> main
+
+---
+
+# 🛠️ Technology Stack
+
+### Frontend
+
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+
+<<<<<<< feature/platform-enhancements
 2. Copy `backend/.env.example` to `backend/.env` and set `DATABASE_URL` and `JWT_SECRET_KEY`. Do not commit `.env`.
 3. Create the application database if you installed PostgreSQL locally, for example `scheme_predictor`. Use a separate `scheme_predictor_test` database for automated tests.
 4. Install backend dependencies and create tables (this does not drop existing tables):
@@ -113,10 +659,162 @@ Public routes include `/predict`, `/recommend`, `/schemes`, `/catalog`, `/evalua
 ## Phase status
 
 Phases 1–43 are complete. Phase 44 adds an administrator portal on the existing JWT: role-checked `/admin` pages and `/api/v1/admin/*` APIs. Citizens cannot open admin routes. Document verification is separate from eligibility. Hybrid scoring, ranking, and citizen API contracts were not rewritten.
+=======
+### Backend
 
-Still out of scope:
+* Python
+* FastAPI
+* Pydantic
+* REST APIs
 
+### Machine Learning
+
+* Python
+* Pandas
+* NumPy
+* Scikit-learn
+* Decision Tree
+
+### Database
+
+* PostgreSQL
+
+### Authentication
+
+* JWT
+* Google Sign-In
+
+### Development
+
+* Git
+* GitHub
+* Pytest
+* Frontend testing framework
+
+---
+
+# 📁 Project Structure
+
+```text
+scheme-eligibility-predictor/
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── hooks/
+│   │   ├── context/
+│   │   ├── routes/
+│   │   └── App.tsx
+│   │
+│   └── package.json
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   └── main.py
+│   │
+│   ├── tests/
+│   └── requirements.txt
+│
+├── ml/
+│   ├── dataset/
+│   ├── models/
+│   ├── preprocessing/
+│   ├── training/
+│   └── evaluation/
+│
+├── docs/
+│   ├── phase26_results.md
+│   ├── phase29_results.md
+│   ├── phase30_results.md
+│   └── ...
+│
+└── README.md
+```
+
+> Adjust the folder names above to match the final repository structure before committing the README.
+
+---
+
+# 🔮 Future Enhancements
+
+Potential future improvements include:
+
+* 🤖 Advanced ML models
+* 📱 Mobile application
+* ☁️ Cloud deployment
+* 🔔 External notification services
+* 🗣️ Voice-based eligibility assistant
+* 🌐 Integration with official government APIs
+* 📊 Advanced analytics
+* 🧠 More sophisticated recommendation algorithms
+* 🔄 Automatic government scheme data updates
+
+---
+
+# ⚠️ Disclaimer
+
+This project is an **academic research prototype**.
+
+The eligibility results generated by the system are for informational and research purposes only.
+
+The system does not:
+
+* Represent the Government
+* Guarantee scheme eligibility
+* Guarantee benefit approval
+* Guarantee receipt of benefits
+* Replace official government verification
+* Submit applications on behalf of citizens
+
+Users should always verify the final eligibility requirements through the respective **official government scheme sources** before applying.
+
+---
+
+# 👨‍💻 Developer
+
+**PRAVEENKUMAR R**
+
+Mechanical Engineering
+Bannari Amman Institute of Technology
+
+---
+
+# 📜 License
+
+Academic Project — Developed for educational and research purposes.
+
+---
+
+## 🏛️ Project Summary
+
+**State Government Sponsored Scheme Eligibility Predictor Engine** provides a centralized platform for identifying potentially relevant government schemes using a combination of **documented eligibility rules, Machine Learning, hybrid evaluation, and explainable recommendations**.
+>>>>>>> main
+
+```text
+Citizen Profile
+      ↓
+Eligibility Rules + ML
+      ↓
+Hybrid Evaluation
+      ↓
+Explainable Recommendation
+      ↓
+Compare / History / PDF
+      ↓
+Readiness / Insights / Notifications
+```
+
+<<<<<<< feature/platform-enhancements
 - Aadhaar / government identity
 - OTP, email verification, SMS, or push notifications
 - LLM features
 - Payment or deployment infrastructure
+=======
+**Goal:** Make government scheme discovery **simpler, more transparent, explainable, and accessible to citizens.**
+>>>>>>> main
