@@ -19,6 +19,8 @@ import { DocumentsPage } from "./pages/DocumentsPage";
 import { InsightsPage } from "./pages/InsightsPage";
 import { ReadinessPage } from "./pages/ReadinessPage";
 import { UploadsPage } from "./pages/UploadsPage";
+import { DocumentScannerPage } from "./pages/DocumentScannerPage";
+import { SchemeAssistantPage } from "./pages/SchemeAssistantPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { NotificationsPage } from "./pages/NotificationsPage";
 import { VoiceAssistantPage } from "./pages/VoiceAssistantPage";
@@ -175,6 +177,14 @@ export default function App() {
           }
         />
         <Route
+          path="/document-scanner"
+          element={
+            <ProtectedRoute>
+              <DocumentScannerPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/history"
           element={
             <ProtectedRoute>
@@ -203,6 +213,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <VoiceAssistantPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/scheme-assistant"
+          element={
+            <ProtectedRoute>
+              <SchemeAssistantPage />
             </ProtectedRoute>
           }
         />

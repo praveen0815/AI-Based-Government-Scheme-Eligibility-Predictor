@@ -121,6 +121,31 @@ export function BellIcon(props: IconProps) {
   );
 }
 
+export function ChevronLeftIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M14.5 6 8.5 12l6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </Icon>
+  );
+}
+
+export function ChevronRightIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="m9.5 6 6 6-6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </Icon>
+  );
+}
+
+export function SearchIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.8" />
+      <path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </Icon>
+  );
+}
+
 export function MenuIcon(props: IconProps) {
   return (
     <Icon {...props}>
@@ -224,6 +249,15 @@ export function DocumentIcon(props: IconProps) {
   );
 }
 
+export function ScanIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M7 5h3M14 5h3v3M20 14v3h-3M7 19H4v-3M4 10V7h3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M8 12h8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </Icon>
+  );
+}
+
 export function BrainIcon(props: IconProps) {
   return (
     <Icon {...props}>
@@ -263,6 +297,46 @@ export function MicIcon(props: IconProps) {
     <Icon {...props}>
       <rect x="9" y="3" width="6" height="11" rx="3" stroke="currentColor" strokeWidth="1.8" />
       <path d="M6 11a6 6 0 0 0 12 0M12 17v4M8 21h8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </Icon>
+  );
+}
+
+export function ChatIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path
+        d="M5 6.5A3.5 3.5 0 0 1 8.5 3h7A3.5 3.5 0 0 1 19 6.5v5A3.5 3.5 0 0 1 15.5 15H11l-4 4v-4H8.5A3.5 3.5 0 0 1 5 11.5v-5Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+    </Icon>
+  );
+}
+
+export function SunIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.8" />
+      <path
+        d="M12 3v2M12 19v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M3 12h2M19 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </Icon>
+  );
+}
+
+export function MoonIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path
+        d="M16.5 13.2A6.2 6.2 0 0 1 10 5.4 6.6 6.6 0 1 0 16.5 13.2Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
     </Icon>
   );
 }

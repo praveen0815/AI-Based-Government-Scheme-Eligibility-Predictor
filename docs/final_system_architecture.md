@@ -62,7 +62,7 @@ User or wallet profile → feature processing → Decision Tree for each CORE sc
 
 ## 7. Backend
 
-FastAPI `12.0.0`. Public routes: `/health`, `/predict`, `/recommend`, `/schemes`, `/model-info`, `/evaluation/*`. Authenticated routes: `/auth/*`, `/wallets/*`. CORS is limited to local Vite origins.
+FastAPI `12.0.0`. Public research routes: `/health`, `/predict`, `/recommend`, `/schemes`, `/model-info`, `/evaluation/*`. Authenticated routes: `/auth/*`, `/wallets/*`, `/applications`, `/admin/*`, and other owner-scoped resources. CORS uses an explicit origin allowlist (never `*`); production requires `CORS_ALLOWED_ORIGINS`.
 
 ## 8. Frontend
 
@@ -78,7 +78,7 @@ Register / login with Argon2 password hashes and HS256 JWTs. The secret comes fr
 
 ## 11. Evaluation
 
-Public read-only APIs read existing Phase 4/5 artifacts. The dashboard does not retrain models or expose users or wallets.
+Public read-only APIs read existing Phase 4/5 artifacts. The React evaluation pages require sign-in. The dashboard does not retrain models or expose users or wallets.
 
 ## 12. Limitations
 

@@ -36,7 +36,7 @@ export function NotificationBell({
       to={to}
       className={
         className ??
-        "relative inline-flex h-12 w-12 items-center justify-center rounded-[12px] border border-line text-ink-900 transition duration-150 hover:bg-sage"
+        "citizen-bell"
       }
       aria-label={t.notificationsBellLabel(unreadCount)}
     >

@@ -176,6 +176,51 @@ function adminFetch() {
         }),
       );
     }
+    if (path.includes("/api/v1/scheme-knowledge")) {
+      return Promise.resolve(
+        jsonOk({
+          scheme_count: 1,
+          total_catalog_count: 1,
+          schemes: [
+            {
+              scheme_id: SAMPLE_SCHEME.scheme_id,
+              scheme_name: SAMPLE_SCHEME.scheme_name,
+              department: SAMPLE_SCHEME.department,
+              scheme_category: SAMPLE_SCHEME.scheme_category,
+              ml_scope: "CORE",
+              catalog_rule_status: "PARTIALLY_VERIFIED",
+              official_source_url: SAMPLE_SCHEME.official_source_url,
+              items: [
+                {
+                  field_key: "required_documents",
+                  label: "Required documents",
+                  value: SAMPLE_SCHEME.required_documents,
+                  content_state: "unverified_placeholder",
+                  verification_status: "unverified",
+                  source_url: SAMPLE_SCHEME.official_source_url,
+                  last_verified_at: null,
+                  catalog_access_date: "2026-08-14",
+                },
+                {
+                  field_key: "benefit_description",
+                  label: "Benefit details",
+                  value: SAMPLE_SCHEME.benefit,
+                  content_state: "present",
+                  verification_status: "unverified",
+                  source_url: SAMPLE_SCHEME.official_source_url,
+                  last_verified_at: null,
+                  catalog_access_date: "2026-08-14",
+                },
+              ],
+              disclaimer: "This knowledge base repeats official catalog text only.",
+            },
+          ],
+          departments: [SAMPLE_SCHEME.department],
+          categories: [SAMPLE_SCHEME.scheme_category],
+          disclaimer: "This knowledge base repeats official catalog text only.",
+        }),
+      );
+    }
     if (path.includes("/api/v1/catalog")) {
       return Promise.resolve(
         jsonOk({
@@ -244,6 +289,8 @@ describe("admin portal access", () => {
     vi.stubGlobal("fetch", adminFetch());
     renderApp(["/admin"], { user: ADMIN_USER, token: "admin-token" });
     expect(await screen.findByRole("heading", { name: en.adminTitle })).toBeInTheDocument();
+    expect(document.querySelector(".admin-console")).toBeInTheDocument();
+    expect(screen.getByLabelText(en.adminSearchLabel)).toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: en.adminConsole })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: en.adminOverviewNav })).toHaveAttribute("href", "/admin");
     expect(screen.getByRole("link", { name: en.adminUsers })).toHaveAttribute("href", "/admin/users");
@@ -255,7 +302,11 @@ describe("admin portal access", () => {
     expect(screen.getByRole("link", { name: en.navSystemEvaluation })).toHaveAttribute("href", "/admin/system-evaluation");
     expect(screen.getByRole("link", { name: en.navResearchDashboard })).toHaveAttribute("href", "/admin/research-dashboard");
     expect(screen.getByRole("link", { name: /^Notifications$/ })).toHaveAttribute("href", "/admin/notifications");
-    expect(screen.getByRole("link", { name: en.navVoiceAssistant })).toHaveAttribute("href", "/admin/voice-assistant");
+    const voiceLinks = screen.getAllByRole("link", { name: en.navVoiceAssistant });
+    expect(voiceLinks.length).toBeGreaterThan(0);
+    for (const link of voiceLinks) {
+      expect(link).toHaveAttribute("href", "/admin/voice-assistant");
+    }
     expect(screen.getByRole("link", { name: en.navUploads })).toHaveAttribute("href", "/admin/uploads");
     expect(screen.getByRole("link", { name: en.navSettings })).toHaveAttribute("href", "/admin/settings");
     for (const label of CITIZEN_ONLY_NAV) {
@@ -318,17 +369,67 @@ describe("admin portal modules", () => {
     renderApp(["/admin/applications"], { user: ADMIN_USER, token: "admin-token" });
     expect(await screen.findByRole("heading", { name: en.navApplications })).toBeInTheDocument();
     expect(screen.getByText(SAMPLE_SCHEME.scheme_name)).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: en.appStatusNotApplied })).toBeInTheDocument();
     expect(screen.getAllByText(en.appStatusPlanning).length).toBeGreaterThan(0);
     expect(document.body.textContent).not.toContain("admin-token");
   });
 
   it("shows a read-only scheme catalog without eligibility editors", async () => {
+    const user = userEvent.setup();
     vi.stubGlobal("fetch", adminFetch());
     renderApp(["/admin/schemes"], { user: ADMIN_USER, token: "admin-token" });
     expect(await screen.findByRole("heading", { name: en.adminSchemeManagement })).toBeInTheDocument();
     expect(screen.getByText(SAMPLE_SCHEME.scheme_name)).toBeInTheDocument();
     expect(screen.getByText(en.adminReadOnlyCatalog)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /edit eligibility|save rules/i })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: en.adminKnowledgeOpen }));
+    expect(screen.getByText(en.adminKnowledgePlaceholder)).toBeInTheDocument();
+    expect(screen.getAllByText(en.adminKnowledgeUnverified).length).toBeGreaterThan(0);
     expect(document.body.textContent).not.toContain("admin-token");
+  });
+
+  it("lets an admin save verification metadata without exposing citizen editors", async () => {
+    const user = userEvent.setup();
+    const fetchMock = adminFetch();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation((url: string, init?: RequestInit) => {
+        const path = String(url);
+        const method = String(init?.method || "GET").toUpperCase();
+        if (path.includes("/api/v1/admin/scheme-knowledge/") && method === "PATCH") {
+          return Promise.resolve(
+            jsonOk({
+              scheme_id: SAMPLE_SCHEME.scheme_id,
+              scheme_name: SAMPLE_SCHEME.scheme_name,
+              department: SAMPLE_SCHEME.department,
+              scheme_category: SAMPLE_SCHEME.scheme_category,
+              ml_scope: "CORE",
+              catalog_rule_status: "PARTIALLY_VERIFIED",
+              official_source_url: SAMPLE_SCHEME.official_source_url,
+              items: [
+                {
+                  field_key: "required_documents",
+                  label: "Required documents",
+                  value: SAMPLE_SCHEME.required_documents,
+                  content_state: "unverified_placeholder",
+                  verification_status: "verified",
+                  source_url: SAMPLE_SCHEME.official_source_url,
+                  last_verified_at: "2026-09-28",
+                  catalog_access_date: "2026-08-14",
+                },
+              ],
+              disclaimer: "This knowledge base repeats official catalog text only.",
+            }),
+          );
+        }
+        return fetchMock(url, init);
+      }),
+    );
+    renderApp(["/admin/schemes"], { user: ADMIN_USER, token: "admin-token" });
+    await screen.findByRole("heading", { name: en.adminSchemeManagement });
+    await user.click(screen.getByRole("button", { name: en.adminKnowledgeOpen }));
+    await user.click(screen.getAllByRole("button", { name: en.adminKnowledgeSave })[0]);
+    expect(await screen.findByText(en.adminKnowledgeSaved)).toBeInTheDocument();
+    expect(vi.mocked(fetch).mock.calls.some(([url, init]) => String(url).includes("/api/v1/admin/scheme-knowledge/") && String(init?.method) === "PATCH")).toBe(true);
   });
 });

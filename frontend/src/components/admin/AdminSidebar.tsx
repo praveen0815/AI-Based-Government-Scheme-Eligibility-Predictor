@@ -3,15 +3,18 @@ import { useI18n } from "../../context/LanguageContext";
 import {
   BellIcon,
   BrainIcon,
+  CheckIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
   ClipboardIcon,
   DashboardIcon,
   DocumentIcon,
   EvaluationIcon,
+  InsightsIcon,
   MicIcon,
   SchemesIcon,
   SettingsIcon,
   ShieldIcon,
-  TargetIcon,
   UploadIcon,
   UserIcon,
 } from "../icons";
@@ -26,7 +29,7 @@ type AdminNavItem = {
 function itemClass(active: boolean, collapsed: boolean) {
   return [
     "admin-sidebar-link",
-    collapsed ? "justify-center px-0" : "gap-3 px-3",
+    collapsed ? "admin-sidebar-link-collapsed" : "admin-sidebar-link-expanded",
     active ? "admin-sidebar-link-active" : "admin-sidebar-link-idle",
   ].join(" ");
 }
@@ -46,12 +49,9 @@ export function AdminSidebar({
 
   const sections: { label: string; items: AdminNavItem[] }[] = [
     {
-      label: t.adminSectionOverview,
-      items: [{ to: "/admin", end: true, label: t.adminOverviewNav, icon: DashboardIcon }],
-    },
-    {
       label: t.adminSectionManagement,
       items: [
+        { to: "/admin", end: true, label: t.adminOverviewNav, icon: DashboardIcon },
         { to: "/admin/users", label: t.adminUsers, icon: UserIcon },
         { to: "/admin/documents", label: t.adminDocumentVerification, icon: DocumentIcon },
         { to: "/admin/applications", label: t.navApplications, icon: ClipboardIcon },
@@ -61,15 +61,10 @@ export function AdminSidebar({
     {
       label: t.adminSectionAnalytics,
       items: [
-        { to: "/admin/eligibility", label: t.adminEligibilityMonitoring, icon: EvaluationIcon },
-        { to: "/admin/evaluation", label: t.adminSchemeEvaluation, icon: TargetIcon },
+        { to: "/admin/eligibility", label: t.adminEligibilityMonitoring, icon: CheckIcon },
+        { to: "/admin/evaluation", label: t.adminSchemeEvaluation, icon: EvaluationIcon },
         { to: "/admin/system-evaluation", label: t.navSystemEvaluation, icon: BrainIcon },
-        { to: "/admin/research-dashboard", label: t.navResearchDashboard, icon: EvaluationIcon },
-      ],
-    },
-    {
-      label: t.adminSectionTools,
-      items: [
+        { to: "/admin/research-dashboard", label: t.navResearchDashboard, icon: InsightsIcon },
         { to: "/admin/notifications", label: t.navNotifications, icon: BellIcon },
         { to: "/admin/voice-assistant", label: t.navVoiceAssistant, icon: MicIcon },
       ],
@@ -86,21 +81,21 @@ export function AdminSidebar({
   return (
     <>
       <div
-        className={`fixed inset-0 z-30 bg-slate-950/45 transition-opacity lg:hidden ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        className={`admin-sidebar-backdrop lg:hidden ${open ? "admin-sidebar-backdrop-open" : ""}`}
         onClick={onClose}
         aria-hidden="true"
       />
       <aside
-        className={`admin-sidebar z-40 flex flex-col text-white ${
+        className={`admin-sidebar z-40 flex flex-col ${
           open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
-        <div className={`border-b border-white/10 ${collapsed ? "px-2 py-4" : "px-4 py-4"}`}>
+        <div className={`admin-brand-wrap ${collapsed ? "admin-brand-wrap-collapsed" : ""}`}>
           {collapsed ? (
             <NavLink
               to="/admin"
               end
-              className="mx-auto flex h-9 w-9 items-center justify-center rounded-lg bg-[#1d4ed8] text-white"
+              className="admin-brand-mark admin-brand-mark-solo"
               aria-label={t.brandName}
               onClick={onClose}
             >
@@ -111,7 +106,7 @@ export function AdminSidebar({
               <span className="admin-brand-mark">
                 <ShieldIcon />
               </span>
-              <span>
+              <span className="admin-brand-copy">
                 <span className="admin-brand-title">{t.brandName}</span>
                 <span className="admin-brand-console">{t.adminConsole}</span>
                 <span className="admin-brand-tag">{t.brandSubtitle}</span>
@@ -120,11 +115,11 @@ export function AdminSidebar({
           )}
         </div>
 
-        <nav aria-label={t.adminConsole} className="flex-1 space-y-4 overflow-y-auto px-2.5 py-4">
+        <nav aria-label={t.adminConsole} className="admin-sidebar-nav">
           {sections.map((section) => (
-            <div key={section.label}>
-              {collapsed ? <p className="sr-only">{section.label}</p> : <p className="admin-nav-label px-3 pb-1.5">{section.label}</p>}
-              <div className="space-y-1">
+            <div key={section.label} className="admin-nav-group">
+              {collapsed ? <p className="sr-only">{section.label}</p> : <p className="admin-nav-label">{section.label}</p>}
+              <div className="admin-nav-items">
                 {section.items.map((item) => (
                   <NavLink
                     key={item.to}
@@ -136,7 +131,7 @@ export function AdminSidebar({
                     onClick={onClose}
                   >
                     <item.icon />
-                    {collapsed ? <span className="sr-only">{item.label}</span> : item.label}
+                    {collapsed ? <span className="sr-only">{item.label}</span> : <span>{item.label}</span>}
                   </NavLink>
                 ))}
               </div>
@@ -144,9 +139,9 @@ export function AdminSidebar({
           ))}
         </nav>
 
-        <div className="space-y-2.5 border-t border-white/10 p-3">
+        <div className="admin-sidebar-foot">
           {collapsed ? (
-            <p className="admin-system justify-center">
+            <p className="admin-system admin-system-collapsed">
               <span className="admin-system-dot" aria-hidden="true" />
               <span className="sr-only">{t.adminSystemOnline}</span>
             </p>
@@ -154,18 +149,19 @@ export function AdminSidebar({
             <p className="admin-system">
               <span className="admin-system-dot" aria-hidden="true" />
               <span>{t.adminSystemOnline}</span>
-              <span className="ml-auto text-slate-400">{t.adminVersion}</span>
+              <span className="admin-system-version">{t.adminVersion}</span>
             </p>
           )}
           <button
             type="button"
-            className="hidden w-full items-center justify-center rounded-lg border border-white/10 px-2 py-2 text-slate-300 hover:bg-white/5 hover:text-white lg:flex"
+            className="admin-collapse-btn hidden lg:flex"
             onClick={onToggleCollapsed}
             aria-label={collapsed ? t.adminExpandSidebar : t.adminCollapseSidebar}
           >
-            {collapsed ? "»" : t.adminCollapseSidebar}
+            <span aria-hidden="true">{collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}</span>
+            {collapsed ? null : <span>{t.adminCollapseSidebar}</span>}
           </button>
-          {collapsed ? null : <p className="admin-sidebar-disclaimer px-0.5 text-slate-400">{t.notOfficialService}</p>}
+          {collapsed ? null : <p className="admin-sidebar-disclaimer">{t.notOfficialService}</p>}
         </div>
       </aside>
     </>

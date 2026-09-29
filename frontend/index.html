@@ -8,6 +8,54 @@
       content="Scheme Predictor is an academic research prototype that helps people discover government schemes that may match their socio-economic profile."
     />
     <title>Scheme Predictor — Civic eligibility research portal</title>
+    <style>
+      html.citizen-boot[data-citizen-theme="dark"] {
+        background: #1c1f24;
+        color: #f6f3ec;
+      }
+      html.citizen-boot[data-citizen-theme="light"] {
+        background: #f6f3ec;
+        color: #1c1914;
+      }
+      html.admin-boot[data-admin-theme="light"] {
+        background: #f3f6f9;
+        color: #0f2744;
+      }
+      html.admin-boot[data-admin-theme="dark"] {
+        background: #0e1726;
+        color: #e8eef6;
+      }
+    </style>
+    <script>
+      (function () {
+        try {
+          var path = window.location.pathname;
+          var skip = path === "/login" || path === "/register" || path.indexOf("/admin") === 0;
+          var stored = localStorage.getItem("schemewise.citizen-theme");
+          var theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches
+                ? "light"
+                : "dark";
+          document.documentElement.setAttribute("data-citizen-theme", theme);
+          if (!skip) document.documentElement.classList.add("citizen-boot");
+          if (path.indexOf("/admin") === 0) {
+            var adminStored = localStorage.getItem("schemewise.admin-theme");
+            var adminTheme =
+              adminStored === "light" || adminStored === "dark"
+                ? adminStored
+                : window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches
+                  ? "light"
+                  : "dark";
+            document.documentElement.setAttribute("data-admin-theme", adminTheme);
+            document.documentElement.classList.add("admin-boot");
+          }
+        } catch (error) {
+          document.documentElement.setAttribute("data-citizen-theme", "dark");
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

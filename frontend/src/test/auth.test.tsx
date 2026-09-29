@@ -91,6 +91,10 @@ describe("authentication pages", () => {
   it("loads the login page", () => {
     renderApp(["/login"]);
     expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
+    expect(document.querySelector(".login-stage")).toBeInTheDocument();
+    expect(document.querySelector(".login-card")).toBeInTheDocument();
+    expect(document.querySelector(".citizen-portal")).not.toBeInTheDocument();
+    expect(document.querySelector(".admin-console")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Continue with Google" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Create an account" })).toHaveAttribute("href", "/register");
@@ -195,8 +199,8 @@ describe("authentication pages", () => {
     expect(screen.getByRole("link", { name: "My Wallet" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "History" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Documents" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Insights" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Application Readiness" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Application Highlights and Insights" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Compare Schemes" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "My Documents" })).toBeInTheDocument();
     expect(screen.getAllByText(TEST_USER.full_name).length).toBeGreaterThan(0);
   });
@@ -258,8 +262,8 @@ describe("authentication pages", () => {
     expect(screen.getByRole("link", { name: /^My Wallet$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^History$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Documents$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Insights$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Application Readiness$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Application Highlights and Insights$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Compare Schemes$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^My Documents$/ })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /^Account$/ })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Settings$/ })).toBeInTheDocument();

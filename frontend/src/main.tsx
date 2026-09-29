@@ -5,9 +5,12 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { googleClientId } from "./components/GoogleSignInButton";
 import { AuthProvider } from "./context/AuthContext";
+import { CitizenThemeProvider } from "./context/CitizenThemeContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import { RecommendationProvider } from "./context/RecommendationContext";
 import "./index.css";
+import "./styles/portal.css";
+import "./styles/admin.css";
 
 function OptionalGoogleProvider({ children }: { children: ReactNode }) {
   const clientId = googleClientId();
@@ -22,11 +25,13 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <OptionalGoogleProvider>
         <LanguageProvider>
-          <AuthProvider>
-            <RecommendationProvider>
-              <App />
-            </RecommendationProvider>
-          </AuthProvider>
+          <CitizenThemeProvider>
+            <AuthProvider>
+              <RecommendationProvider>
+                <App />
+              </RecommendationProvider>
+            </AuthProvider>
+          </CitizenThemeProvider>
         </LanguageProvider>
       </OptionalGoogleProvider>
     </BrowserRouter>

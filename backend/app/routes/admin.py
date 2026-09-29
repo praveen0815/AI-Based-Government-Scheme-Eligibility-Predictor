@@ -19,6 +19,11 @@ from app.schemas.admin import (
     AdminVoiceAuditCreate,
     AdminVoiceAuditResponse,
 )
+from app.schemas.scheme_knowledge import (
+    SchemeKnowledgeItemUpdate,
+    SchemeKnowledgeListResponse,
+    SchemeKnowledgeRecord,
+)
 from app.services.admin_service import (
     get_admin_overview,
     get_admin_user,
@@ -26,6 +31,10 @@ from app.services.admin_service import (
     list_admin_eligibility,
     list_admin_users,
     update_admin_document_status,
+)
+from app.services.scheme_knowledge_service import (
+    list_scheme_knowledge,
+    update_scheme_knowledge_item,
 )
 from app.services.voice_audit_service import create_voice_audit, resolve_transcript_hash
 
@@ -109,6 +118,52 @@ def patch_admin_document(
 ) -> AdminDocumentItem:
     _ = current_admin
     return update_admin_document_status(require_db(session), upload_id, payload.review_status)
+
+
+@router.get(
+    "/scheme-knowledge",
+    response_model=SchemeKnowledgeListResponse,
+    summary="List official scheme knowledge records for verification",
+    description=_NOTE,
+)
+def read_admin_scheme_knowledge(
+    q: str | None = Query(default=None, max_length=200),
+    scheme_id: str | None = Query(default=None),
+    department: str | None = Query(default=None),
+    category: str | None = Query(default=None),
+    current_admin: UserRecord = Depends(get_current_admin),
+    session: Session | None = Depends(get_db),
+) -> SchemeKnowledgeListResponse:
+    _ = current_admin
+    return list_scheme_knowledge(
+        session,
+        q=q,
+        scheme_id=scheme_id,
+        department=department,
+        category=category,
+    )
+
+
+@router.patch(
+    "/scheme-knowledge/{scheme_id}/items/{field_key}",
+    response_model=SchemeKnowledgeRecord,
+    summary="Update source or verification metadata for one catalog field",
+    description=_NOTE,
+)
+def patch_admin_scheme_knowledge_item(
+    scheme_id: str,
+    field_key: str,
+    payload: SchemeKnowledgeItemUpdate,
+    current_admin: UserRecord = Depends(get_current_admin),
+    session: Session | None = Depends(get_db),
+) -> SchemeKnowledgeRecord:
+    return update_scheme_knowledge_item(
+        require_db(session),
+        scheme_id,
+        field_key,
+        payload,
+        current_admin.id,
+    )
 
 
 @router.get(

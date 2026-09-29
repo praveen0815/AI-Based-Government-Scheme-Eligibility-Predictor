@@ -104,6 +104,14 @@ class AdminContractTests(unittest.TestCase):
             ).status_code,
             401,
         )
+        self.assertEqual(self.client.get("/api/v1/admin/scheme-knowledge").status_code, 401)
+        self.assertEqual(
+            self.client.patch(
+                "/api/v1/admin/scheme-knowledge/TN-SW-001/items/required_documents",
+                json={"verification_status": "verified"},
+            ).status_code,
+            401,
+        )
 
     def test_openapi_lists_admin_routes(self) -> None:
         paths = self.client.get("/openapi.json").json()["paths"]
@@ -114,6 +122,8 @@ class AdminContractTests(unittest.TestCase):
         self.assertIn("/api/v1/admin/documents/{upload_id}", paths)
         self.assertIn("/api/v1/admin/eligibility", paths)
         self.assertIn("/api/v1/admin/audit/voice", paths)
+        self.assertIn("/api/v1/admin/scheme-knowledge", paths)
+        self.assertIn("/api/v1/admin/scheme-knowledge/{scheme_id}/items/{field_key}", paths)
 
 
 class AdminDatabaseTests(unittest.TestCase):
@@ -174,6 +184,12 @@ class AdminDatabaseTests(unittest.TestCase):
         self.assertEqual(overview.status_code, 403)
         users = self.client.get("/api/v1/admin/users", headers=headers)
         self.assertEqual(users.status_code, 403)
+        knowledge = self.client.patch(
+            "/api/v1/admin/scheme-knowledge/TN-SW-001/items/required_documents",
+            json={"verification_status": "verified"},
+            headers=headers,
+        )
+        self.assertEqual(knowledge.status_code, 403)
         audit = self.client.post(
             "/api/v1/admin/audit/voice",
             json={"intent": "ADMIN_USER_DOCUMENTS", "outcome": "ok", "transcript": "show kamal nath"},

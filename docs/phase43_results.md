@@ -63,10 +63,10 @@ Not changed: `AuthContext` login/logout, JWT issuance, Google sign-in, recommend
 | --- | --- | --- | --- |
 | Login / Register / Google | `/login`, `/register` | Public; signed-in users go to Dashboard | JWT in sessionStorage only |
 | Dashboard | `/dashboard` | Protected | Post-login entry; snapshot + quick actions |
-| Eligibility check | `/check` | Public form; wallet compare/PDF need sign-in | Scores via `POST /api/v1/recommend` |
-| Results | `/results` | Public session result | Backend statuses only |
-| Scheme discovery | `/schemes` | Public | Catalog + optional recommendation overlay |
-| Scheme details | `/schemes/:schemeId` | Public | Official source links |
+| Eligibility check | `/check` | Protected (login-first) | Scores via `POST /api/v1/recommend` |
+| Results | `/results` | Protected (login-first) | Backend statuses only |
+| Scheme discovery | `/schemes` | Protected (login-first) | Catalog + optional recommendation overlay |
+| Scheme details | `/schemes/:schemeId` | Protected (login-first) | Official source links |
 | Compare | `/compare` | Protected | Empty state without 2–3 IDs; API `/api/v1/compare` |
 | History | `/history` | Protected | Owner rows only |
 | Documents | `/documents` | Protected | Checklist, not government submit |

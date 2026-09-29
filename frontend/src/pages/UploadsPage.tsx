@@ -255,9 +255,12 @@ export function UploadsPage() {
         </section>
       ) : null}
 
-      <p className="text-[16px] text-ink-500">
+      <p className="flex flex-wrap gap-4 text-[16px] text-ink-500">
         <Link to="/documents" className="font-semibold text-action hover:underline">
           {t.navDocuments}
+        </Link>
+        <Link to="/document-scanner" className="font-semibold text-action hover:underline">
+          {t.navDocumentScanner}
         </Link>
       </p>
     </div>

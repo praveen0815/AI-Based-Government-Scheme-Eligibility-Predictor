@@ -34,7 +34,7 @@ Suggested local-only values (change them):
 - Email: `demo.reviewer@example.com`
 - Password: choose an 8+ character password and do not record it in this repository
 
-After registration, log in. The portal opens **My Wallet**.
+After registration, log in. Citizens open **Dashboard**. Administrators open **Admin Console**.
 
 ## Sample citizen profile
 

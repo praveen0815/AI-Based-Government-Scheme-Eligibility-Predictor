@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { AdminKpiCard, AdminPageHeader, AdminPanel, AdminStatusBadge, sharePercent } from "../components/admin/adminUi";
+import {
+  AdminKpiCard,
+  AdminPageHeader,
+  AdminPanel,
+  AdminShareBar,
+  AdminStatusBadge,
+  sharePercent,
+} from "../components/admin/adminUi";
 import { ErrorState } from "../components/ErrorState";
 import { LoadingState } from "../components/LoadingState";
 import { useI18n } from "../context/LanguageContext";
@@ -59,7 +66,6 @@ export function AdminDashboardPage() {
         eyebrow={`${t.adminConsole} › ${t.adminOverviewNav}`}
         title={t.adminTitle}
         description={t.adminLead}
-        actions={<span className="admin-range">{t.adminLast7Days}</span>}
       />
       {loading ? <LoadingState message={t.adminLoading} /> : null}
       {error ? <ErrorState message={error} onRetry={() => void load()} /> : null}
@@ -94,15 +100,31 @@ export function AdminDashboardPage() {
               label={t.adminTotalSchemes}
               value={String(schemeCount ?? data.eligible_scheme_results)}
               hint={schemeCount != null ? t.adminKpiCatalogSchemes : t.catalogEligibleFilter}
-              tone="purple"
+              tone="teal"
               icon={<SchemesIcon />}
             />
           </section>
           <section className="admin-analytics-grid" aria-label={t.adminSectionAnalytics}>
-            <AdminPanel title={t.adminEligibilityDistribution} padded>
+            <AdminPanel
+              title={t.adminEligibilityDistribution}
+              padded
+              actions={
+                <Link to="/admin/eligibility" className="admin-link">
+                  {t.adminViewAll}
+                </Link>
+              }
+            >
+              <AdminShareBar
+                label={t.adminEligibilityDistribution}
+                segments={[
+                  { key: "eligible", value: data.eligible_scheme_results, color: "#0f766e" },
+                  { key: "not_eligible", value: data.not_eligible_scheme_results, color: "#b91c1c" },
+                  { key: "incomplete", value: data.cannot_fully_evaluate_users, color: "#d97706" },
+                ]}
+              />
               <div className="admin-stat-row">
                 <p className="admin-stat-label">
-                  <span className="admin-stat-dot" style={{ background: "#059669" }} />
+                  <span className="admin-stat-dot" style={{ background: "#0f766e" }} />
                   {t.catalogEligibilityEligible}
                 </p>
                 <p className="admin-stat-value">{data.eligible_scheme_results}</p>
@@ -125,10 +147,26 @@ export function AdminDashboardPage() {
                 <p className="admin-stat-share">{sharePercent(data.cannot_fully_evaluate_users, eligibilityTotal)}</p>
               </div>
             </AdminPanel>
-            <AdminPanel title={t.adminDocumentStatus} padded>
+            <AdminPanel
+              title={t.adminDocumentStatus}
+              padded
+              actions={
+                <Link to="/admin/documents" className="admin-link">
+                  {t.adminViewAll}
+                </Link>
+              }
+            >
+              <AdminShareBar
+                label={t.adminDocumentStatus}
+                segments={[
+                  { key: "verified", value: data.verified_documents, color: "#0f766e" },
+                  { key: "pending", value: data.pending_document_reviews, color: "#d97706" },
+                  { key: "rejected", value: data.rejected_documents, color: "#b91c1c" },
+                ]}
+              />
               <div className="admin-stat-row">
                 <p className="admin-stat-label">
-                  <span className="admin-stat-dot" style={{ background: "#2563eb" }} />
+                  <span className="admin-stat-dot" style={{ background: "#d97706" }} />
                   {t.adminUploaded}
                 </p>
                 <p className="admin-stat-value">{data.total_document_uploads}</p>
@@ -136,7 +174,7 @@ export function AdminDashboardPage() {
               </div>
               <div className="admin-stat-row">
                 <p className="admin-stat-label">
-                  <span className="admin-stat-dot" style={{ background: "#059669" }} />
+                  <span className="admin-stat-dot" style={{ background: "#0f766e" }} />
                   {t.adminVerified}
                 </p>
                 <p className="admin-stat-value">{data.verified_documents}</p>
@@ -152,6 +190,43 @@ export function AdminDashboardPage() {
               </div>
             </AdminPanel>
           </section>
+          <AdminPanel
+            title={t.navApplications}
+            actions={
+              <Link to="/admin/applications" className="admin-link">
+                {t.adminViewAll}
+              </Link>
+            }
+          >
+            {data.recent_activity.filter((item) => item.activity_type === "application").length === 0 ? (
+              <p className="admin-empty">{t.adminApplicationsEmpty}</p>
+            ) : (
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>{t.adminActivity}</th>
+                      <th>{t.adminName}</th>
+                      <th>{t.adminFilterStatus}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.recent_activity
+                      .filter((item) => item.activity_type === "application")
+                      .map((item) => (
+                        <tr key={`${item.user_id}-${item.occurred_at}-${item.summary}`}>
+                          <td>{item.summary}</td>
+                          <td>{item.user_name}</td>
+                          <td>
+                            <AdminStatusBadge status={item.activity_type} />
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </AdminPanel>
           <AdminPanel
             title={t.adminActivity}
             actions={
@@ -177,7 +252,7 @@ export function AdminDashboardPage() {
                   <tbody>
                     {data.recent_activity.map((item) => (
                       <tr key={`${item.activity_type}-${item.user_id}-${item.occurred_at}`}>
-                        <td className="font-medium text-slate-900">{item.summary}</td>
+                        <td>{item.summary}</td>
                         <td>{item.user_name}</td>
                         <td>{item.user_email}</td>
                         <td>{formatActivityTime(item.occurred_at, t)}</td>

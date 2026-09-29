@@ -3,16 +3,24 @@ import { useI18n } from "../context/LanguageContext";
 export function LanguageSwitcher({
   variant = "light",
 }: {
+<<<<<<< Updated upstream
 <<<<<<< HEAD
   variant?: "light" | "sidebar" | "dark" | "login";
 =======
   variant?: "light" | "sidebar" | "dark";
 >>>>>>> origin/main
+=======
+  variant?: "light" | "sidebar" | "dark" | "login" | "citizen";
+>>>>>>> Stashed changes
 }) {
   const { language, setLanguage, t } = useI18n();
   const sidebar = variant === "sidebar";
   const dark = variant === "dark";
+<<<<<<< Updated upstream
 <<<<<<< HEAD
+=======
+  const citizen = variant === "citizen";
+>>>>>>> Stashed changes
   const login = variant === "login";
 
   if (login) {
@@ -43,6 +51,29 @@ export function LanguageSwitcher({
   }
 =======
 >>>>>>> origin/main
+
+  if (citizen) {
+    return (
+      <div className="citizen-lang" role="group" aria-label={t.languageLabel}>
+        <button
+          type="button"
+          aria-pressed={language === "en"}
+          className={`citizen-lang-btn ${language === "en" ? "is-active" : ""}`}
+          onClick={() => setLanguage("en")}
+        >
+          {t.languageEnglish}
+        </button>
+        <button
+          type="button"
+          aria-pressed={language === "ta"}
+          className={`citizen-lang-btn ${language === "ta" ? "is-active" : ""}`}
+          onClick={() => setLanguage("ta")}
+        >
+          {t.languageTamil}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div

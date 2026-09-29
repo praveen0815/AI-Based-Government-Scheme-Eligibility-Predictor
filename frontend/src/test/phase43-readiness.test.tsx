@@ -25,12 +25,14 @@ const PROTECTED_ROUTES = [
   "/insights",
   "/notifications",
   "/voice-assistant",
+  "/scheme-assistant",
   "/eligibility-simulator",
   "/applications",
   "/research-dashboard",
   "/system-evaluation",
   "/settings",
   "/uploads",
+  "/document-scanner",
 ];
 
 function jsonOk(body: unknown) {
@@ -115,22 +117,25 @@ describe("phase 43 module navigation", () => {
     const research = within(screen.getByRole("navigation", { name: "Research" }));
     const mainHrefs = [
       ["/dashboard", "Dashboard"],
+      ["/wallet", "My Wallet"],
       ["/check", "Check Eligibility"],
-      ["/compare", "Compare"],
-      ["/history", "History"],
-      ["/documents", "Documents"],
-      ["/readiness", "Application Readiness"],
-      ["/insights", "Insights"],
-      ["/notifications", "Notifications"],
-      ["/voice-assistant", "Voice Assistant"],
+      ["/compare", "Compare Schemes"],
       ["/eligibility-simulator", "Eligibility Simulator"],
       ["/applications", "Applications"],
+      ["/documents", "Documents"],
+      ["/document-scanner", "AI Document Scanner"],
+      ["/insights", "Application Highlights and Insights"],
+      ["/history", "History"],
+      ["/scheme-assistant", "Scheme Assistant"],
     ] as const;
     for (const [href, name] of mainHrefs) {
       expect(main.getByRole("link", { name })).toHaveAttribute("href", href);
     }
     expect(research.getByRole("link", { name: "Schemes" })).toHaveAttribute("href", "/schemes");
-    expect(research.getByRole("link", { name: "Research Dashboard" })).toHaveAttribute("href", "/research-dashboard");
+    expect(research.getByRole("link", { name: "Evaluation" })).toHaveAttribute("href", "/evaluation");
+    expect(research.queryByRole("link", { name: "Research Dashboard" })).not.toBeInTheDocument();
+    expect(main.queryByRole("link", { name: "Notifications" })).not.toBeInTheDocument();
+    expect(main.queryByRole("link", { name: "Voice Assistant" })).not.toBeInTheDocument();
   });
 
   it("clears an expired JWT and returns the user to login", async () => {

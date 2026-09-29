@@ -1,4 +1,4 @@
-"""Owner-only supporting-document uploads. No OCR or identity analysis."""
+"""Owner-only supporting-document uploads. OCR lives in the document scanner service."""
 
 from __future__ import annotations
 
