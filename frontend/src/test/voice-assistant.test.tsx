@@ -440,7 +440,7 @@ describe("voice assistant page", () => {
     expect(screen.getByText("Ready")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Start Speaking" })).toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: "Type your question" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Voice Assistant" })).toHaveAttribute("href", "/voice-assistant");
+    expect(screen.getByRole("heading", { name: "Nira" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Check my eligibility" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Who are you?" })).toBeInTheDocument();
   });
@@ -616,7 +616,7 @@ describe("voice assistant page", () => {
     renderApp(["/voice-assistant"], { user: TEST_USER, token: "test-token", language: "ta" });
     expect(screen.getByRole("heading", { name: "நிரா" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "பேசத் தொடங்கு" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "குரல் உதவியாளர்" })).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "உங்கள் கேள்வியைத் தட்டச்சு செய்யவும்" })).toBeInTheDocument();
   });
 
   it("explains the existing hybrid result without inventing a new reason", async () => {

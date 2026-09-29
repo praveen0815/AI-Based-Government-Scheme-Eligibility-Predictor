@@ -491,14 +491,33 @@ Relationships between entities are maintained using relational database constrai
 
 # 🔄 Complete System Flow
 
+The Login Page is the first and only public entry page. The main website — including the Dashboard, Navbar, and Sidebar — is not shown until authentication succeeds.
+
 ```text
-User
+┌──────────────────────┐
+│      LOGIN PAGE      │
+│ Email / Password     │
+│ Google Sign-In       │
+└──────────┬───────────┘
+           │
+           │ Successful Login
+           ▼
+┌──────────────────────────────────┐
+│        OPEN WEBSITE              │
+│   Role-Based Dashboard           │
+│                                  │
+│   User → User Dashboard          │
+│   Admin → Admin Dashboard        │
+└──────────────────────────────────┘
+```
+
+Unauthenticated visitors are always redirected to the Login Page. After a successful email/password or Google sign-in, the existing JWT session is used to open the website and send the user to the matching dashboard. Existing dashboard modules are unchanged.
+
+```text
+Open Website
  │
- ↓
-Login / Google Sign-In
- │
- ↓
-Dashboard
+ ├─ Citizen / User → User Dashboard
+ └─ Admin → Admin Dashboard
  │
  ↓
 Complete Socio-Economic Wallet

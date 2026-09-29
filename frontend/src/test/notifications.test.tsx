@@ -99,8 +99,10 @@ describe("notifications page", () => {
     expect(screen.getAllByText("Documents").length).toBeGreaterThan(0);
     expect(screen.getByText("Unread")).toBeInTheDocument();
     expect(screen.getByText("Read")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Notifications" })).toHaveAttribute("href", "/notifications");
-    expect(screen.getByRole("link", { name: "Notifications, 1 unread reminder" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Notifications, 1 unread reminder" })).toHaveAttribute(
+      "href",
+      "/notifications",
+    );
     const openLinks = screen.getAllByRole("link", { name: "Open related page" });
     expect(openLinks[0]).toHaveAttribute("href", "/wallet");
     expect(openLinks[1]).toHaveAttribute("href", "/documents?scheme=scheme-1");

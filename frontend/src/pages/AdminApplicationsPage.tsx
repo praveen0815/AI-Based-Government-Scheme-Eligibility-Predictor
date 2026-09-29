@@ -72,6 +72,7 @@ export function AdminApplicationsPage() {
             onChange={(event) => setStatusFilter(event.target.value as ApplicationStatus | "all")}
           >
             <option value="all">{t.adminFilterAll}</option>
+            <option value="not_applied">{t.appStatusNotApplied}</option>
             <option value="planning">{t.appStatusPlanning}</option>
             <option value="documents_ready">{t.appStatusDocumentsReady}</option>
             <option value="applied">{t.appStatusApplied}</option>
@@ -102,7 +103,7 @@ export function AdminApplicationsPage() {
                   <tr key={item.application_id}>
                     <td>
                       <div className="font-medium text-slate-900">{item.owner_name}</div>
-                      <div className="text-[13px] text-slate-500">{item.owner_email}</div>
+                      <div className="admin-meta">{item.owner_email}</div>
                     </td>
                     <td className="font-medium text-slate-900">{item.scheme_name}</td>
                     <td>{item.department ?? "—"}</td>

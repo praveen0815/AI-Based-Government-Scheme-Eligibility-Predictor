@@ -82,7 +82,7 @@ describe("supporting documents page", () => {
     renderAuthenticatedApp(["/uploads"]);
     expect(await screen.findByRole("heading", { name: "My Documents" })).toBeInTheDocument();
     expect(screen.getByText(WARNING)).toBeInTheDocument();
-    expect(screen.getByText("No supporting documents yet")).toBeInTheDocument();
+    expect(await screen.findByText("No supporting documents yet")).toBeInTheDocument();
   });
 
   it("uploads a non-sensitive file and can delete it", async () => {

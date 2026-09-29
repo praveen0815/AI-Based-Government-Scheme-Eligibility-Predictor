@@ -23,11 +23,44 @@ CORE scheme recommendations + official catalog links
 
 The Decision Tree artifact is `ml/models/baseline/decision_tree.joblib`. Datasets stay in `dataset/`. Existing API contracts are unchanged.
 
+<<<<<<< HEAD
+## Access flow
+
+The Login Page is the first and only public entry page. Dashboard, Navbar, Sidebar, and other main-website content are not rendered before authentication.
+
+```text
+┌──────────────────────┐
+│      LOGIN PAGE      │
+│ Email / Password     │
+│ Google Sign-In       │
+└──────────┬───────────┘
+           │
+           │ Successful Login
+           ▼
+┌──────────────────────────────────┐
+│        OPEN WEBSITE              │
+│   Role-Based Dashboard           │
+│                                  │
+│   User → User Dashboard          │
+│   Admin → Admin Dashboard        │
+└──────────────────────────────────┘
+```
+
+## Demo user flow
+
+```text
+Login Page (email/password or Google Sign-In)
+  → Successful authentication
+  → Open website
+      Citizen / User → User Dashboard
+      Admin → Admin Dashboard
+=======
 ## Demo user flow
 
 ```text
 Login or Google Sign-In
   → Dashboard
+>>>>>>> origin/main
   → My Wallet / Edit Profile
   → Check Eligibility
   → Hybrid recommendations + Why this result?
@@ -46,9 +79,15 @@ Login or Google Sign-In
   → Research Dashboard (Phase 29 metrics; research prototype label)
 ```
 
+<<<<<<< HEAD
+Opening `/` or any main-website route without a session always goes to `/login`. Signed-in users who open `/login` or `/register` are sent to `/dashboard` (citizen) or `/admin` (administrator). Expired JWTs are cleared on HTTP 401; this prototype does not refresh tokens. Opening Compare without two or three selected schemes shows an empty state instead of silently leaving the page.
+
+Login and Register remain the only unauthenticated pages. Home, Check Eligibility, Results, Schemes, Evaluation, and every other portal module require a session.
+=======
 Signed-in users who open `/login` or `/register` are sent to `/dashboard`. Unauthenticated visits to protected pages go to `/login`. Expired JWTs are cleared on HTTP 401; this prototype does not refresh tokens. Opening Compare without two or three selected schemes shows an empty state instead of silently leaving the page.
 
 Public pages remain available without a session: Home, Check Eligibility, Results (session recommendation only), Schemes, Evaluation, Login, and Register.
+>>>>>>> origin/main
 
 ## Major modules
 

@@ -22,7 +22,7 @@ cd frontend
 npm run dev
 ```
 
-4. Open [http://localhost:5173](http://localhost:5173).
+4. Open [http://localhost:5173](http://localhost:5173). The Login Page is the first screen. The Dashboard, Navbar, and Sidebar stay hidden until sign-in succeeds.
 
 ## Demo account
 
@@ -34,7 +34,7 @@ Suggested local-only values (change them):
 - Email: `demo.reviewer@example.com`
 - Password: choose an 8+ character password and do not record it in this repository
 
-After registration, log in. The portal opens **My Wallet**.
+After registration, log in. Citizens open **Dashboard**. Administrators open **Admin Console**.
 
 ## Sample citizen profile
 

@@ -66,6 +66,7 @@ class SchemeRecord:
     eligibility_rule_status: str | None
     gender_requirement: str | None = None
     student_status_requirement: str | None = None
+    source_access_date: str | None = None
 
 
 class SchemeService:
@@ -127,6 +128,11 @@ class SchemeService:
                         if OPTIONAL_FILTER_FIELDS[1] in frame.columns
                         else None
                     ),
+                    source_access_date=(
+                        _catalog_text(row.get("source_access_date"))
+                        if "source_access_date" in frame.columns
+                        else None
+                    ),
                 )
             for scheme_id in CORE_SCHEME_IDS:
                 record = records.get(scheme_id)
@@ -155,6 +161,11 @@ class SchemeService:
 
     def ml_core_schemes(self) -> list[SchemeRecord]:
         return [self.require_core(scheme_id) for scheme_id in CORE_SCHEME_IDS]
+
+    def get_record(self, scheme_id: str) -> SchemeRecord | None:
+        if not self._by_id:
+            self.load()
+        return self._by_id.get(scheme_id)
 
     def list_catalog(self) -> list[SchemeRecord]:
         if not self._by_id:

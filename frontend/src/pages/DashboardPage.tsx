@@ -1,15 +1,18 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AnimatedMetric, MotionBlock } from "../components/CitizenMotion";
 import { ErrorState } from "../components/ErrorState";
+import { RevealSection } from "../components/RevealSection";
 import {
   BellIcon,
-  BrainIcon,
   CheckIcon,
   DocumentIcon,
   EvaluationIcon,
   HistoryIcon,
   InsightsIcon,
   MicIcon,
+  ScanIcon,
+  ChatIcon,
   ReadinessIcon,
   SchemesIcon,
   SparkIcon,
@@ -21,7 +24,6 @@ import { SchemeCard } from "../components/SchemeCard";
 import { Badge } from "../components/ui/Badge";
 import { Button } from "../components/ui/Button";
 import { EmptyState } from "../components/ui/EmptyState";
-import { PageHeader } from "../components/ui/PageHeader";
 import { useAuth } from "../context/AuthContext";
 import { useI18n } from "../context/LanguageContext";
 import type { Messages } from "../i18n/types";
@@ -189,10 +191,10 @@ function ActionCard({
   description: string;
   disabled?: boolean;
 }) {
-  const className = "card-surface flex h-full flex-col gap-3 p-5 transition duration-150 hover:border-[#C5CDC7] hover:shadow-lift";
+  const className = "dash-more-card flex h-full flex-col gap-3 p-5 transition duration-150";
   const body = (
     <>
-      <span className="inline-flex h-11 w-11 items-center justify-center rounded-[12px] bg-action/10 text-action">
+      <span className="dash-action-icon inline-flex h-11 w-11 items-center justify-center">
         {icon}
       </span>
       <h3 className="text-[20px] font-semibold text-ink-900">{title}</h3>
@@ -205,6 +207,34 @@ function ActionCard({
   return (
     <Link to={to} className={`${className} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action`}>
       {body}
+    </Link>
+  );
+}
+
+function LaunchRow({
+  to,
+  icon,
+  title,
+  description,
+  meta,
+  status,
+}: {
+  to: string;
+  icon: ReactNode;
+  title: string;
+  description: string;
+  meta: string;
+  status: string;
+}) {
+  return (
+    <Link to={to} className="dash-launch-item">
+      <div className="dash-launch-meta">
+        <span>{meta}</span>
+        <span className="dash-status">{status}</span>
+      </div>
+      <h3>{title}</h3>
+      <p>{description}</p>
+      <span className="dash-launch-icon">{icon}</span>
     </Link>
   );
 }
@@ -226,17 +256,23 @@ function HistorySchemePreview({ scheme }: { scheme: HistorySchemeRef }) {
 function ProgressCard({
   title,
   value,
-  detail,
+  icon,
+  delayClass,
 }: {
   title: string;
   value: string;
-  detail: string;
+  icon: ReactNode;
+  delayClass: string;
 }) {
   return (
-    <article className="card-surface p-5 md:p-6">
-      <p className="text-[15px] font-medium text-ink-500">{title}</p>
-      <p className="mt-3 font-display text-[32px] font-extrabold leading-none text-navy-900">{value}</p>
-      <p className="mt-3 text-[16px] text-ink-500">{detail}</p>
+    <article className={`dash-stat reveal-up ${delayClass}`}>
+      <span className="dash-stat-icon" aria-hidden="true">
+        {icon}
+      </span>
+      <p className="dash-stat-value font-display">
+        <AnimatedMetric value={value} />
+      </p>
+      <p className="dash-stat-label">{title}</p>
     </article>
   );
 }
@@ -396,8 +432,34 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="page-stack">
-      <PageHeader title={t.dashboardWelcome(displayName)} description={t.dashboardLead} />
+    <div className="page-stack dash-page">
+      <section className="dash-hero" aria-labelledby="dashboard-welcome">
+        <div className="dash-hero-bar">
+          <MotionBlock className="dash-hero-copy">
+            <p className="dash-hero-eyebrow">{t.navDashboard}</p>
+            <h1 id="dashboard-welcome" className="dash-hero-title">
+              {t.dashboardWelcome(displayName)}
+            </h1>
+            <p className="dash-hero-kicker">{t.dashboardHeroTitle}</p>
+            <p className="dash-hero-lead">{t.dashboardLead}</p>
+            <div className="dash-hero-actions">
+              <Link to="/schemes" className="dash-hero-cta">
+                {t.dashboardBrowseSchemes}
+              </Link>
+              <Link to="/check" className="chip-link">
+                {t.navCheck}
+              </Link>
+              <Link to="/scheme-assistant" className="chip-link">
+                {t.navSchemeAssistant}
+              </Link>
+            </div>
+          </MotionBlock>
+          <Link to="/voice-assistant" className="dash-voice-btn">
+            <MicIcon />
+            {t.navVoiceAssistant}
+          </Link>
+        </div>
+      </section>
 
       {loading ? <DashboardSkeleton message={t.dashboardLoading} /> : null}
       {error ? <ErrorState message={error} /> : null}
@@ -421,58 +483,43 @@ export function DashboardPage() {
             </section>
           ) : null}
 
-          <section aria-labelledby="dashboard-progress">
+          <RevealSection className="reveal-up reveal-d3" aria-labelledby="dashboard-progress">
             <h2 id="dashboard-progress" className="section-title">
               {t.dashboardProgressOverview}
             </h2>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="dash-stat-grid mt-5">
               <ProgressCard
                 title={t.dashboardProgressProfile}
                 value={`${snapshot.progress.profile_completeness_percent}%`}
-                detail={wallet ? t.completenessTitle : t.dashboardProfileNotCreated}
+                icon={<WalletIcon />}
+                delayClass="reveal-d1"
               />
               <ProgressCard
                 title={t.dashboardProgressEligibility}
                 value={
                   snapshot.progress.eligibility_checked
                     ? String(snapshot.progress.latest_recommendation_count)
-                    : "—"
+                    : "0"
                 }
-                detail={
-                  snapshot.progress.eligibility_checked
-                    ? t.dashboardEligibilityChecked
-                    : t.dashboardEligibilityNotChecked
-                }
+                icon={<SparkIcon />}
+                delayClass="reveal-d2"
               />
               <ProgressCard
                 title={t.dashboardProgressDocuments}
                 value={`${snapshot.progress.document_progress_percent}%`}
-                detail={t.documentsPreparationProgress}
-              />
-              <ProgressCard
-                title={t.dashboardProgressReadiness}
-                value={`${snapshot.progress.readiness_progress_percent}%`}
-                detail={t.readinessDashboardLead}
-              />
-              <ProgressCard
-                title={t.dashCannotEvaluate}
-                value={String(completeness?.incomplete_fields.length ?? 0)}
-                detail={t.whyRequiredToEvaluate}
-              />
-              <ProgressCard
-                title={t.dashSavedSchemes}
-                value={String(applications?.count ?? 0)}
-                detail={t.appEligibilityVsStatus}
+                icon={<DocumentIcon />}
+                delayClass="reveal-d3"
               />
               <ProgressCard
                 title={t.dashApplications}
                 value={String(applications?.count ?? 0)}
-                detail={t.appLead}
+                icon={<CheckIcon />}
+                delayClass="reveal-d4"
               />
             </div>
-          </section>
+          </RevealSection>
 
-          <section className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-journey">
+          <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-journey">
             <div>
               <h2 id="dashboard-journey" className="section-title">
                 {t.dashboardJourneyTitle}
@@ -488,7 +535,7 @@ export function DashboardPage() {
                         step.status === "completed"
                           ? "bg-action text-white"
                           : step.status === "current"
-                            ? "border-2 border-action bg-[#E8F1EC] text-action"
+                            ? "border-2 border-action bg-action/15 text-action"
                             : "border border-line bg-sage text-ink-500"
                       }`}
                     >
@@ -505,9 +552,9 @@ export function DashboardPage() {
                 </li>
               ))}
             </ol>
-          </section>
+          </RevealSection>
 
-          <section className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-summary">
+          <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-summary">
             <div>
               <h2 id="dashboard-summary" className="section-title">
                 {t.dashboardSmartSummary}
@@ -536,9 +583,156 @@ export function DashboardPage() {
                 </p>
               </article>
             </div>
-          </section>
+          </RevealSection>
 
-          <section className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-notifications">
+          <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-insights">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 id="dashboard-insights" className="section-title">
+                  {t.navHighlights}
+                </h2>
+                <p className="mt-2 text-[17px] text-ink-500">{t.insightsDashboardLead}</p>
+              </div>
+              <Link
+                to="/insights"
+                className="inline-flex items-center justify-center rounded-[12px] bg-action px-4 py-2.5 text-[16px] font-semibold text-white hover:bg-action-hover"
+              >
+                {t.insightsDashboardCta}
+              </Link>
+            </div>
+            {insights ? (
+              <p className="text-[18px] font-semibold text-ink-900">
+                {t.insightsEligibleCount(insights.predicted_eligible_count)}
+              </p>
+            ) : (
+              <p className="text-[16px] text-ink-500">{t.insightsDashboardEmpty}</p>
+            )}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
+                <p className="text-[15px] font-medium text-ink-500">{t.dashApplications}</p>
+                <p className="mt-2 text-[22px] font-semibold text-ink-900">{applications?.count ?? 0}</p>
+                <p className="mt-2 text-[16px] text-ink-500">{t.appLead}</p>
+              </article>
+              <article className="rounded-[12px] border border-line bg-sage px-4 py-4">
+                <p className="text-[15px] font-medium text-ink-500">{t.readinessDashboardTitle}</p>
+                <p className="mt-2 text-[22px] font-semibold text-ink-900">
+                  {readiness ? t.readinessOverallProgress(readiness.overall_progress_percent) : t.readinessDashboardEmpty}
+                </p>
+              </article>
+            </div>
+          </RevealSection>
+
+          <RevealSection className="dash-panel space-y-4 p-6 md:p-8" aria-labelledby="dashboard-activity">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 id="dashboard-activity" className="section-title">
+                  {t.navHistory}
+                </h2>
+                <p className="mt-2 text-[16px] text-ink-500">{t.dashboardRecentActivity}</p>
+              </div>
+              <Link to="/history" className="dash-text-link">
+                {t.dashboardViewHistory}
+              </Link>
+            </div>
+            {snapshot.activity.length === 0 ? (
+              <EmptyState title={t.dashboardActivityEmptyTitle} description={t.dashboardActivityEmptyLead}>
+                <Button type="button" onClick={() => navigate("/check")}>
+                  {t.navCheck}
+                </Button>
+              </EmptyState>
+            ) : (
+              <ul className="dash-activity-list">
+                {snapshot.activity.map((item, index) => (
+                  <li
+                    key={`${item.kind}-${item.occurred_at}-${item.scheme_id ?? item.history_id ?? index}`}
+                    className="dash-activity-item"
+                  >
+                    <p className="dash-activity-date">
+                      <span className="sr-only">{t.dashboardActivityDate}: </span>
+                      {formatCheckedAt(item.occurred_at, language)}
+                    </p>
+                    <p className="dash-activity-title">{activityDescription(item, t)}</p>
+                    <Link to={activityHref(item)} className="dash-activity-link">
+                      {item.kind === "recommendation" ? t.viewHistoryDetails : t.dashboardViewAllRecommendations}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </RevealSection>
+
+          <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-assistant">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 id="dashboard-assistant" className="section-title">
+                  {t.navSchemeAssistant}
+                </h2>
+                <p className="mt-2 text-[17px] text-ink-500">{t.assistantLead}</p>
+              </div>
+              <Link
+                to="/scheme-assistant"
+                className="inline-flex items-center justify-center rounded-[12px] bg-action px-4 py-2.5 text-[16px] font-semibold text-white hover:bg-action-hover"
+              >
+                {t.navSchemeAssistant}
+              </Link>
+            </div>
+            <p className="text-[16px] text-ink-700">{t.assistantWarning}</p>
+          </RevealSection>
+
+          <RevealSection className="dash-panel space-y-1 p-6 md:p-8" aria-labelledby="dashboard-quick-actions">
+            <h2 id="dashboard-quick-actions" className="section-title">
+              {t.dashboardQuickActions}
+            </h2>
+            <div className="dash-launch">
+              <LaunchRow
+                to="/schemes"
+                icon={<SchemesIcon />}
+                title={t.dashboardBrowseSchemes}
+                description={t.schemesDescription}
+                meta={t.dashboardJourneyCurrent}
+                status={t.dashboardStatusActive}
+              />
+              <LaunchRow
+                to="/check"
+                icon={<CheckIcon />}
+                title={t.navCheck}
+                description={t.checkDescription}
+                meta={t.dashboardJourneyCurrent}
+                status={t.dashboardStatusActive}
+              />
+              <LaunchRow
+                to="/document-scanner"
+                icon={<ScanIcon />}
+                title={t.navDocumentScanner}
+                description={t.scannerLead}
+                meta={t.dashboardJourneyCurrent}
+                status={t.dashboardStatusActive}
+              />
+              <LaunchRow
+                to="/scheme-assistant"
+                icon={<ChatIcon />}
+                title={t.navSchemeAssistant}
+                description={t.assistantLead}
+                meta={t.dashboardJourneyCurrent}
+                status={t.dashboardStatusActive}
+              />
+            </div>
+          </RevealSection>
+
+          <RevealSection aria-label={t.dashboardMoreActions}>
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <ActionCard to="/compare" icon={<HistoryIcon />} title={t.navCompare} description={t.compareHint} />
+              <ActionCard to="/documents" icon={<DocumentIcon />} title={t.documentsManage} description={t.documentsDashboardLead} />
+              <ActionCard to="/eligibility-simulator" icon={<SparkIcon />} title={t.navSimulator} description={t.simLead} />
+              <ActionCard to="/applications" icon={<WalletIcon />} title={t.navApplications} description={t.appLead} />
+              <ActionCard to="/wallet" icon={<WalletIcon />} title={t.navWallet} description={t.walletDescription} />
+              <ActionCard to="/insights" icon={<InsightsIcon />} title={t.insightsDashboardCta} description={t.insightsDashboardLead} />
+              <ActionCard to="/readiness" icon={<ReadinessIcon />} title={t.readinessDashboardCta} description={t.readinessDashboardLead} />
+              <ActionCard to="/history" icon={<HistoryIcon />} title={t.dashboardViewHistory} description={t.historySubtitle} />
+            </div>
+          </RevealSection>
+
+          <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-notifications">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 id="dashboard-notifications" className="section-title">
@@ -576,64 +770,9 @@ export function DashboardPage() {
             ) : (
               <p className="text-[16px] text-ink-500">{t.notificationsDashboardEmpty}</p>
             )}
-          </section>
+          </RevealSection>
 
-          <section aria-labelledby="dashboard-quick-actions">
-            <h2 id="dashboard-quick-actions" className="section-title">
-              {t.dashboardQuickActions}
-            </h2>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              <ActionCard to="/check" icon={<CheckIcon />} title={t.navCheck} description={t.checkDescription} />
-              <ActionCard to="/schemes" icon={<SchemesIcon />} title={t.dashboardBrowseSchemes} description={t.schemesDescription} />
-              <ActionCard to="/compare" icon={<HistoryIcon />} title={t.navCompare} description={t.compareHint} />
-              <ActionCard to="/documents" icon={<DocumentIcon />} title={t.documentsManage} description={t.documentsDashboardLead} />
-              <ActionCard to="/voice-assistant" icon={<MicIcon />} title={t.navVoiceAssistant} description={t.voiceLead} />
-              <ActionCard to="/eligibility-simulator" icon={<SparkIcon />} title={t.navSimulator} description={t.simLead} />
-              <ActionCard to="/applications" icon={<WalletIcon />} title={t.navApplications} description={t.appLead} />
-              <ActionCard to="/wallet" icon={<WalletIcon />} title={t.navWallet} description={t.walletDescription} />
-              <ActionCard to="/insights" icon={<InsightsIcon />} title={t.insightsDashboardCta} description={t.insightsDashboardLead} />
-              <ActionCard to="/readiness" icon={<ReadinessIcon />} title={t.readinessDashboardCta} description={t.readinessDashboardLead} />
-              <ActionCard to="/history" icon={<HistoryIcon />} title={t.dashboardViewHistory} description={t.historySubtitle} />
-            </div>
-          </section>
-
-          <section className="card-surface p-6 md:p-8" aria-labelledby="dashboard-activity">
-            <h2 id="dashboard-activity" className="section-title">
-              {t.dashboardRecentActivity}
-            </h2>
-            {snapshot.activity.length === 0 ? (
-              <EmptyState title={t.dashboardActivityEmptyTitle} description={t.dashboardActivityEmptyLead}>
-                <Button type="button" onClick={() => navigate("/check")}>
-                  {t.navCheck}
-                </Button>
-              </EmptyState>
-            ) : (
-              <ul className="mt-5 divide-y divide-line">
-                {snapshot.activity.map((item, index) => (
-                  <li
-                    key={`${item.kind}-${item.occurred_at}-${item.scheme_id ?? item.history_id ?? index}`}
-                    className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between"
-                  >
-                    <div className="min-w-0 space-y-2">
-                      <p className="text-[15px] font-medium text-ink-500">
-                        <span className="sr-only">{t.dashboardActivityDate}: </span>
-                        {formatCheckedAt(item.occurred_at, language)}
-                      </p>
-                      <p className="text-[18px] font-semibold text-ink-900">{activityDescription(item, t)}</p>
-                    </div>
-                    <Link
-                      to={activityHref(item)}
-                      className="inline-flex shrink-0 items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
-                    >
-                      {item.kind === "recommendation" ? t.viewHistoryDetails : t.dashboardViewAllRecommendations}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-
-          <section className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-recommendations">
+          <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-recommendations">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 id="dashboard-recommendations" className="section-title">
@@ -678,33 +817,9 @@ export function DashboardPage() {
                 </Button>
               </EmptyState>
             )}
-          </section>
+          </RevealSection>
 
-          <section className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-insights">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <h2 id="dashboard-insights" className="section-title">
-                  {t.insightsDashboardTitle}
-                </h2>
-                <p className="mt-2 text-[17px] text-ink-500">{t.insightsDashboardLead}</p>
-              </div>
-              <Link
-                to="/insights"
-                className="inline-flex items-center justify-center rounded-[12px] bg-action px-4 py-2.5 text-[16px] font-semibold text-white hover:bg-action-hover"
-              >
-                {t.insightsDashboardCta}
-              </Link>
-            </div>
-            {insights ? (
-              <p className="text-[18px] font-semibold text-ink-900">
-                {t.insightsEligibleCount(insights.predicted_eligible_count)}
-              </p>
-            ) : (
-              <p className="text-[16px] text-ink-500">{t.insightsDashboardEmpty}</p>
-            )}
-          </section>
-
-          <section className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-readiness">
+          <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-readiness">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 id="dashboard-readiness" className="section-title">
@@ -735,9 +850,9 @@ export function DashboardPage() {
             ) : (
               <p className="text-[16px] text-ink-500">{t.readinessDashboardEmpty}</p>
             )}
-          </section>
+          </RevealSection>
 
-          <section className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-documents">
+          <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-documents">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 id="dashboard-documents" className="section-title">
@@ -770,9 +885,9 @@ export function DashboardPage() {
             ) : (
               <p className="text-[16px] text-ink-500">{t.documentsEmptyLead}</p>
             )}
-          </section>
+          </RevealSection>
 
-          <section className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-uploads">
+          <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-uploads">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 id="dashboard-uploads" className="section-title">
@@ -792,9 +907,9 @@ export function DashboardPage() {
             ) : (
               <p className="text-[16px] text-ink-500">{t.uploadsDashboardEmpty}</p>
             )}
-          </section>
+          </RevealSection>
 
-          <section className="card-surface p-6 md:p-8" aria-labelledby="dashboard-more-actions">
+          <RevealSection className="card-surface p-6 md:p-8" aria-labelledby="dashboard-more-actions">
             <h2 id="dashboard-more-actions" className="section-title">
               {t.dashboardMoreActions}
             </h2>
@@ -814,13 +929,6 @@ export function DashboardPage() {
               >
                 <EvaluationIcon />
                 {t.navEvaluation}
-              </Link>
-              <Link
-                to="/system-evaluation"
-                className="inline-flex items-center gap-2 rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
-              >
-                <BrainIcon />
-                {t.navSystemEvaluation}
               </Link>
               <Link
                 to="/notifications"
@@ -848,7 +956,7 @@ export function DashboardPage() {
               ) : null}
             </div>
             <p className="mt-6 text-[16px] leading-relaxed text-ink-500">{t.dashboardDisclaimer}</p>
-          </section>
+          </RevealSection>
         </>
       ) : null}
     </div>

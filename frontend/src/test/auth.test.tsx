@@ -9,14 +9,31 @@ afterEach(() => {
   window.sessionStorage.clear();
 });
 
+async function completeRegisterForm(
+  user: ReturnType<typeof userEvent.setup>,
+  extras?: { password?: string; confirmPassword?: string; skipTerms?: boolean },
+) {
+  await user.type(screen.getByLabelText("Full name"), "Praveen Kumar");
+  await user.type(screen.getByLabelText("Email"), "user@example.com");
+  await user.type(screen.getByLabelText("Password"), extras?.password ?? "password123");
+  await user.type(screen.getByLabelText("Confirm password"), extras?.confirmPassword ?? extras?.password ?? "password123");
+  await user.type(screen.getByLabelText("Mobile number"), "9876543210");
+  if (!extras?.skipTerms) {
+    await user.click(screen.getByRole("checkbox"));
+  }
+}
+
 describe("authentication pages", () => {
   it("loads the register page", () => {
     renderApp(["/register"]);
-    expect(screen.getByRole("heading", { name: "Create Your SchemeWise Profile" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Create Your Account" })).toBeInTheDocument();
     expect(screen.getByLabelText("Full name")).toBeInTheDocument();
     expect(screen.getByLabelText("Email")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
     expect(screen.getByLabelText("Confirm password")).toBeInTheDocument();
+    expect(screen.getByLabelText("Mobile number")).toBeInTheDocument();
+    expect(screen.getByText("I agree to the Terms & Conditions and Privacy Policy")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Sign in" })).toHaveAttribute("href", "/login");
   });
 
   it("validates register fields before calling the API", async () => {
@@ -34,10 +51,7 @@ describe("authentication pages", () => {
     vi.stubGlobal("fetch", fetchMock);
     renderApp(["/register"]);
     const user = userEvent.setup();
-    await user.type(screen.getByLabelText("Full name"), "Praveen Kumar");
-    await user.type(screen.getByLabelText("Email"), "user@example.com");
-    await user.type(screen.getByLabelText("Password"), "short");
-    await user.type(screen.getByLabelText("Confirm password"), "different");
+    await completeRegisterForm(user, { password: "short", confirmPassword: "different" });
     await user.click(screen.getByRole("button", { name: "Create Account" }));
     expect(screen.getByText("Password must be at least 8 characters.")).toBeInTheDocument();
     expect(screen.getByText("Passwords do not match.")).toBeInTheDocument();
@@ -54,10 +68,7 @@ describe("authentication pages", () => {
     );
     renderApp(["/register"]);
     const user = userEvent.setup();
-    await user.type(screen.getByLabelText("Full name"), "Praveen Kumar");
-    await user.type(screen.getByLabelText("Email"), "user@example.com");
-    await user.type(screen.getByLabelText("Password"), "password123");
-    await user.type(screen.getByLabelText("Confirm password"), "password123");
+    await completeRegisterForm(user);
     await user.click(screen.getByRole("button", { name: "Create Account" }));
     expect(await screen.findByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
     expect(screen.getByText("Account created. Please sign in.")).toBeInTheDocument();
@@ -67,10 +78,9 @@ describe("authentication pages", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 503 }));
     renderApp(["/register"]);
     const user = userEvent.setup();
+    await completeRegisterForm(user);
+    await user.clear(screen.getByLabelText("Full name"));
     await user.type(screen.getByLabelText("Full name"), "KamalNath V");
-    await user.type(screen.getByLabelText("Email"), "user@example.com");
-    await user.type(screen.getByLabelText("Password"), "password123");
-    await user.type(screen.getByLabelText("Confirm password"), "password123");
     await user.click(screen.getByRole("button", { name: "Create Account" }));
     expect(await screen.findByText("We could not create the account.")).toBeInTheDocument();
     expect(
@@ -81,9 +91,22 @@ describe("authentication pages", () => {
   it("loads the login page", () => {
     renderApp(["/login"]);
     expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
+    expect(document.querySelector(".login-stage")).toBeInTheDocument();
+    expect(document.querySelector(".login-card")).toBeInTheDocument();
+    expect(document.querySelector(".citizen-portal")).not.toBeInTheDocument();
+    expect(document.querySelector(".admin-console")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Continue with Google" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Create an account" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Create an account" })).toHaveAttribute("href", "/register");
+  });
+
+  it("opens the register page from the login Register link", async () => {
+    renderApp(["/login"]);
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("link", { name: "Create an account" }));
+    expect(await screen.findByRole("heading", { name: "Create Your Account" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Full name")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Sign in" })).toHaveAttribute("href", "/login");
   });
 
   it("signs in with Google and opens the dashboard", async () => {
@@ -176,8 +199,8 @@ describe("authentication pages", () => {
     expect(screen.getByRole("link", { name: "My Wallet" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "History" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Documents" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Insights" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Application Readiness" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Application Highlights and Insights" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Compare Schemes" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "My Documents" })).toBeInTheDocument();
     expect(screen.getAllByText(TEST_USER.full_name).length).toBeGreaterThan(0);
   });
@@ -188,12 +211,35 @@ describe("authentication pages", () => {
     expect(await screen.findByRole("heading", { name: "Welcome back, Test User" })).toBeInTheDocument();
   });
 
+<<<<<<< HEAD
+  it("sends an already signed-in administrator from login to the admin dashboard", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404 }));
+    renderAuthenticatedApp(["/login"], { user: { ...TEST_USER, is_admin: true } });
+    expect(await screen.findByRole("heading", { name: "Admin Overview" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Welcome back, Test User" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^My Wallet$/ })).not.toBeInTheDocument();
+  });
+
+  it("sends unauthenticated visitors from the main website to the login page", () => {
+    renderApp(["/home"]);
+    expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Welcome 👋" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Dashboard$/ })).not.toBeInTheDocument();
+  });
+
+=======
+>>>>>>> origin/main
   it("opens the login page for an unauthenticated visitor at the application root", () => {
     renderApp(["/"]);
     expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument();
+<<<<<<< HEAD
+    expect(screen.getByRole("link", { name: "Create an account" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Dashboard$/ })).not.toBeInTheDocument();
+=======
     expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Register" })).toBeInTheDocument();
+>>>>>>> origin/main
   });
 
   it("sends an already signed-in visitor from the application root to the dashboard", async () => {
@@ -216,8 +262,8 @@ describe("authentication pages", () => {
     expect(screen.getByRole("link", { name: /^My Wallet$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^History$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Documents$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Insights$/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Application Readiness$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Application Highlights and Insights$/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Compare Schemes$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^My Documents$/ })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /^Account$/ })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Settings$/ })).toBeInTheDocument();
@@ -225,6 +271,22 @@ describe("authentication pages", () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Logout" }));
     expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
+<<<<<<< HEAD
+    expect(screen.getByRole("link", { name: "Create an account" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Dashboard$/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^My Wallet$/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
+  });
+
+  it("keeps the login page separate from the main website chrome", () => {
+    renderApp(["/login"]);
+    expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Create an account" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Dashboard$/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^My Wallet$/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
+=======
     expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Register" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Dashboard$/ })).toBeInTheDocument();
@@ -251,5 +313,6 @@ describe("authentication pages", () => {
     expect(screen.getByRole("link", { name: /^My Documents$/ })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /^Account$/ })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Settings$/ })).toBeInTheDocument();
+>>>>>>> origin/main
   });
 });

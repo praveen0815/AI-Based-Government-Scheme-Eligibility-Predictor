@@ -118,6 +118,51 @@ export interface CatalogSearchResponse {
   disclaimer: string;
 }
 
+export type KnowledgeFieldKey =
+  | "scheme_name"
+  | "department"
+  | "description"
+  | "eligibility_notes"
+  | "required_documents"
+  | "benefit_description"
+  | "application_method"
+  | "official_source_url";
+
+export type KnowledgeVerificationStatus = "verified" | "unverified" | "missing";
+export type KnowledgeContentState = "present" | "missing" | "unverified_placeholder";
+
+export interface SchemeKnowledgeItem {
+  field_key: KnowledgeFieldKey;
+  label: string;
+  value: string | null;
+  content_state: KnowledgeContentState;
+  verification_status: KnowledgeVerificationStatus;
+  source_url: string | null;
+  last_verified_at: string | null;
+  catalog_access_date: string | null;
+}
+
+export interface SchemeKnowledgeRecord {
+  scheme_id: string;
+  scheme_name: string;
+  department: string | null;
+  scheme_category: string | null;
+  ml_scope: string;
+  catalog_rule_status: string | null;
+  official_source_url: string | null;
+  items: SchemeKnowledgeItem[];
+  disclaimer: string;
+}
+
+export interface SchemeKnowledgeListResponse {
+  scheme_count: number;
+  total_catalog_count: number;
+  schemes: SchemeKnowledgeRecord[];
+  departments: string[];
+  categories: string[];
+  disclaimer: string;
+}
+
 export interface AuthUser {
   user_id: string;
   full_name: string;
@@ -404,6 +449,30 @@ export interface SupportingUploadListResponse {
   uploads: SupportingUpload[];
   count: number;
   disclaimer: string;
+}
+
+export type ScanDocumentType = "education_certificate";
+export type ScanStatus = "pending_review" | "confirmed" | "cancelled" | "failed";
+export type ScanFieldClarity = "extracted" | "unclear" | "missing";
+
+export interface ExtractedScanField {
+  name: string;
+  value: string | number | boolean | null;
+  clarity: ScanFieldClarity;
+  current_wallet_value: string | number | boolean | null;
+}
+
+export interface DocumentScan {
+  id: string;
+  upload_id: string;
+  document_type: ScanDocumentType;
+  status: ScanStatus;
+  review_status: DocumentReviewStatus;
+  fields: ExtractedScanField[];
+  applied_fields: string[];
+  wallet: CitizenWallet | null;
+  disclaimer: string;
+  created_at: string;
 }
 
 export interface InsightsResponse {
@@ -753,5 +822,107 @@ export interface VoiceTranscribeResponse {
   language: string;
   provider: string;
   audio_retained: boolean;
+  disclaimer: string;
+}
+
+export type AssistantLanguage = "en" | "ta";
+export type AssistantProvider = "llm" | "template";
+
+export interface AssistantHistoryTurn {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export interface AssistantSource {
+  scheme_id: string;
+  scheme_name: string;
+  field_key: string;
+  label: string;
+  source_url: string | null;
+  verification_status: string;
+  last_verified_at: string | null;
+  content_state: string;
+}
+
+export interface AssistantAction {
+  label: string;
+  path: string;
+}
+
+export interface AssistantChatRequest {
+  message: string;
+  language: AssistantLanguage;
+  scheme_id?: string | null;
+  history?: AssistantHistoryTurn[];
+}
+
+export interface AssistantChatResponse {
+  reply: string;
+  language: AssistantLanguage;
+  intent: string;
+  llm_used: boolean;
+  provider: AssistantProvider;
+  scheme_id: string | null;
+  scheme_name: string | null;
+  sources: AssistantSource[];
+  actions: AssistantAction[];
+  notice: string | null;
+  disclaimer: string;
+}
+
+export interface AssistantStatusResponse {
+  llm_configured: boolean;
+  llm_model: string | null;
+  fallback: "template";
+  disclaimer: string;
+}
+
+export type AgentIntent =
+  | "PROFILE_COMPLETENESS"
+  | "FIND_SCHEMES"
+  | "CHECK_ELIGIBILITY"
+  | "DOCUMENT_READINESS"
+  | "APPLICATION_STATUS"
+  | "EXPLAIN_SCHEME"
+  | "GENERAL_HELP"
+  | "CLARIFY"
+  | "UNSUPPORTED";
+
+export interface AgentToolStep {
+  tool: string;
+  status: "ok" | "skipped" | "error";
+  summary: string;
+}
+
+export interface AgentRunRequest {
+  message: string;
+  language: AssistantLanguage;
+  scheme_id?: string | null;
+  history?: AssistantHistoryTurn[];
+}
+
+export interface AgentRunResponse {
+  reply: string;
+  language: AssistantLanguage;
+  intent: AgentIntent;
+  llm_used: boolean;
+  provider: AssistantProvider;
+  agent_ran: boolean;
+  tools_used: string[];
+  steps: AgentToolStep[];
+  scheme_id: string | null;
+  scheme_name: string | null;
+  sources: AssistantSource[];
+  actions: AssistantAction[];
+  notice: string | null;
+  disclaimer: string;
+}
+
+export interface AgentStatusResponse {
+  llm_configured: boolean;
+  llm_model: string | null;
+  fallback: "template";
+  read_only: boolean;
+  allowed_tools: string[];
   disclaimer: string;
 }

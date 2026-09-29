@@ -81,5 +81,7 @@ Project notes, data-source records, and later design documents.
 | `phase43_results.md` | 43 | Final integration, QA, security, and demo-readiness results |
 | `admin_portal_design.md` | 44 | Administrator role, APIs, and document-review isolation |
 | `phase44_results.md` | 44 | Admin portal implementation results |
+| `ieee_paper.md` | Paper | IEEE-section manuscript compiled from existing Phase 2–5 and architecture records. No new metrics. |
+| `prior_art_and_novelty.md` | Paper | Short mentor briefing: prior art, research gap, and novelty points verified against the current implementation. |
 
 Aadhaar, LLMs, and deployment remain out of scope.

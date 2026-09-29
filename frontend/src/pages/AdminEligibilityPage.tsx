@@ -110,7 +110,7 @@ export function AdminEligibilityPage() {
                         </ul>
                       )}
                       {row.incomplete_fields.length > 0 ? (
-                        <p className="mt-1 text-[13px] text-slate-500">
+                        <p className="admin-meta mt-1">
                           {t.whyRequiredToEvaluate}: {row.incomplete_fields.join(", ")}
                         </p>
                       ) : null}

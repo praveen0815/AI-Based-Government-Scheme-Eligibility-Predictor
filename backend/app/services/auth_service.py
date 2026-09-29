@@ -15,6 +15,7 @@ from app.models.readiness import ApplicationReadinessRecord
 from app.models.applications import ApplicationTrackingRecord
 from app.models.history import RecommendationHistoryRecord
 from app.services.notification_service import delete_notifications_for_user
+from app.services.document_scanner_service import delete_scans_for_user
 from app.services.upload_service import delete_uploads_for_user
 from app.models.user import UserRecord
 from app.schemas.auth import UserPublic
@@ -205,6 +206,7 @@ def delete_account(session: Session, user: UserRecord) -> None:
         session.query(ApplicationTrackingRecord).filter(
             ApplicationTrackingRecord.user_id == user.id
         ).delete(synchronize_session=False)
+        delete_scans_for_user(session, user.id)
         delete_uploads_for_user(session, user.id)
         delete_notifications_for_user(session, user.id)
         session.query(CitizenProfileRecord).filter(CitizenProfileRecord.user_id == user.id).delete(

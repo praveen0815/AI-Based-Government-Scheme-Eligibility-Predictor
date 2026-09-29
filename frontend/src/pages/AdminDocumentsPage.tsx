@@ -98,11 +98,11 @@ export function AdminDocumentsPage() {
                   <tr key={item.id}>
                     <td>
                       <div className="font-medium text-slate-900">{item.owner_name}</div>
-                      <div className="text-[13px] text-slate-500">{item.owner_email}</div>
+                      <div className="admin-meta">{item.owner_email}</div>
                     </td>
                     <td>
                       <div className="text-slate-800">{item.display_name}</div>
-                      <div className="text-[13px] text-slate-500">{item.category}</div>
+                      <div className="admin-meta">{item.category}</div>
                     </td>
                     <td>{item.created_at}</td>
                     <td>
