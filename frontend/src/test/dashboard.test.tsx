@@ -11,6 +11,7 @@ import type {
   SupportingUploadListResponse,
   RecommendationHistoryListResponse,
 } from "../types/api";
+import { CITIZEN_THEME_STORAGE_KEY } from "../context/CitizenThemeContext";
 import { recommendResponse, SAMPLE_SCHEME, SECOND_SCHEME, VALID_PROFILE } from "./fixtures";
 import { renderApp, renderAuthenticatedApp, TEST_USER } from "./renderApp";
 
@@ -150,10 +151,32 @@ describe("user dashboard", () => {
     const fetchMock = mockDashboardFetch({ wallet: null });
     vi.stubGlobal("fetch", fetchMock);
     renderAuthenticatedApp(["/dashboard"]);
-    expect(await screen.findByRole("heading", { name: "Welcome back, Test User" })).toBeInTheDocument();
+    const welcome = await screen.findByRole("heading", { name: "Welcome back, Test User" });
+    expect(welcome).toHaveClass("dash-hero-title");
+    expect(welcome.closest(".dash-hero-copy")).toBeInTheDocument();
+    expect(document.querySelector(".dash-hero-welcome")).not.toBeInTheDocument();
+    expect(document.querySelector(".dash-hero")).toBeInTheDocument();
+    expect(document.querySelector(".dash-voice-btn")).toHaveAttribute("href", "/voice-assistant");
+    expect(document.querySelectorAll(".dash-voice-btn")).toHaveLength(1);
+    expect(screen.getByText("Scheme Predictor — your scheme command center")).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "Scheme Assistant" })[0]).toHaveAttribute("href", "/scheme-assistant");
+    expect(screen.getAllByRole("link", { name: "Voice Assistant" })[0]).toHaveAttribute("href", "/voice-assistant");
+    expect(screen.getByRole("button", { name: "Switch to light mode" })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "Browse Schemes" })[0]).toHaveAttribute("href", "/schemes");
     expect(screen.getAllByText("Your profile is not created yet.").length).toBeGreaterThan(0);
     expect(screen.getByRole("button", { name: "Create My Profile" })).toBeInTheDocument();
     expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/recommend"))).toBe(false);
+  });
+
+  it("toggles and persists the citizen theme without changing login copy", async () => {
+    vi.stubGlobal("fetch", mockDashboardFetch({ wallet: null }));
+    renderAuthenticatedApp(["/dashboard"]);
+    expect(await screen.findByRole("heading", { name: "Welcome back, Test User" })).toBeInTheDocument();
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "Switch to light mode" }));
+    expect(document.documentElement.dataset.citizenTheme).toBe("light");
+    expect(window.localStorage.getItem(CITIZEN_THEME_STORAGE_KEY)).toBe("light");
+    expect(screen.getByRole("button", { name: "Switch to dark mode" })).toBeInTheDocument();
   });
 
   it("shows completeness for an incomplete wallet", async () => {
@@ -172,10 +195,11 @@ describe("user dashboard", () => {
     renderAuthenticatedApp(["/dashboard"]);
     expect(await screen.findByText("2 predicted-eligible schemes")).toBeInTheDocument();
     expect(screen.getAllByText(SAMPLE_SCHEME.scheme_name).length).toBeGreaterThan(0);
-    expect(screen.getByRole("heading", { name: "Progress overview" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Quick Stats" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Citizen journey" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Preparation summary" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Recent activity" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "History" })).toBeInTheDocument();
+    expect(screen.getByText("Recent activity")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "View Details" })).toHaveAttribute("href", "/history/hist-1");
     expect(screen.getByRole("heading", { name: "Application Preparation" })).toBeInTheDocument();
     expect(
@@ -184,7 +208,7 @@ describe("user dashboard", () => {
       ),
     ).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "Manage Documents" })[0]).toHaveAttribute("href", "/documents");
-    expect(screen.getByRole("heading", { name: "Eligibility Insights" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Application Highlights and Insights" })).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "View Insights" })[0]).toHaveAttribute("href", "/insights");
     expect(screen.getAllByRole("link", { name: "Check Eligibility" })[0]).toHaveAttribute("href", "/check");
     expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("/recommend"))).toBe(false);
@@ -236,7 +260,7 @@ describe("user dashboard", () => {
     });
     vi.stubGlobal("fetch", fetchMock);
     renderAuthenticatedApp(["/dashboard"]);
-    expect(await screen.findByRole("heading", { name: "Eligibility Insights" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Application Highlights and Insights" })).toBeInTheDocument();
     expect(screen.getByText("2 predicted eligible schemes")).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "View Insights" })[0]).toHaveAttribute("href", "/insights");
   });

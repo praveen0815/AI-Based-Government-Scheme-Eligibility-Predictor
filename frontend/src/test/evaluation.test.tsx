@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { renderApp } from "./renderApp";
+import { renderAuthenticatedApp } from "./renderApp";
 
 const OVERVIEW = {
   official_scheme_count: 13,
@@ -159,7 +159,7 @@ afterEach(() => {
 
 describe("evaluation dashboard", () => {
   it("shows the evaluation link in the header", () => {
-    renderApp(["/"]);
+    renderAuthenticatedApp(["/dashboard"]);
     const evaluationLinks = screen.getAllByRole("link", { name: "Evaluation" });
     expect(evaluationLinks.length).toBeGreaterThan(0);
     expect(evaluationLinks[0]).toHaveAttribute("href", "/evaluation");
@@ -167,7 +167,7 @@ describe("evaluation dashboard", () => {
 
   it("loads overview cards and academic notice", async () => {
     vi.stubGlobal("fetch", mockEvaluationFetch());
-    renderApp(["/evaluation"]);
+    renderAuthenticatedApp(["/evaluation"]);
     expect(await screen.findByRole("heading", { name: "Research Evaluation" })).toBeInTheDocument();
     expect(screen.getAllByText("Academic Research Prototype").length).toBeGreaterThan(0);
     expect(screen.getByText("Synthetic Dataset • Rule-Derived Labels • CORE Schemes")).toBeInTheDocument();
@@ -181,7 +181,7 @@ describe("evaluation dashboard", () => {
   it("renders model comparison and scheme distribution from the API", async () => {
     const fetchMock = mockEvaluationFetch();
     vi.stubGlobal("fetch", fetchMock);
-    renderApp(["/evaluation"]);
+    renderAuthenticatedApp(["/evaluation"]);
     expect(await screen.findByRole("heading", { name: "Model Comparison" })).toBeInTheDocument();
     expect(screen.getAllByText("Logistic Regression").length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Pudhumai Penn Thittam/).length).toBeGreaterThan(0);
@@ -190,7 +190,7 @@ describe("evaluation dashboard", () => {
 
   it("switches confusion matrices", async () => {
     vi.stubGlobal("fetch", mockEvaluationFetch());
-    renderApp(["/evaluation"]);
+    renderAuthenticatedApp(["/evaluation"]);
     expect(await screen.findByText("5269")).toBeInTheDocument();
     const user = userEvent.setup();
     await user.click(screen.getByRole("tab", { name: "Logistic Regression" }));
@@ -199,7 +199,7 @@ describe("evaluation dashboard", () => {
 
   it("shows limitations and official source links", async () => {
     vi.stubGlobal("fetch", mockEvaluationFetch());
-    renderApp(["/evaluation"]);
+    renderAuthenticatedApp(["/evaluation"]);
     expect(await screen.findByText("This system is an academic AI research prototype.")).toBeInTheDocument();
     expect(screen.getByText("These are model associations and importance measures, not causal relationships.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Pudhumai Penn/ })).toHaveAttribute(
@@ -210,7 +210,7 @@ describe("evaluation dashboard", () => {
 
   it("handles an evaluation API error", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch")));
-    renderApp(["/evaluation"]);
+    renderAuthenticatedApp(["/evaluation"]);
     expect(await screen.findByText(/Unable to connect to SchemeWise AI/)).toBeInTheDocument();
   });
 });

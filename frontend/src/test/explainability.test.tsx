@@ -3,7 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { RecommendResponse } from "../types/api";
 import { recommendResponse, SAMPLE_SCHEME, VALID_PROFILE } from "./fixtures";
+<<<<<<< HEAD
+import { renderAuthenticatedApp } from "./renderApp";
+=======
 import { renderApp } from "./renderApp";
+>>>>>>> origin/main
 
 function disagreeingResult(): RecommendResponse {
   const scheme = {
@@ -22,7 +26,11 @@ afterEach(() => {
 
 describe("explainable recommendation view", () => {
   it("keeps result cards clean until Why this result? is opened", async () => {
+<<<<<<< HEAD
+    renderAuthenticatedApp(["/results"], {
+=======
     renderApp(["/results"], {
+>>>>>>> origin/main
       profile: VALID_PROFILE,
       result: recommendResponse([SAMPLE_SCHEME]),
     });
@@ -49,7 +57,11 @@ describe("explainable recommendation view", () => {
   });
 
   it("states that the documented rule is the reference when Rule and ML differ", async () => {
+<<<<<<< HEAD
+    renderAuthenticatedApp(["/results"], {
+=======
     renderApp(["/results"], {
+>>>>>>> origin/main
       profile: VALID_PROFILE,
       result: disagreeingResult(),
     });
@@ -62,7 +74,11 @@ describe("explainable recommendation view", () => {
   });
 
   it("lists incomplete profile fields as review items without telling the user to change them", async () => {
+<<<<<<< HEAD
+    renderAuthenticatedApp(["/results"], {
+=======
     renderApp(["/results"], {
+>>>>>>> origin/main
       profile: { ...VALID_PROFILE, occupation_category: "" as never },
       result: recommendResponse([SAMPLE_SCHEME]),
     });
@@ -93,7 +109,11 @@ describe("explainable recommendation view", () => {
         },
       ],
     };
+<<<<<<< HEAD
+    renderAuthenticatedApp(["/results"], { profile: VALID_PROFILE, result });
+=======
     renderApp(["/results"], { profile: VALID_PROFILE, result });
+>>>>>>> origin/main
     expect(screen.getByRole("heading", { name: "Not predicted eligible" })).toBeInTheDocument();
     expect(screen.getByText("Example Not Eligible Scheme")).toBeInTheDocument();
     const user = userEvent.setup();
@@ -104,7 +124,11 @@ describe("explainable recommendation view", () => {
   });
 
   it("shows cannot-fully-evaluate copy for incomplete profile fields", () => {
+<<<<<<< HEAD
+    renderAuthenticatedApp(["/results"], {
+=======
     renderApp(["/results"], {
+>>>>>>> origin/main
       profile: { ...VALID_PROFILE, occupation_category: "" as never },
       result: recommendResponse([SAMPLE_SCHEME]),
     });

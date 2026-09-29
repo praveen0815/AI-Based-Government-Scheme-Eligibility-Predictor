@@ -6,6 +6,8 @@ from app.models.documents import DocumentChecklistProgressRecord
 from app.models.history import RecommendationHistoryRecord
 from app.models.readiness import ApplicationReadinessRecord
 from app.models.notifications import NotificationRecord
+from app.models.document_scans import DocumentScanRecord
+from app.models.scheme_knowledge import SchemeKnowledgeItemRecord
 from app.models.uploads import SupportingUploadRecord
 from app.models.user import UserRecord
 from app.models.voice_audit import VoiceAuditRecord
@@ -15,8 +17,10 @@ __all__ = [
     "ApplicationTrackingRecord",
     "CitizenProfileRecord",
     "DocumentChecklistProgressRecord",
+    "DocumentScanRecord",
     "NotificationRecord",
     "RecommendationHistoryRecord",
+    "SchemeKnowledgeItemRecord",
     "SupportingUploadRecord",
     "UserRecord",
     "VoiceAuditRecord",

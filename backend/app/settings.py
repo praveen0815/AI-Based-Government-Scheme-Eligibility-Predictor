@@ -200,6 +200,35 @@ def voice_stt_configured() -> bool:
     return bool(voice_stt_api_url() and voice_stt_api_key())
 
 
+def assistant_llm_api_url() -> str:
+    load_database_env()
+    return (os.environ.get("ASSISTANT_LLM_API_URL") or "").strip()
+
+
+def assistant_llm_api_key() -> str:
+    load_database_env()
+    return (os.environ.get("ASSISTANT_LLM_API_KEY") or "").strip()
+
+
+def assistant_llm_model() -> str:
+    load_database_env()
+    return (os.environ.get("ASSISTANT_LLM_MODEL") or "gpt-4o-mini").strip()
+
+
+def assistant_llm_timeout_seconds() -> float:
+    load_database_env()
+    raw = (os.environ.get("ASSISTANT_LLM_TIMEOUT_SECONDS") or "20").strip()
+    try:
+        timeout = float(raw)
+    except ValueError:
+        return 20.0
+    return max(5.0, min(timeout, 60.0))
+
+
+def assistant_llm_configured() -> bool:
+    return bool(assistant_llm_api_url() and assistant_llm_api_key())
+
+
 def validate_runtime_settings() -> None:
     """Fail fast in production. Development keeps local academic defaults."""
     if not is_production():

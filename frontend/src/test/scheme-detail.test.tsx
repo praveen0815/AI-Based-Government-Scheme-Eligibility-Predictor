@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { RecommendResponse, SchemeCatalogItem } from "../types/api";
 import { recommendResponse, SAMPLE_SCHEME, SECOND_SCHEME, VALID_PROFILE } from "./fixtures";
-import { renderApp, renderAuthenticatedApp, TEST_USER } from "./renderApp";
+import { renderAuthenticatedApp } from "./renderApp";
 
 function catalogItem(scheme = SAMPLE_SCHEME): SchemeCatalogItem {
   return {
@@ -43,7 +43,7 @@ describe("scheme details page", () => {
       return Promise.resolve(catalogOk());
     });
     vi.stubGlobal("fetch", fetchMock);
-    renderApp([`/schemes/${SAMPLE_SCHEME.scheme_id}`]);
+    renderAuthenticatedApp([`/schemes/${SAMPLE_SCHEME.scheme_id}`]);
     expect(await screen.findByRole("heading", { name: SAMPLE_SCHEME.scheme_name })).toBeInTheDocument();
     expect(screen.getByText(`Scheme ID: ${SAMPLE_SCHEME.scheme_id}`)).toBeInTheDocument();
     expect(screen.getByText("CORE")).toBeInTheDocument();
@@ -61,7 +61,7 @@ describe("scheme details page", () => {
 
   it("shows predicted-eligible status from existing recommendation data", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(catalogOk()));
-    renderApp([`/schemes/${SAMPLE_SCHEME.scheme_id}`], {
+    renderAuthenticatedApp([`/schemes/${SAMPLE_SCHEME.scheme_id}`], {
       profile: VALID_PROFILE,
       result: recommendResponse([SAMPLE_SCHEME, SECOND_SCHEME]),
     });
@@ -92,7 +92,7 @@ describe("scheme details page", () => {
       ],
     };
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(catalogOk()));
-    renderApp([`/schemes/${SECOND_SCHEME.scheme_id}`], {
+    renderAuthenticatedApp([`/schemes/${SECOND_SCHEME.scheme_id}`], {
       profile: VALID_PROFILE,
       result,
     });
@@ -106,14 +106,14 @@ describe("scheme details page", () => {
 
   it("shows a friendly missing-scheme state", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(catalogOk()));
-    renderApp(["/schemes/TN-HOLD-999"]);
+    renderAuthenticatedApp(["/schemes/TN-HOLD-999"]);
     expect(await screen.findByRole("heading", { name: "Scheme not found" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "View All Schemes" })).toHaveAttribute("href", "/schemes");
   });
 
   it("shows a friendly API error", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 503 }));
-    renderApp([`/schemes/${SAMPLE_SCHEME.scheme_id}`]);
+    renderAuthenticatedApp([`/schemes/${SAMPLE_SCHEME.scheme_id}`]);
     expect(
       await screen.findByText("The eligibility service is temporarily unavailable. Please try again in a moment."),
     ).toBeInTheDocument();
@@ -122,9 +122,7 @@ describe("scheme details page", () => {
 
   it("enables compare for authenticated users with two recommended schemes", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(catalogOk()));
-    renderApp([`/schemes/${SAMPLE_SCHEME.scheme_id}`], {
-      user: TEST_USER,
-      token: "test-token",
+    renderAuthenticatedApp([`/schemes/${SAMPLE_SCHEME.scheme_id}`], {
       profile: VALID_PROFILE,
       result: recommendResponse([SAMPLE_SCHEME, SECOND_SCHEME]),
     });
@@ -143,7 +141,7 @@ describe("scheme details page", () => {
 
   it("opens scheme details from the catalog View Details link", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(catalogOk()));
-    renderApp(["/schemes"]);
+    renderAuthenticatedApp(["/schemes"]);
     expect(await screen.findByText(SAMPLE_SCHEME.scheme_name)).toBeInTheDocument();
     const user = userEvent.setup();
     await user.click(screen.getAllByRole("link", { name: "View Details" })[0]);

@@ -42,6 +42,10 @@ from app.routes.admin import router as admin_router
 from app.routes.voice import router as voice_router
 from app.routes.applications import router as applications_router
 from app.routes.uploads import router as uploads_router
+from app.routes.document_scanner import router as document_scanner_router
+from app.routes.scheme_knowledge import router as scheme_knowledge_router
+from app.routes.scheme_assistant import router as scheme_assistant_router
+from app.routes.scheme_agent import router as scheme_agent_router
 from app.routes.reports import router as reports_router
 from app.routes.wallet import router as wallet_router
 from app.services.evaluation_service import EvaluationUnavailableError, get_evaluation_service
@@ -58,6 +62,16 @@ from app.services.notification_service import NotificationNotFoundError
 from app.services.admin_service import AdminUserNotFoundError
 from app.services.application_service import ApplicationConflictError, ApplicationNotFoundError
 from app.services.upload_service import UploadNotFoundError, UploadRejectedError
+from app.services.document_scanner_service import (
+    DocumentScanConflictError,
+    DocumentScanNotFoundError,
+    DocumentScanRejectedError,
+)
+from app.services.ocr_service import OcrUnavailableError, OcrUnreadableError
+from app.services.scheme_knowledge_service import (
+    SchemeKnowledgeNotFoundError,
+    SchemeKnowledgeRejectedError,
+)
 from app.services.history_service import HistoryNotFoundError
 from app.services.wallet_service import (
     DatabaseUnavailableError,
@@ -152,6 +166,10 @@ app.include_router(insights_router)
 app.include_router(readiness_router)
 app.include_router(dashboard_router)
 app.include_router(uploads_router)
+app.include_router(document_scanner_router)
+app.include_router(scheme_knowledge_router)
+app.include_router(scheme_assistant_router)
+app.include_router(scheme_agent_router)
 app.include_router(notifications_router)
 app.include_router(applications_router)
 app.include_router(admin_router)
@@ -285,6 +303,51 @@ async def application_conflict_handler(
 
 @app.exception_handler(UploadRejectedError)
 async def upload_rejected_handler(_request: Request, exc: UploadRejectedError) -> JSONResponse:
+    return JSONResponse(status_code=422, content={"detail": str(exc)})
+
+
+@app.exception_handler(DocumentScanNotFoundError)
+async def document_scan_not_found_handler(
+    _request: Request, exc: DocumentScanNotFoundError
+) -> JSONResponse:
+    return JSONResponse(status_code=404, content={"detail": str(exc)})
+
+
+@app.exception_handler(DocumentScanRejectedError)
+async def document_scan_rejected_handler(
+    _request: Request, exc: DocumentScanRejectedError
+) -> JSONResponse:
+    return JSONResponse(status_code=422, content={"detail": str(exc)})
+
+
+@app.exception_handler(DocumentScanConflictError)
+async def document_scan_conflict_handler(
+    _request: Request, exc: DocumentScanConflictError
+) -> JSONResponse:
+    return JSONResponse(status_code=409, content={"detail": str(exc)})
+
+
+@app.exception_handler(OcrUnreadableError)
+async def ocr_unreadable_handler(_request: Request, exc: OcrUnreadableError) -> JSONResponse:
+    return JSONResponse(status_code=422, content={"detail": str(exc)})
+
+
+@app.exception_handler(OcrUnavailableError)
+async def ocr_unavailable_handler(_request: Request, exc: OcrUnavailableError) -> JSONResponse:
+    return JSONResponse(status_code=503, content={"detail": str(exc)})
+
+
+@app.exception_handler(SchemeKnowledgeNotFoundError)
+async def scheme_knowledge_not_found_handler(
+    _request: Request, exc: SchemeKnowledgeNotFoundError
+) -> JSONResponse:
+    return JSONResponse(status_code=404, content={"detail": str(exc)})
+
+
+@app.exception_handler(SchemeKnowledgeRejectedError)
+async def scheme_knowledge_rejected_handler(
+    _request: Request, exc: SchemeKnowledgeRejectedError
+) -> JSONResponse:
     return JSONResponse(status_code=422, content={"detail": str(exc)})
 
 

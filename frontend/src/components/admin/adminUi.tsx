@@ -38,7 +38,7 @@ export function AdminKpiCard({
   label: string;
   value: string;
   hint?: string;
-  tone?: "blue" | "green" | "amber" | "purple";
+  tone?: "blue" | "green" | "amber" | "teal";
   icon?: ReactNode;
 }) {
   return (
@@ -124,4 +124,31 @@ export function AdminPanel({
 export function sharePercent(part: number, total: number): string {
   if (total <= 0) return "0%";
   return `${((part / total) * 100).toFixed(1)}%`;
+}
+
+export function AdminShareBar({
+  segments,
+  label,
+}: {
+  segments: { key: string; value: number; color: string }[];
+  label: string;
+}) {
+  const total = segments.reduce((sum, item) => sum + item.value, 0);
+  return (
+    <div className="admin-share-bar" role="img" aria-label={label}>
+      {total <= 0 ? (
+        <span className="admin-share-empty" />
+      ) : (
+        segments.map((item) =>
+          item.value > 0 ? (
+            <span
+              key={item.key}
+              className="admin-share-segment"
+              style={{ width: `${(item.value / total) * 100}%`, background: item.color }}
+            />
+          ) : null,
+        )
+      )}
+    </div>
+  );
 }

@@ -1,6 +1,6 @@
 # Evaluation dashboard design
 
-A public, read-only research dashboard for college review. It presents existing Phase 4/5 metrics. It does not score wallets, train models, or claim government accuracy.
+A read-only research dashboard for college review. The React `/evaluation` page is behind the login-first portal. The existing `GET /api/v1/evaluation/*` APIs remain unauthenticated research endpoints. The dashboard presents existing Phase 4/5 metrics. It does not score wallets, train models, or claim government accuracy.
 
 ## Architecture
 

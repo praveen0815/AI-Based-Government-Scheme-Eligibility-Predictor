@@ -109,7 +109,7 @@ describe("system evaluation page", () => {
     expect(screen.getAllByText("/predict").length).toBeGreaterThan(0);
     expect(screen.getAllByText("/recommend").length).toBeGreaterThan(0);
     expect(screen.getAllByText("12.50 ms").length).toBeGreaterThan(0);
-    expect(screen.getByRole("link", { name: /^System Evaluation$/ })).toHaveAttribute("href", "/system-evaluation");
+    expect(screen.getByRole("heading", { name: "System Performance & Evaluation" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Open full research evaluation" })).toHaveAttribute("href", "/evaluation");
     expect(screen.queryByText("password_hash")).not.toBeInTheDocument();
     expect(screen.queryByText("google-access-token")).not.toBeInTheDocument();

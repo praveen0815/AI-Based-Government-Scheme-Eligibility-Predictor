@@ -6,7 +6,7 @@ const tones: Record<Tone, string> = {
   brand: "bg-sage text-navy-800",
   success: "bg-emerald-50 text-success",
   warning: "bg-amber-50 text-warning",
-  muted: "bg-[#EEF1ED] text-ink-700",
+  muted: "bg-sage text-ink-700",
   danger: "bg-red-50 text-red-800",
 };
 

@@ -66,7 +66,8 @@ describe("scheme comparison and PDF report", () => {
       profile: VALID_PROFILE,
       result: recommendResponse([SAMPLE_SCHEME, SECOND_SCHEME]),
     });
-    expect(screen.getByText(/Sign in with a saved wallet to compare schemes/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Compare Schemes" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Download PDF Report" })).not.toBeInTheDocument();
   });

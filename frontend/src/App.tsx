@@ -19,6 +19,8 @@ import { DocumentsPage } from "./pages/DocumentsPage";
 import { InsightsPage } from "./pages/InsightsPage";
 import { ReadinessPage } from "./pages/ReadinessPage";
 import { UploadsPage } from "./pages/UploadsPage";
+import { DocumentScannerPage } from "./pages/DocumentScannerPage";
+import { SchemeAssistantPage } from "./pages/SchemeAssistantPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { NotificationsPage } from "./pages/NotificationsPage";
 import { VoiceAssistantPage } from "./pages/VoiceAssistantPage";
@@ -40,9 +42,36 @@ export default function App() {
     <PortalLayout>
       <Routes>
         <Route path="/" element={<RootRedirect />} />
+<<<<<<< HEAD
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/check"
+          element={
+            <ProtectedRoute>
+              <CheckPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/results"
+          element={
+            <ProtectedRoute>
+              <ResultsPage />
+            </ProtectedRoute>
+          }
+        />
+=======
         <Route path="/home" element={<HomePage />} />
         <Route path="/check" element={<CheckPage />} />
         <Route path="/results" element={<ResultsPage />} />
+>>>>>>> origin/main
         <Route
           path="/compare"
           element={
@@ -51,9 +80,36 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+<<<<<<< HEAD
+        <Route
+          path="/schemes"
+          element={
+            <ProtectedRoute>
+              <SchemesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/schemes/:schemeId"
+          element={
+            <ProtectedRoute>
+              <SchemeDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/evaluation"
+          element={
+            <ProtectedRoute>
+              <EvaluationPage />
+            </ProtectedRoute>
+          }
+        />
+=======
         <Route path="/schemes" element={<SchemesPage />} />
         <Route path="/schemes/:schemeId" element={<SchemeDetailPage />} />
         <Route path="/evaluation" element={<EvaluationPage />} />
+>>>>>>> origin/main
         <Route
           path="/system-evaluation"
           element={
@@ -121,6 +177,14 @@ export default function App() {
           }
         />
         <Route
+          path="/document-scanner"
+          element={
+            <ProtectedRoute>
+              <DocumentScannerPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/history"
           element={
             <ProtectedRoute>
@@ -149,6 +213,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <VoiceAssistantPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/scheme-assistant"
+          element={
+            <ProtectedRoute>
+              <SchemeAssistantPage />
             </ProtectedRoute>
           }
         />
@@ -288,7 +360,18 @@ export default function App() {
             </AdminRoute>
           }
         />
+<<<<<<< HEAD
+        <Route
+          path="*"
+          element={
+            <ProtectedRoute>
+              <NotFoundPage />
+            </ProtectedRoute>
+          }
+        />
+=======
         <Route path="*" element={<NotFoundPage />} />
+>>>>>>> origin/main
       </Routes>
     </PortalLayout>
   );

@@ -24,6 +24,7 @@ import type {
   SupportingUpload,
   SupportingUploadCategory,
   SupportingUploadListResponse,
+  DocumentScan,
   NotificationItem,
   NotificationListResponse,
   ApplicationItem,
@@ -34,6 +35,10 @@ import type {
   RecommendationHistoryListResponse,
   SchemeCatalogResponse,
   CatalogSearchResponse,
+  KnowledgeFieldKey,
+  KnowledgeVerificationStatus,
+  SchemeKnowledgeListResponse,
+  SchemeKnowledgeRecord,
   SchemeEvaluationResponse,
   SystemEvaluationResponse,
   AdminOverviewResponse,
@@ -47,6 +52,12 @@ import type {
   DocumentReviewStatus,
   VoiceStatusResponse,
   VoiceTranscribeResponse,
+  AssistantChatRequest,
+  AssistantChatResponse,
+  AssistantStatusResponse,
+  AgentRunRequest,
+  AgentRunResponse,
+  AgentStatusResponse,
 } from "../types/api";
 
 const REQUEST_TIMEOUT_MS = 20000;
@@ -121,19 +132,20 @@ function authHeaders(): HeadersInit {
   return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
 }
 
-async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
+async function requestJson<T>(path: string, init?: RequestInit & { timeoutMs?: number }): Promise<T> {
   const controller = new AbortController();
-  const timer = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const { timeoutMs, ...requestInit } = init ?? {};
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs ?? REQUEST_TIMEOUT_MS);
 
   try {
     const response = await fetch(`${getApiBaseUrl()}${path}`, {
-      ...init,
+      ...requestInit,
       signal: controller.signal,
       headers: {
         Accept: "application/json",
-        ...(init?.body && !(init.body instanceof FormData) ? { "Content-Type": "application/json" } : {}),
+        ...(requestInit.body && !(requestInit.body instanceof FormData) ? { "Content-Type": "application/json" } : {}),
         ...authHeaders(),
-        ...init?.headers,
+        ...requestInit.headers,
       },
     });
 
@@ -504,6 +516,59 @@ export async function downloadSupportingUpload(uploadId: string, displayName: st
   }
 }
 
+export async function createDocumentScan(uploadId: string, documentType = "education_certificate"): Promise<DocumentScan> {
+  const path = "/api/v1/document-scans";
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), 60000);
+  try {
+    const response = await fetch(`${getApiBaseUrl()}${path}`, {
+      method: "POST",
+      signal: controller.signal,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        ...authHeaders(),
+      },
+      body: JSON.stringify({ upload_id: uploadId, document_type: documentType }),
+    });
+    if (!response.ok) {
+      if (shouldClearSessionOnUnauthorized(path, response.status)) {
+        onUnauthorized?.();
+      }
+      throw new ApiError(friendlyStatusMessage(response.status, path), response.status);
+    }
+    return (await response.json()) as DocumentScan;
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new ApiError(messages[uiLanguage].requestTimeout);
+    }
+    throw new ApiError(messages[uiLanguage].networkError);
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
+export async function getDocumentScan(scanId: string): Promise<DocumentScan> {
+  return requestJson<DocumentScan>(`/api/v1/document-scans/${scanId}`);
+}
+
+export async function confirmDocumentScan(
+  scanId: string,
+  fields: Record<string, string | number | boolean>,
+): Promise<DocumentScan> {
+  return requestJson<DocumentScan>(`/api/v1/document-scans/${scanId}/confirm`, {
+    method: "POST",
+    body: JSON.stringify({ fields }),
+  });
+}
+
+export async function cancelDocumentScan(scanId: string): Promise<DocumentScan> {
+  return requestJson<DocumentScan>(`/api/v1/document-scans/${scanId}/cancel`, {
+    method: "POST",
+  });
+}
+
 export async function updateSchemeReadiness(
   schemeId: string,
   stage: ReadinessStage,
@@ -618,6 +683,39 @@ export async function fetchAdminUser(userId: string): Promise<AdminUserDetailRes
   return requestJson<AdminUserDetailResponse>(`/api/v1/admin/users/${userId}`);
 }
 
+export async function fetchSchemeKnowledge(params?: {
+  q?: string;
+  schemeId?: string;
+  department?: string;
+  category?: string;
+}): Promise<SchemeKnowledgeListResponse> {
+  const query = new URLSearchParams();
+  if (params?.q) query.set("q", params.q);
+  if (params?.schemeId) query.set("scheme_id", params.schemeId);
+  if (params?.department) query.set("department", params.department);
+  if (params?.category) query.set("category", params.category);
+  const suffix = query.toString() ? `?${query.toString()}` : "";
+  return requestJson<SchemeKnowledgeListResponse>(`/api/v1/scheme-knowledge${suffix}`);
+}
+
+export async function updateSchemeKnowledgeItem(
+  schemeId: string,
+  fieldKey: KnowledgeFieldKey,
+  payload: {
+    verification_status?: KnowledgeVerificationStatus;
+    source_url?: string | null;
+    last_verified_at?: string | null;
+  },
+): Promise<SchemeKnowledgeRecord> {
+  return requestJson<SchemeKnowledgeRecord>(
+    `/api/v1/admin/scheme-knowledge/${schemeId}/items/${fieldKey}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    },
+  );
+}
+
 export async function fetchAdminDocuments(): Promise<AdminDocumentListResponse> {
   return requestJson<AdminDocumentListResponse>("/api/v1/admin/documents");
 }
@@ -647,6 +745,32 @@ export async function createAdminVoiceAudit(
 
 export async function fetchVoiceStatus(): Promise<VoiceStatusResponse> {
   return requestJson<VoiceStatusResponse>("/api/v1/voice/status");
+}
+
+export async function fetchSchemeAssistantStatus(): Promise<AssistantStatusResponse> {
+  return requestJson<AssistantStatusResponse>("/api/v1/scheme-assistant/status");
+}
+
+export async function fetchSchemeAgentStatus(): Promise<AgentStatusResponse> {
+  return requestJson<AgentStatusResponse>("/api/v1/scheme-agent/status");
+}
+
+export async function runSchemeAgent(payload: AgentRunRequest): Promise<AgentRunResponse> {
+  return requestJson<AgentRunResponse>("/api/v1/scheme-agent/run", {
+    method: "POST",
+    body: JSON.stringify(payload),
+    timeoutMs: 65000,
+  });
+}
+
+export async function sendSchemeAssistantChat(
+  payload: AssistantChatRequest,
+): Promise<AssistantChatResponse> {
+  return requestJson<AssistantChatResponse>("/api/v1/scheme-assistant/chat", {
+    method: "POST",
+    body: JSON.stringify(payload),
+    timeoutMs: 65000,
+  });
 }
 
 export async function transcribeVoiceAudio(

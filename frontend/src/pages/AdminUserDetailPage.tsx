@@ -49,36 +49,36 @@ export function AdminUserDetailPage() {
       {data ? (
         <>
           <AdminPanel title={data.user.full_name}>
-            <div className="grid gap-3 px-5 py-4 sm:grid-cols-2">
-              <p className="text-[14px] text-slate-600">{data.user.email}</p>
-              <p className="text-[14px] text-slate-600">{data.user.has_wallet ? t.adminHasWallet : t.adminNoWallet}</p>
+            <div className="admin-detail-grid">
+              <p className="admin-body">{data.user.email}</p>
+              <p className="admin-body">{data.user.has_wallet ? t.adminHasWallet : t.adminNoWallet}</p>
             </div>
           </AdminPanel>
           {data.wallet ? (
             <AdminPanel title={t.adminWallet}>
-              <div className="grid gap-3 px-5 py-4 sm:grid-cols-2">
-                <p className="text-[14px] text-slate-700">
+              <div className="admin-detail-grid">
+                <p className="admin-body">
                   {t.fieldAge}: {data.wallet.age}
                 </p>
-                <p className="text-[14px] text-slate-700">
+                <p className="admin-body">
                   {t.fieldGender}: {data.wallet.gender}
                 </p>
                 {data.completeness ? (
-                  <p className="text-[14px] text-slate-700 sm:col-span-2">
+                  <p className="admin-body admin-detail-span">
                     {t.completenessTitle}: {data.completeness.percentage}%
                   </p>
                 ) : null}
               </div>
             </AdminPanel>
           ) : (
-            <p className="text-[14px] text-slate-500">{t.adminNoWallet}</p>
+            <p className="admin-empty">{t.adminNoWallet}</p>
           )}
           <AdminPanel title={t.adminEligibilityMonitoring}>
-            <div className="space-y-3 px-5 py-4">
+            <div className="admin-panel-body space-y-3">
               <AdminStatusBadge status={predictionStatus(data.eligibility.prediction_label)} />
-              <p className="text-[14px] text-slate-600">{t.adminPredictionNotice}</p>
+              <p className="admin-body">{t.adminPredictionNotice}</p>
               {data.eligibility.incomplete_fields.length > 0 ? (
-                <p className="text-[14px] text-slate-700">
+                <p className="admin-body">
                   {t.whyRequiredToEvaluate}: {data.eligibility.incomplete_fields.join(", ")}
                 </p>
               ) : null}
@@ -108,7 +108,7 @@ export function AdminUserDetailPage() {
           </AdminPanel>
           <AdminPanel title={t.navApplications}>
             {data.applications.length === 0 ? (
-              <p className="px-5 py-4 text-[14px] text-slate-500">{t.adminApplicationsEmpty}</p>
+              <p className="admin-empty">{t.adminApplicationsEmpty}</p>
             ) : (
               <div className="admin-table-wrap">
                 <table className="admin-table">
@@ -134,7 +134,7 @@ export function AdminUserDetailPage() {
           </AdminPanel>
           <AdminPanel title={t.navHistory}>
             {data.history.length === 0 ? (
-              <p className="px-5 py-4 text-[14px] text-slate-500">{t.adminHistoryEmpty}</p>
+              <p className="admin-empty">{t.adminHistoryEmpty}</p>
             ) : (
               <div className="admin-table-wrap">
                 <table className="admin-table">
