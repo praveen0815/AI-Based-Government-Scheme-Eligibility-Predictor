@@ -75,28 +75,32 @@ export function DocumentScannerPage() {
     [uploads],
   );
 
-  async function loadPage() {
-    setLoading(true);
-    setError(null);
-    try {
-      const [listed, currentWallet] = await Promise.all([
-        fetchSupportingUploads(),
-        getMyWallet().catch((caught) => {
-          if (caught instanceof ApiError && caught.status === 404) return null;
-          throw caught;
-        }),
-      ]);
-      setUploads(listed.uploads);
-      setWallet(currentWallet);
-    } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : t.networkError);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
+    let cancelled = false;
+    async function loadPage() {
+      setLoading(true);
+      setError(null);
+      try {
+        const [listed, currentWallet] = await Promise.all([
+          fetchSupportingUploads(),
+          getMyWallet().catch((caught) => {
+            if (caught instanceof ApiError && caught.status === 404) return null;
+            throw caught;
+          }),
+        ]);
+        if (cancelled) return;
+        setUploads(listed.uploads);
+        setWallet(currentWallet);
+      } catch (caught) {
+        if (!cancelled) setError(caught instanceof ApiError ? caught.message : t.networkError);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
     void loadPage();
+    return () => {
+      cancelled = true;
+    };
   }, [t]);
 
   function startReview(next: DocumentScan) {

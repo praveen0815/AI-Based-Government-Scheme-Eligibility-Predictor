@@ -1,48 +1,72 @@
+import { Component, Suspense, type ReactNode } from "react";
 import { Route, Routes } from "react-router-dom";
+import { AdminRoute } from "./components/AdminRoute";
+import { ErrorState } from "./components/ErrorState";
+import { LoadingState } from "./components/LoadingState";
 import { PortalLayout } from "./components/PortalLayout";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { RootRedirect } from "./components/RootRedirect";
-import { CheckPage } from "./pages/CheckPage";
-import { HomePage } from "./pages/HomePage";
-import { LoginPage } from "./pages/LoginPage";
-import { RegisterPage } from "./pages/RegisterPage";
-import { ResultsPage } from "./pages/ResultsPage";
-import { SchemeDetailPage } from "./pages/SchemeDetailPage";
-import { SchemesPage } from "./pages/SchemesPage";
-import { EvaluationPage } from "./pages/EvaluationPage";
-import { ComparePage } from "./pages/ComparePage";
-import { HistoryPage } from "./pages/HistoryPage";
-import { NotFoundPage } from "./pages/NotFoundPage";
-import { AccountPage } from "./pages/AccountPage";
-import { SystemEvaluationPage } from "./pages/SystemEvaluationPage";
-import { DocumentsPage } from "./pages/DocumentsPage";
-import { InsightsPage } from "./pages/InsightsPage";
-import { ReadinessPage } from "./pages/ReadinessPage";
-import { UploadsPage } from "./pages/UploadsPage";
-import { DocumentScannerPage } from "./pages/DocumentScannerPage";
-import { SchemeAssistantPage } from "./pages/SchemeAssistantPage";
-import { DashboardPage } from "./pages/DashboardPage";
-import { NotificationsPage } from "./pages/NotificationsPage";
-import { VoiceAssistantPage } from "./pages/VoiceAssistantPage";
-import { WalletPage } from "./pages/WalletPage";
-import { EligibilitySimulatorPage } from "./pages/EligibilitySimulatorPage";
-import { ApplicationsPage } from "./pages/ApplicationsPage";
-import { ResearchDashboardPage } from "./pages/ResearchDashboardPage";
-import { AdminRoute } from "./components/AdminRoute";
-import { AdminDashboardPage } from "./pages/AdminDashboardPage";
-import { AdminUsersPage } from "./pages/AdminUsersPage";
-import { AdminUserDetailPage } from "./pages/AdminUserDetailPage";
-import { AdminDocumentsPage } from "./pages/AdminDocumentsPage";
-import { AdminEligibilityPage } from "./pages/AdminEligibilityPage";
-import { AdminApplicationsPage } from "./pages/AdminApplicationsPage";
-import { AdminSchemesPage } from "./pages/AdminSchemesPage";
+import { useI18n } from "./context/LanguageContext";
+import {
+  AccountPage,
+  AdminApplicationsPage,
+  AdminDashboardPage,
+  AdminDocumentsPage,
+  AdminEligibilityPage,
+  AdminSchemesPage,
+  AdminUserDetailPage,
+  AdminUsersPage,
+  ApplicationsPage,
+  CheckPage,
+  ComparePage,
+  DashboardPage,
+  DocumentScannerPage,
+  DocumentsPage,
+  EligibilitySimulatorPage,
+  EvaluationPage,
+  HistoryPage,
+  HomePage,
+  InsightsPage,
+  LoginPage,
+  NotFoundPage,
+  NotificationsPage,
+  ReadinessPage,
+  RegisterPage,
+  ResearchDashboardPage,
+  ResultsPage,
+  SchemeAssistantPage,
+  SchemeDetailPage,
+  SchemesPage,
+  SystemEvaluationPage,
+  UploadsPage,
+  VoiceAssistantPage,
+  WalletPage,
+} from "@pages";
+
+class PageLoadBoundary extends Component<{ children: ReactNode; message: string }, { failed: boolean }> {
+  state = { failed: false };
+
+  static getDerivedStateFromError(): { failed: boolean } {
+    return { failed: true };
+  }
+
+  render() {
+    if (this.state.failed) {
+      return <ErrorState message={this.props.message} onRetry={() => window.location.reload()} />;
+    }
+    return this.props.children;
+  }
+}
 
 export default function App() {
+  const { t } = useI18n();
+
   return (
     <PortalLayout>
+      <PageLoadBoundary message={t.networkError}>
+        <Suspense fallback={<LoadingState message={t.loadingGeneric} />}>
       <Routes>
         <Route path="/" element={<RootRedirect />} />
-<<<<<<< HEAD
         <Route
           path="/home"
           element={
@@ -67,11 +91,6 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-=======
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/check" element={<CheckPage />} />
-        <Route path="/results" element={<ResultsPage />} />
->>>>>>> origin/main
         <Route
           path="/compare"
           element={
@@ -80,7 +99,6 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-<<<<<<< HEAD
         <Route
           path="/schemes"
           element={
@@ -105,11 +123,6 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-=======
-        <Route path="/schemes" element={<SchemesPage />} />
-        <Route path="/schemes/:schemeId" element={<SchemeDetailPage />} />
-        <Route path="/evaluation" element={<EvaluationPage />} />
->>>>>>> origin/main
         <Route
           path="/system-evaluation"
           element={
@@ -360,7 +373,6 @@ export default function App() {
             </AdminRoute>
           }
         />
-<<<<<<< HEAD
         <Route
           path="*"
           element={
@@ -369,10 +381,9 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-=======
-        <Route path="*" element={<NotFoundPage />} />
->>>>>>> origin/main
       </Routes>
+        </Suspense>
+      </PageLoadBoundary>
     </PortalLayout>
   );
 }

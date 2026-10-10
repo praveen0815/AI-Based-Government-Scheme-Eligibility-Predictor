@@ -4,10 +4,9 @@ import {
   AdminKpiCard,
   AdminPageHeader,
   AdminPanel,
-  AdminShareBar,
   AdminStatusBadge,
-  sharePercent,
 } from "../components/admin/adminUi";
+import { sharePercent } from "../components/admin/sharePercent";
 import { ErrorState } from "../components/ErrorState";
 import { LoadingState } from "../components/LoadingState";
 import { useI18n } from "../context/LanguageContext";
@@ -104,90 +103,63 @@ export function AdminDashboardPage() {
               icon={<SchemesIcon />}
             />
           </section>
-          <section className="admin-analytics-grid" aria-label={t.adminSectionAnalytics}>
-            <AdminPanel
-              title={t.adminEligibilityDistribution}
-              padded
-              actions={
-                <Link to="/admin/eligibility" className="admin-link">
-                  {t.adminViewAll}
-                </Link>
-              }
-            >
-              <AdminShareBar
-                label={t.adminEligibilityDistribution}
-                segments={[
-                  { key: "eligible", value: data.eligible_scheme_results, color: "#0f766e" },
-                  { key: "not_eligible", value: data.not_eligible_scheme_results, color: "#b91c1c" },
-                  { key: "incomplete", value: data.cannot_fully_evaluate_users, color: "#d97706" },
-                ]}
-              />
-              <div className="admin-stat-row">
-                <p className="admin-stat-label">
-                  <span className="admin-stat-dot" style={{ background: "#0f766e" }} />
-                  {t.catalogEligibilityEligible}
-                </p>
-                <p className="admin-stat-value">{data.eligible_scheme_results}</p>
-                <p className="admin-stat-share">{sharePercent(data.eligible_scheme_results, eligibilityTotal)}</p>
-              </div>
-              <div className="admin-stat-row">
-                <p className="admin-stat-label">
-                  <span className="admin-stat-dot" style={{ background: "#dc2626" }} />
-                  {t.catalogEligibilityNotEligible}
-                </p>
-                <p className="admin-stat-value">{data.not_eligible_scheme_results}</p>
-                <p className="admin-stat-share">{sharePercent(data.not_eligible_scheme_results, eligibilityTotal)}</p>
-              </div>
-              <div className="admin-stat-row">
-                <p className="admin-stat-label">
-                  <span className="admin-stat-dot" style={{ background: "#d97706" }} />
-                  {t.catalogEligibilityIncomplete}
-                </p>
-                <p className="admin-stat-value">{data.cannot_fully_evaluate_users}</p>
-                <p className="admin-stat-share">{sharePercent(data.cannot_fully_evaluate_users, eligibilityTotal)}</p>
+          <section className="admin-ops" aria-label={t.adminSectionManagement}>
+            <AdminPanel title={t.adminSectionManagement} padded>
+              <ul className="admin-quick">
+                {[
+                  { to: "/admin/users", label: t.adminUsers, icon: <UserIcon /> },
+                  { to: "/admin/documents", label: t.adminDocumentVerification, icon: <DocumentIcon /> },
+                  { to: "/admin/applications", label: t.navApplications, icon: <ClipboardIcon /> },
+                  { to: "/admin/schemes", label: t.adminSchemeManagement, icon: <SchemesIcon /> },
+                  { to: "/admin/eligibility", label: t.adminEligibilityMonitoring, icon: <ClipboardIcon /> },
+                ].map((item) => (
+                  <li key={item.to}>
+                    <Link to={item.to} className="admin-quick-link" aria-label={`${t.adminViewAll}: ${item.label}`}>
+                      <span className="admin-quick-icon" aria-hidden="true">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </AdminPanel>
+            <AdminPanel title={t.adminEligibilityDistribution} padded actions={<Link to="/admin/eligibility" className="admin-link">{t.adminViewAll}</Link>}>
+              <div className="admin-bars" role="img" aria-label={t.adminEligibilityDistribution}>
+                {[
+                  { key: "eligible", label: t.catalogEligibilityEligible, value: data.eligible_scheme_results, tone: "ok" },
+                  { key: "not", label: t.catalogEligibilityNotEligible, value: data.not_eligible_scheme_results, tone: "danger" },
+                  { key: "partial", label: t.catalogEligibilityIncomplete, value: data.cannot_fully_evaluate_users, tone: "pending" },
+                ].map((bar) => {
+                  const height = eligibilityTotal > 0 ? Math.max(8, Math.round((bar.value / eligibilityTotal) * 100)) : 8;
+                  return (
+                    <div key={bar.key} className="admin-bar">
+                      <span className="admin-bar-value">{bar.value}</span>
+                      <span className={`admin-bar-fill admin-bar-${bar.tone}`} style={{ height: `${height}%` }} />
+                      <span className="admin-bar-label">{bar.label}</span>
+                      <span className="admin-bar-share">{sharePercent(bar.value, eligibilityTotal)}</span>
+                    </div>
+                  );
+                })}
               </div>
             </AdminPanel>
-            <AdminPanel
-              title={t.adminDocumentStatus}
-              padded
-              actions={
-                <Link to="/admin/documents" className="admin-link">
-                  {t.adminViewAll}
-                </Link>
-              }
-            >
-              <AdminShareBar
-                label={t.adminDocumentStatus}
-                segments={[
-                  { key: "verified", value: data.verified_documents, color: "#0f766e" },
-                  { key: "pending", value: data.pending_document_reviews, color: "#d97706" },
-                  { key: "rejected", value: data.rejected_documents, color: "#b91c1c" },
-                ]}
-              />
-              <div className="admin-stat-row">
-                <p className="admin-stat-label">
-                  <span className="admin-stat-dot" style={{ background: "#d97706" }} />
-                  {t.adminUploaded}
-                </p>
-                <p className="admin-stat-value">{data.total_document_uploads}</p>
-                <p className="admin-stat-share">{documentTotal > 0 ? "100%" : "0%"}</p>
-              </div>
-              <div className="admin-stat-row">
-                <p className="admin-stat-label">
-                  <span className="admin-stat-dot" style={{ background: "#0f766e" }} />
-                  {t.adminVerified}
-                </p>
-                <p className="admin-stat-value">{data.verified_documents}</p>
-                <p className="admin-stat-share">{sharePercent(data.verified_documents, documentTotal)}</p>
-              </div>
-              <div className="admin-stat-row">
-                <p className="admin-stat-label">
-                  <span className="admin-stat-dot" style={{ background: "#dc2626" }} />
-                  {t.adminRejected}
-                </p>
-                <p className="admin-stat-value">{data.rejected_documents}</p>
-                <p className="admin-stat-share">{sharePercent(data.rejected_documents, documentTotal)}</p>
-              </div>
+            <AdminPanel title={t.adminDocumentStatus} padded actions={<Link to="/admin/documents" className="admin-link">{t.adminViewAll}</Link>}>
+              {[
+                { label: t.adminPending, value: data.pending_document_reviews, tone: "pending" },
+                { label: t.adminVerified, value: data.verified_documents, tone: "ok" },
+                { label: t.adminRejected, value: data.rejected_documents, tone: "danger" },
+              ].map((row) => {
+                const width = documentTotal > 0 ? Math.round((row.value / documentTotal) * 100) : 0;
+                return (
+                  <div key={row.label} className="admin-meter-row">
+                    <div className="admin-meter-copy">
+                      <span>{row.label}</span>
+                      <strong>{row.value} · {sharePercent(row.value, documentTotal)}</strong>
+                    </div>
+                    <div className="admin-meter-track" aria-hidden="true">
+                      <span className={`admin-meter-fill admin-bar-${row.tone}`} style={{ width: `${width}%` }} />
+                    </div>
+                  </div>
+                );
+              })}
             </AdminPanel>
           </section>
           <AdminPanel
@@ -238,32 +210,19 @@ export function AdminDashboardPage() {
             {data.recent_activity.length === 0 ? (
               <p className="admin-empty">{t.adminActivityEmpty}</p>
             ) : (
-              <div className="admin-table-wrap">
-                <table className="admin-table admin-table-activity">
-                  <thead>
-                    <tr>
-                      <th>{t.adminActivity}</th>
-                      <th>{t.adminName}</th>
-                      <th>{t.adminEmail}</th>
-                      <th>{t.adminTime}</th>
-                      <th>{t.adminFilterStatus}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.recent_activity.map((item) => (
-                      <tr key={`${item.activity_type}-${item.user_id}-${item.occurred_at}`}>
-                        <td>{item.summary}</td>
-                        <td>{item.user_name}</td>
-                        <td>{item.user_email}</td>
-                        <td>{formatActivityTime(item.occurred_at, t)}</td>
-                        <td>
-                          <AdminStatusBadge status={item.activity_type as AdminActivityType} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <ul className="admin-audit">
+                {data.recent_activity.map((item) => (
+                  <li key={`${item.activity_type}-${item.user_id}-${item.occurred_at}`} className="admin-audit-card">
+                    <div className="admin-audit-top">
+                      <AdminStatusBadge status={item.activity_type as AdminActivityType} />
+                      <time dateTime={item.occurred_at}>{formatActivityTime(item.occurred_at, t)}</time>
+                    </div>
+                    <p className="admin-audit-title">{item.summary}</p>
+                    <p className="admin-audit-meta">{item.user_name}</p>
+                    <p className="admin-audit-meta">{item.user_email}</p>
+                  </li>
+                ))}
+              </ul>
             )}
           </AdminPanel>
         </>

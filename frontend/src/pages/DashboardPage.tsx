@@ -432,7 +432,7 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="page-stack dash-page">
+    <div className="page-stack dash-page uae-board">
       <section className="dash-hero" aria-labelledby="dashboard-welcome">
         <div className="dash-hero-bar">
           <MotionBlock className="dash-hero-copy">
@@ -454,10 +454,6 @@ export function DashboardPage() {
               </Link>
             </div>
           </MotionBlock>
-          <Link to="/voice-assistant" className="dash-voice-btn">
-            <MicIcon />
-            {t.navVoiceAssistant}
-          </Link>
         </div>
       </section>
 
@@ -483,7 +479,7 @@ export function DashboardPage() {
             </section>
           ) : null}
 
-          <RevealSection className="reveal-up reveal-d3" aria-labelledby="dashboard-progress">
+          <RevealSection className="reveal-up reveal-d3 uae-bento" aria-labelledby="dashboard-progress">
             <h2 id="dashboard-progress" className="section-title">
               {t.dashboardProgressOverview}
             </h2>
@@ -519,7 +515,7 @@ export function DashboardPage() {
             </div>
           </RevealSection>
 
-          <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-journey">
+          <RevealSection className="uae-journey space-y-5" aria-labelledby="dashboard-journey">
             <div>
               <h2 id="dashboard-journey" className="section-title">
                 {t.dashboardJourneyTitle}
@@ -554,7 +550,7 @@ export function DashboardPage() {
             </ol>
           </RevealSection>
 
-          <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-summary">
+          <RevealSection className="uae-prep space-y-5" aria-labelledby="dashboard-summary">
             <div>
               <h2 id="dashboard-summary" className="section-title">
                 {t.dashboardSmartSummary}
@@ -622,7 +618,7 @@ export function DashboardPage() {
             </div>
           </RevealSection>
 
-          <RevealSection className="dash-panel space-y-4 p-6 md:p-8" aria-labelledby="dashboard-activity">
+          <RevealSection className="dash-panel uae-log space-y-4 p-6 md:p-8" aria-labelledby="dashboard-activity">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 id="dashboard-activity" className="section-title">
@@ -661,22 +657,27 @@ export function DashboardPage() {
             )}
           </RevealSection>
 
-          <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-assistant">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <h2 id="dashboard-assistant" className="section-title">
-                  {t.navSchemeAssistant}
-                </h2>
-                <p className="mt-2 text-[17px] text-ink-500">{t.assistantLead}</p>
-              </div>
-              <Link
-                to="/scheme-assistant"
-                className="inline-flex items-center justify-center rounded-[12px] bg-action px-4 py-2.5 text-[16px] font-semibold text-white hover:bg-action-hover"
-              >
+          <RevealSection className="uae-rail" aria-labelledby="dashboard-assistant">
+            <div className="uae-rail-glow" aria-hidden="true" />
+            <div className="uae-rail-body">
+              <p className="uae-rail-kicker">{t.assistantSuggested}</p>
+              <h2 id="dashboard-assistant" className="section-title">
                 {t.navSchemeAssistant}
+              </h2>
+              <p className="uae-rail-lead">{t.assistantLead}</p>
+              <p className="uae-rail-note">{t.assistantWarning}</p>
+              <div className="uae-prompts">
+                {[t.assistantSuggestFind, t.assistantSuggestEligibilityCheck, t.assistantSuggestDocsMissing, t.assistantSuggestApps].map((prompt) => (
+                  <Link key={prompt} to="/scheme-assistant" className="uae-prompt">
+                    {prompt}
+                  </Link>
+                ))}
+              </div>
+              <Link to="/voice-assistant" className="dash-voice-btn uae-mic">
+                <MicIcon />
+                {t.navVoiceAssistant}
               </Link>
             </div>
-            <p className="text-[16px] text-ink-700">{t.assistantWarning}</p>
           </RevealSection>
 
           <RevealSection className="dash-panel space-y-1 p-6 md:p-8" aria-labelledby="dashboard-quick-actions">

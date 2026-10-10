@@ -17,7 +17,11 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@pages": ["./src/routing/pages.lazy.tsx"]
+    }
   },
   "include": ["src"]
 }
