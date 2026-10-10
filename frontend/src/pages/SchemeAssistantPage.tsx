@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { ErrorState } from "../components/ErrorState";
 import { LoadingState } from "../components/LoadingState";
@@ -88,7 +88,7 @@ export function SchemeAssistantPage() {
     [t],
   );
 
-  async function loadPage() {
+  const loadPage = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -103,11 +103,11 @@ export function SchemeAssistantPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [t]);
 
   useEffect(() => {
     void loadPage();
-  }, []);
+  }, [loadPage]);
 
   async function sendMessage(raw: string) {
     const message = raw.trim();
@@ -280,7 +280,7 @@ export function SchemeAssistantPage() {
                 <p className="text-[15px] font-semibold uppercase tracking-wide text-ink-500">
                   {turn.role === "user" ? t.assistantRoleUser : t.assistantRoleAssistant}
                 </p>
-                <p className="mt-1 whitespace-pre-wrap text-[17px] leading-relaxed text-ink-900">{turn.text}</p>
+                <p className="mt-1 whitespace-pre-wrap break-words text-[17px] leading-relaxed text-ink-900">{turn.text}</p>
                 {turn.schemeName ? (
                   <p className="mt-2 text-[15px] text-ink-500">
                     {turn.schemeName}

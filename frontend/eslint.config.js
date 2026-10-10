@@ -19,7 +19,25 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "react-refresh/only-export-components": [
+        "warn",
+        {
+          allowConstantExport: true,
+          allowExportNames: [
+            "useCitizenTheme",
+            "useAdminTheme",
+            "readStoredCitizenTheme",
+            "applyCitizenTheme",
+            "readStoredAdminTheme",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/main.tsx"],
+    rules: {
+      "react-refresh/only-export-components": "off",
     },
   },
 );

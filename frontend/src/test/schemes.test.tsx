@@ -9,11 +9,7 @@ import {
   EMPTY_CATALOG_FILTERS,
 } from "../utils/catalogSearch";
 import { SAMPLE_SCHEME, SECOND_SCHEME, VALID_PROFILE, recommendResponse } from "./fixtures";
-<<<<<<< HEAD
 import { renderAuthenticatedApp } from "./renderApp";
-=======
-import { renderApp, renderAuthenticatedApp } from "./renderApp";
->>>>>>> origin/main
 
 function catalogItem(
   scheme = SAMPLE_SCHEME,
@@ -102,14 +98,10 @@ function jsonError(status: number) {
   return { ok: false as const, status, json: async () => ({ detail: "error" }) };
 }
 
-<<<<<<< HEAD
 function mockCatalogFetch(options?: {
   catalog?: CatalogSearchResponse | "error" | "pending";
   recommend?: boolean;
 }) {
-=======
-function mockCatalogFetch(options?: { catalog?: CatalogSearchResponse | "error" | "pending" }) {
->>>>>>> origin/main
   if (options?.catalog === "pending") {
     return vi.fn().mockReturnValue(new Promise(() => undefined));
   }
@@ -130,13 +122,9 @@ function mockCatalogFetch(options?: { catalog?: CatalogSearchResponse | "error" 
         incomplete_fields: ["occupation_category"],
       });
     }
-<<<<<<< HEAD
     if (path.includes("/recommend")) {
       return options?.recommend ? jsonOk(discoveryRecommend()) : jsonError(404);
     }
-=======
-    if (path.includes("/recommend")) return jsonOk(discoveryRecommend());
->>>>>>> origin/main
     if (path.includes("/compare")) {
       return jsonOk({
         scheme_count: 2,
@@ -203,11 +191,7 @@ describe("catalog discovery helpers", () => {
 describe("scheme catalog search", () => {
   it("lists catalog schemes with CORE badges and official source links", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch());
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"]);
-=======
-    renderApp(["/schemes"]);
->>>>>>> origin/main
     expect(await screen.findByRole("heading", { name: "Explore Government Schemes" })).toBeInTheDocument();
     expect(await screen.findByText(SAMPLE_SCHEME.scheme_name)).toBeInTheDocument();
     expect(screen.getAllByText("CORE").length).toBeGreaterThan(0);
@@ -222,11 +206,7 @@ describe("scheme catalog search", () => {
 
   it("searches by scheme ID", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch());
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"]);
-=======
-    renderApp(["/schemes"]);
->>>>>>> origin/main
     expect(await screen.findByText(SAMPLE_SCHEME.scheme_name)).toBeInTheDocument();
     const user = userEvent.setup();
     await user.type(screen.getAllByPlaceholderText("Search by scheme name, description, or keyword")[0], "TN-HFW-001");
@@ -237,11 +217,7 @@ describe("scheme catalog search", () => {
 
   it("searches by description keyword", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch());
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"]);
-=======
-    renderApp(["/schemes"]);
->>>>>>> origin/main
     expect(await screen.findByText(SAMPLE_SCHEME.scheme_name)).toBeInTheDocument();
     const user = userEvent.setup();
     await user.type(screen.getAllByPlaceholderText("Search by scheme name, description, or keyword")[0], "education");
@@ -252,11 +228,7 @@ describe("scheme catalog search", () => {
 
   it("filters by category", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch());
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"]);
-=======
-    renderApp(["/schemes"]);
->>>>>>> origin/main
     expect(await screen.findByText(ADVANCED_SCHEME.scheme_name)).toBeInTheDocument();
     const user = userEvent.setup();
     await user.selectOptions(screen.getAllByLabelText("Category")[0], "Health insurance");
@@ -266,11 +238,7 @@ describe("scheme catalog search", () => {
 
   it("filters by department", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch());
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"]);
-=======
-    renderApp(["/schemes"]);
->>>>>>> origin/main
     expect(await screen.findByText(ADVANCED_SCHEME.scheme_name)).toBeInTheDocument();
     const user = userEvent.setup();
     await user.selectOptions(screen.getAllByLabelText("Department")[0], "Health and Family Welfare Department");
@@ -280,11 +248,7 @@ describe("scheme catalog search", () => {
 
   it("filters by CORE status and can clear filters", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch());
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"]);
-=======
-    renderApp(["/schemes"]);
->>>>>>> origin/main
     expect(await screen.findByText(ADVANCED_SCHEME.scheme_name)).toBeInTheDocument();
     const user = userEvent.setup();
     await user.selectOptions(screen.getAllByLabelText("CORE status")[0], "ADVANCED");
@@ -297,11 +261,7 @@ describe("scheme catalog search", () => {
 
   it("sorts schemes by name", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch());
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"]);
-=======
-    renderApp(["/schemes"]);
->>>>>>> origin/main
     expect(await screen.findByText(SAMPLE_SCHEME.scheme_name)).toBeInTheDocument();
     const user = userEvent.setup();
     await user.selectOptions(screen.getAllByLabelText("Sort")[0], "Scheme Name A–Z");
@@ -318,11 +278,7 @@ describe("scheme catalog search", () => {
 
   it("shows the empty state when no catalog rows match", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch());
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"]);
-=======
-    renderApp(["/schemes"]);
->>>>>>> origin/main
     expect(await screen.findByText(SAMPLE_SCHEME.scheme_name)).toBeInTheDocument();
     const user = userEvent.setup();
     await user.type(screen.getAllByPlaceholderText("Search by scheme name, description, or keyword")[0], "not-a-real-scheme");
@@ -337,21 +293,13 @@ describe("scheme catalog search", () => {
 
   it("shows a loading state while the catalog is fetched", () => {
     vi.stubGlobal("fetch", mockCatalogFetch({ catalog: "pending" }));
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"]);
-=======
-    renderApp(["/schemes"]);
->>>>>>> origin/main
     expect(screen.getByText("Loading supported schemes...")).toBeInTheDocument();
   });
 
   it("shows an error state when the catalog cannot be loaded", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch({ catalog: "error" }));
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"]);
-=======
-    renderApp(["/schemes"]);
->>>>>>> origin/main
     expect(
       await screen.findByText("Something went wrong while processing your request. Please try again."),
     ).toBeInTheDocument();
@@ -360,11 +308,7 @@ describe("scheme catalog search", () => {
 
   it("reads filter state from the URL", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch());
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes?q=education&category=Higher+education+assurance"]);
-=======
-    renderApp(["/schemes?q=education&category=Higher+education+assurance"]);
->>>>>>> origin/main
     expect(await screen.findByText(SAMPLE_SCHEME.scheme_name)).toBeInTheDocument();
     expect(screen.getByText(SECOND_SCHEME.scheme_name)).toBeInTheDocument();
     expect(screen.queryByText(ADVANCED_SCHEME.scheme_name)).not.toBeInTheDocument();
@@ -373,11 +317,7 @@ describe("scheme catalog search", () => {
 
   it("exposes accessible search, filter, and result-count labels", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch());
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"]);
-=======
-    renderApp(["/schemes"]);
->>>>>>> origin/main
     expect(await screen.findByText(SAMPLE_SCHEME.scheme_name)).toBeInTheDocument();
     expect(screen.getAllByLabelText("Search")[0]).toBeInTheDocument();
     expect(screen.getAllByLabelText("Category")[0]).toBeInTheDocument();
@@ -390,11 +330,7 @@ describe("scheme catalog search", () => {
 
   it("shows Tamil catalog copy", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch({ catalog: { ...CATALOG, schemes: [] } }));
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"], { language: "ta" });
-=======
-    renderApp(["/schemes"], { language: "ta" });
->>>>>>> origin/main
     expect(await screen.findByRole("heading", { name: "அரசு திட்டங்களை ஆராயுங்கள்" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "திட்டங்கள் இல்லை" })).toBeInTheDocument();
   });
@@ -495,11 +431,7 @@ describe("scheme discovery eligibility overlay", () => {
 
   it("does not invent eligibility when no recommendation result exists", async () => {
     vi.stubGlobal("fetch", mockCatalogFetch());
-<<<<<<< HEAD
     renderAuthenticatedApp(["/schemes"]);
-=======
-    renderApp(["/schemes"]);
->>>>>>> origin/main
     expect(await screen.findByText(SAMPLE_SCHEME.scheme_name)).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Recommended for You" })).not.toBeInTheDocument();
     const user = userEvent.setup();

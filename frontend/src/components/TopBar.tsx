@@ -53,7 +53,7 @@ export function TopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
 
   return (
     <header className="citizen-topbar sticky top-0 z-20">
-      <div className="flex items-center gap-3 px-4 py-4 md:px-8 lg:px-10">
+      <div className="citizen-topbar-row flex items-center gap-3 px-4 py-4 md:px-8 lg:px-10">
         <button
           type="button"
           className="citizen-icon-btn lg:hidden"
@@ -62,7 +62,7 @@ export function TopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
         >
           <MenuIcon />
         </button>
-        <div className="lg:hidden">
+        <div className="citizen-topbar-brand min-w-0 lg:hidden">
           <BrandMark compact inverted={theme === "dark"} />
         </div>
         {isAuthenticated ? (

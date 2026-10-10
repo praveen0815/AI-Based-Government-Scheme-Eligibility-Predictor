@@ -123,7 +123,7 @@ describe("scheme assistant page", () => {
       "href",
       "/scheme-assistant",
     );
-    expect(screen.getAllByRole("link", { name: en.navSchemeAssistant }).length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByRole("link", { name: en.navSchemeAssistant })).toHaveLength(1);
     expect(screen.getByRole("option", { name: /TN-SW-001/ })).toBeInTheDocument();
     expect(screen.getByText(en.assistantLlmFallback)).toBeInTheDocument();
   });

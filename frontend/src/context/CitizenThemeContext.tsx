@@ -57,7 +57,6 @@ export function CitizenThemeProvider({
 }
 
 // Hook lives with the provider; this is the standard React context pattern.
-// eslint-disable-next-line react-refresh/only-export-components
 export function useCitizenTheme(): CitizenThemeState {
   const context = useContext(CitizenThemeContext);
   if (!context) {

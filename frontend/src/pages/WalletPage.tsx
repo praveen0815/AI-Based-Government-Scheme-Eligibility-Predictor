@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CitizenForm } from "../components/CitizenForm";
 import { ErrorState } from "../components/ErrorState";
@@ -46,26 +46,18 @@ export function WalletPage() {
   const [loading, setLoading] = useState(true);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  async function loadCompleteness() {
-    try {
-      setCompleteness(await fetchProfileCompleteness());
-    } catch {
-      setCompleteness(null);
-    }
-  }
-
   function update<K extends keyof CitizenFormValues>(field: K, value: CitizenFormValues[K]) {
     setValues((current) => ({ ...current, [field]: value }));
   }
 
-  function showWallet(next: CitizenWallet, message: string | null = null) {
+  const showWallet = useCallback((next: CitizenWallet, message: string | null = null) => {
     setWallet(next);
     setValues(profileToForm(walletToProfile(next)));
     setMode("view");
     setNotice(message);
     setConfirmDelete(false);
-    void loadCompleteness();
-  }
+    void fetchProfileCompleteness().then(setCompleteness).catch(() => setCompleteness(null));
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -92,7 +84,7 @@ export function WalletPage() {
     return () => {
       cancelled = true;
     };
-  }, [t]);
+  }, [showWallet, t]);
 
   async function handleCreate(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

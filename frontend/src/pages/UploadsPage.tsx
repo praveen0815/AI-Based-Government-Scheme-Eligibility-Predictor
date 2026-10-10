@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { ErrorState } from "../components/ErrorState";
 import { LoadingState } from "../components/LoadingState";
@@ -49,7 +49,7 @@ export function UploadsPage() {
   const [schemeId, setSchemeId] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
-  async function loadUploads() {
+  const loadUploads = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -64,11 +64,11 @@ export function UploadsPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [t]);
 
   useEffect(() => {
     void loadUploads();
-  }, [t]);
+  }, [loadUploads]);
 
   async function handleUpload(event: FormEvent) {
     event.preventDefault();

@@ -49,7 +49,6 @@ export function AuthProvider({
     setUnauthorizedHandler(() => applySession(null, null));
     return () => setUnauthorizedHandler(null);
     // Register the 401 handler once per token change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   useEffect(() => {

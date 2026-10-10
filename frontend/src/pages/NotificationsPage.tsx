@@ -21,22 +21,26 @@ export function NotificationsPage() {
   const [actionError, setActionError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
-  async function loadNotifications() {
-    setLoading(true);
-    setError(null);
-    try {
-      const listed = await fetchNotifications();
-      setItems(listed.notifications);
-      setUnreadCount(listed.unread_count);
-    } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : t.networkError);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
+    let cancelled = false;
+    async function loadNotifications() {
+      setLoading(true);
+      setError(null);
+      try {
+        const listed = await fetchNotifications();
+        if (cancelled) return;
+        setItems(listed.notifications);
+        setUnreadCount(listed.unread_count);
+      } catch (caught) {
+        if (!cancelled) setError(caught instanceof ApiError ? caught.message : t.networkError);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
     void loadNotifications();
+    return () => {
+      cancelled = true;
+    };
   }, [t]);
 
   async function handleRead(notificationId: string) {

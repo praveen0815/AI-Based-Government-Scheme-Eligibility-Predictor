@@ -52,20 +52,24 @@ export function ReadinessPage() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
 
-  async function loadSummary() {
-    setLoading(true);
-    setError(null);
-    try {
-      setSummary(await fetchReadinessProgress());
-    } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : t.networkError);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
+    let cancelled = false;
+    async function loadSummary() {
+      setLoading(true);
+      setError(null);
+      try {
+        const next = await fetchReadinessProgress();
+        if (!cancelled) setSummary(next);
+      } catch (caught) {
+        if (!cancelled) setError(caught instanceof ApiError ? caught.message : t.networkError);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
     void loadSummary();
+    return () => {
+      cancelled = true;
+    };
   }, [t]);
 
   async function handleStage(schemeId: string, stage: ReadinessStage) {

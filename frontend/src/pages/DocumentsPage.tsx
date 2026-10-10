@@ -21,6 +21,7 @@ import type {
 } from "../types/api";
 
 const STATUSES: DocumentPrepStatus[] = ["not_started", "ready", "needs_verification"];
+const EMPTY_SCHEMES: NonNullable<DocumentProgressResponse["schemes"]> = [];
 
 function statusLabel(status: DocumentPrepStatus, t: ReturnType<typeof useI18n>["t"]): string {
   if (status === "ready") return t.documentsReady;
@@ -83,7 +84,7 @@ export function DocumentsPage() {
     };
   }, [t]);
 
-  const schemes = summary?.schemes ?? [];
+  const schemes = summary?.schemes ?? EMPTY_SCHEMES;
   const activeId = useMemo(() => {
     if (schemes.some((scheme) => scheme.scheme_id === selectedId)) return selectedId;
     return schemes[0]?.scheme_id ?? "";

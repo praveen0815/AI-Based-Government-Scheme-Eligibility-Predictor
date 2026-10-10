@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import { googleClientId } from "./components/GoogleSignInButton";
+import { googleClientId } from "./googleClient";
 import { AuthProvider } from "./context/AuthContext";
 import { CitizenThemeProvider } from "./context/CitizenThemeContext";
 import { LanguageProvider } from "./context/LanguageContext";
