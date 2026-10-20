@@ -2,7 +2,7 @@ import type { Messages } from "./types";
 
 export const en: Messages = {
   brandName: "Scheme Predictor",
-  brandSubtitle: "AI-powered scheme discovery",
+  brandSubtitle: "Eligibility guidance workspace",
   productName: "SchemeWise AI",
   productTagline: "Government Scheme Discovery & Eligibility Research Platform",
   researchBadge: "Academic Research Prototype",
@@ -516,7 +516,7 @@ export const en: Messages = {
   navSectionResearch: "Research",
   navSectionPreferences: "Preferences",
   navSectionAuth: "Account",
-  sidebarTagline: "AI-powered scheme discovery",
+  sidebarTagline: "Eligibility guidance workspace",
   guestUser: "Guest User",
   notSignedIn: "Not signed in",
   notifications: "Notifications",
@@ -538,16 +538,16 @@ export const en: Messages = {
   homeDisclaimer:
     "This platform is an academic research prototype. Predictions are based on model analysis and documented rules. This is not a government portal. Eligibility is not guaranteed. Please verify with official sources before applying.",
   dashboardWelcome: (name) => `Welcome back, ${name}`,
-  dashboardHeroTitle: "Scheme Predictor — your scheme command center",
+  dashboardHeroTitle: "Your eligibility progress, in one view",
   dashboardLead:
-    "Track your profile, eligibility checks, document preparation, and application readiness in one place. This is a research prototype, not a government portal.",
+    "Review your profile, eligibility results, document preparation, and application readiness. These figures are research estimates and are not an official government decision.",
   dashboardLoading: "Loading your dashboard...",
   dashboardProfileNotCreated: "Your profile is not created yet.",
   dashboardCreateProfileLead:
     "A socio-economic wallet is required for personalized scheme recommendations. Create your profile to get started.",
   dashboardCreateMyProfile: "Create My Profile",
   dashboardCreateYourProfile: "Create Your Profile",
-  dashboardQuickActions: "Quick Launch",
+  dashboardQuickActions: "Priority actions",
   dashboardStatusActive: "Active",
   dashboardCompareNeedsRecommendations:
     "Comparison requires predicted-eligible schemes from a previous recommendation.",
@@ -567,9 +567,9 @@ export const en: Messages = {
   dashboardMoreActions: "More actions",
   dashboardBrowseSchemes: "Browse Schemes",
   dashboardPreparingReport: "Preparing your PDF report...",
-  dashboardProgressOverview: "Quick Stats",
-  dashboardJourneyTitle: "Citizen journey",
-  dashboardJourneyLead: "Your preparation path in this research prototype. Completed stages are not government approval.",
+  dashboardProgressOverview: "Status overview",
+  dashboardJourneyTitle: "Progress timeline",
+  dashboardJourneyLead: "The stages of your preparation. A completed stage is not an official approval.",
   dashboardJourneyProfileCreated: "Profile Created",
   dashboardJourneyProfileCompleted: "Profile Completed",
   dashboardJourneyEligibilityChecked: "Eligibility Checked",
@@ -1142,9 +1142,9 @@ export const en: Messages = {
       ? "You are tracking 1 scheme in this research prototype."
       : `You are tracking ${count} schemes in this research prototype.`,
   adminNav: "Administration",
-  adminTitle: "Admin Overview",
+  adminTitle: "Operations overview",
   adminLead:
-    "Monitor registered users, supporting documents, and existing Hybrid Rule + ML predictions. Document review does not change eligibility.",
+    "Registered accounts, supporting documents, and hybrid eligibility results. A document review does not change an eligibility result.",
   adminLoading: "Loading administrator data...",
   adminOverview: "Overview",
   adminUsers: "Users",
@@ -1191,7 +1191,7 @@ export const en: Messages = {
   adminConsole: "Admin Console",
   adminConsoleRole: "Administrator",
   adminEnvironment: "Academic research prototype",
-  adminOverviewNav: "Admin Overview",
+  adminOverviewNav: "Operations",
   adminSectionOverview: "Workspace",
   adminSectionManagement: "Workspace",
   adminSectionAnalytics: "Monitoring & Evaluation",

@@ -23,7 +23,7 @@ export function BrandMark({
         } shadow-sm`}
         aria-hidden="true"
       >
-        <ShieldIcon />
+        <ShieldIcon width={24} height={24} />
       </span>
       <span className="min-w-0">
         <span className="block font-display text-[20px] font-extrabold leading-tight tracking-tight">

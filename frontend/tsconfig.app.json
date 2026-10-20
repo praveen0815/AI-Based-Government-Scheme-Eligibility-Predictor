@@ -18,7 +18,6 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "baseUrl": ".",
     "paths": {
       "@pages": ["./src/routing/pages.lazy.tsx"]
     }

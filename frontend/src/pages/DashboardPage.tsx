@@ -522,7 +522,7 @@ export function DashboardPage() {
               </h2>
               <p className="mt-2 text-[17px] text-ink-500">{t.dashboardJourneyLead}</p>
             </div>
-            <ol className="grid gap-4 md:grid-cols-6">
+            <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {snapshot.journey.map((step, index) => (
                 <li key={step.key} className="relative flex flex-col gap-3">
                   <div className="flex items-center gap-3">
@@ -538,7 +538,7 @@ export function DashboardPage() {
                       {index + 1}
                     </span>
                     {index < snapshot.journey.length - 1 ? (
-                      <span className="hidden h-px flex-1 bg-line md:block" aria-hidden="true" />
+                      <span className="hidden h-px flex-1 bg-line lg:block" aria-hidden="true" />
                     ) : null}
                   </div>
                   <div>

@@ -306,7 +306,7 @@ export function DocumentScannerPage() {
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                   <p className="text-[17px] font-semibold text-ink-900">{fieldLabel(field.name, t)}</p>
                   <span
-                    className={`rounded-full px-3 py-1 text-[13px] font-semibold ${
+                    className={`rounded-full px-3 py-1.5 text-[15px] font-semibold ${
                       field.clarity === "extracted"
                         ? "bg-emerald-50 text-emerald-800"
                         : field.clarity === "unclear"

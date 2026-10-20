@@ -28,41 +28,43 @@
 
 .citizen-portal,
 html[data-citizen-theme="dark"] .citizen-portal {
-  --citizen-bg: #1c1f24;
-  --citizen-chrome: #262a31;
-  --citizen-card: #2c3138;
-  --citizen-card-soft: #343a42;
-  --citizen-text: #f6f3ec;
-  --citizen-muted: #c4bdb2;
-  --citizen-faint: #9c958a;
-  --citizen-line: rgb(246 243 236 / 0.1);
-  --citizen-gold: #e2c98a;
-  --citizen-gold-fill: #c6a15a;
-  --citizen-gold-deep: #b89245;
-  --citizen-gold-ink: #1c1914;
-  --sw-canvas: 28 31 36;
-  --sw-surface: 44 49 56;
-  --sw-sage: 52 58 66;
-  --sw-line: 78 72 62;
-  --sw-line-strong: #6d6558;
-  --sw-ink-900: 246 243 236;
-  --sw-ink-700: 214 208 196;
-  --sw-ink-500: 184 176 164;
-  --sw-action: 198 161 90;
-  --sw-action-hover: 176 140 72;
-  --sw-accent: 198 161 90;
+  --citizen-bg: #0e141b;
+  --citizen-chrome: #141c26;
+  --citizen-card: #1a2430;
+  --citizen-card-soft: #223041;
+  --citizen-text: #eef3f8;
+  --citizen-muted: #b7c3d1;
+  --citizen-faint: #8b9aab;
+  --citizen-line: rgb(238 243 248 / 0.12);
+  --citizen-accent-rgb: 142 183 230;
+  --citizen-gold: #c5daf5;
+  --citizen-gold-fill: #3d7ab5;
+  --citizen-gold-deep: #2f6598;
+  --citizen-gold-ink: #f7fbff;
+  --sw-canvas: 14 20 27;
+  --sw-surface: 26 36 48;
+  --sw-sage: 34 48 65;
+  --sw-line: 58 74 94;
+  --sw-line-strong: #4d6278;
+  --sw-ink-900: 238 243 248;
+  --sw-ink-700: 199 210 222;
+  --sw-ink-500: 160 174 190;
+  --sw-action: 61 122 181;
+  --sw-action-hover: 47 101 152;
+  --sw-accent: 142 183 230;
   --sw-success: 126 176 142;
   --sw-warning: 212 168 86;
   --sw-danger: 224 138 128;
-  --sw-navy-950: 28 31 36;
-  --sw-navy-900: 38 42 49;
-  --sw-navy-800: 44 49 56;
-  --sw-navy-700: 52 58 66;
-  --sw-navy-600: 62 68 76;
+  --sw-navy-950: 14 20 27;
+  --sw-navy-900: 20 28 38;
+  --sw-navy-800: 26 36 48;
+  --sw-navy-700: 34 48 65;
+  --sw-navy-600: 48 66 88;
   --sw-shadow-card: 0 10px 28px rgb(0 0 0 / 0.22);
   --sw-shadow-lift: 0 16px 36px rgb(0 0 0 / 0.28);
-  --sw-shadow-inset: inset 0 0 0 1px rgb(246 243 236 / 0.08);
+  --sw-shadow-inset: inset 0 0 0 1px rgb(238 243 248 / 0.08);
   color-scheme: dark;
+  font-family: "Source Sans 3", Inter, "Segoe UI", sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
   background: var(--citizen-bg);
@@ -70,40 +72,41 @@ html[data-citizen-theme="dark"] .citizen-portal {
 }
 
 html[data-citizen-theme="light"] .citizen-portal {
-  --citizen-bg: #f6f3ec;
-  --citizen-chrome: #fbf8f2;
-  --citizen-card: #fffcf7;
-  --citizen-card-soft: #f3eee4;
-  --citizen-text: #1c1914;
-  --citizen-muted: #5c564c;
-  --citizen-faint: #746d62;
-  --citizen-line: #e4dccf;
-  --citizen-gold: #6f5420;
-  --citizen-gold-fill: #c6a15a;
-  --citizen-gold-deep: #b89245;
-  --citizen-gold-ink: #1c1914;
-  --sw-canvas: 246 243 236;
-  --sw-surface: 255 252 247;
-  --sw-sage: 243 238 228;
-  --sw-line: 228 220 207;
-  --sw-line-strong: #d2c8b8;
-  --sw-ink-900: 28 25 20;
-  --sw-ink-700: 68 62 52;
-  --sw-ink-500: 94 88 78;
-  --sw-action: 141 107 47;
-  --sw-action-hover: 116 86 34;
-  --sw-accent: 141 107 47;
+  --citizen-bg: #f3f6f9;
+  --citizen-chrome: #ffffff;
+  --citizen-card: #ffffff;
+  --citizen-card-soft: #eef3f8;
+  --citizen-text: #122033;
+  --citizen-muted: #4b5d73;
+  --citizen-faint: #5e7086;
+  --citizen-line: #d5dee8;
+  --citizen-accent-rgb: 29 78 137;
+  --citizen-gold: #1d4e89;
+  --citizen-gold-fill: #1d4e89;
+  --citizen-gold-deep: #163a68;
+  --citizen-gold-ink: #ffffff;
+  --sw-canvas: 243 246 249;
+  --sw-surface: 255 255 255;
+  --sw-sage: 238 243 248;
+  --sw-line: 213 222 232;
+  --sw-line-strong: #c3d0de;
+  --sw-ink-900: 18 32 51;
+  --sw-ink-700: 55 72 92;
+  --sw-ink-500: 75 93 115;
+  --sw-action: 29 78 137;
+  --sw-action-hover: 22 58 104;
+  --sw-accent: 29 78 137;
   --sw-success: 22 122 74;
   --sw-warning: 146 96 20;
   --sw-danger: 168 42 42;
-  --sw-navy-950: 28 25 20;
-  --sw-navy-900: 48 42 32;
-  --sw-navy-800: 255 252 247;
-  --sw-navy-700: 243 238 228;
-  --sw-navy-600: 232 224 210;
-  --sw-shadow-card: 0 8px 24px rgb(48 40 24 / 0.06);
-  --sw-shadow-lift: 0 14px 32px rgb(48 40 24 / 0.1);
-  --sw-shadow-inset: inset 0 0 0 1px rgb(48 40 24 / 0.06);
+  --sw-navy-950: 18 32 51;
+  --sw-navy-900: 18 42 72;
+  --sw-navy-800: 255 255 255;
+  --sw-navy-700: 238 243 248;
+  --sw-navy-600: 226 234 242;
+  --sw-shadow-card: 0 8px 24px rgb(18 32 51 / 0.06);
+  --sw-shadow-lift: 0 14px 32px rgb(18 32 51 / 0.1);
+  --sw-shadow-inset: inset 0 0 0 1px rgb(18 32 51 / 0.06);
   color-scheme: light;
   background: var(--citizen-bg);
   color: var(--citizen-text);
@@ -112,8 +115,8 @@ html[data-citizen-theme="light"] .citizen-portal {
 html.citizen-boot:has(.citizen-portal),
 html.citizen-boot:has(.citizen-portal) body,
 html.citizen-boot:has(.citizen-portal) #root {
-  background: var(--citizen-bg, #1c1f24);
-  color: var(--citizen-text, #f6f3ec);
+  background: var(--citizen-bg, #0e141b);
+  color: var(--citizen-text, #eef3f8);
 }
 
 .citizen-sidebar {
@@ -148,18 +151,18 @@ html.citizen-boot:has(.citizen-portal) #root {
 }
 
 .citizen-sidebar-link svg {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
 }
 
 .citizen-sidebar-link-idle:hover {
-  background: rgb(198 161 90 / 0.1);
+  background: rgb(var(--citizen-accent-rgb) / 0.1);
   color: var(--citizen-text);
 }
 
 .citizen-sidebar-link-active {
-  background: rgb(198 161 90 / 0.16);
+  background: rgb(var(--citizen-accent-rgb) / 0.16);
   color: var(--citizen-text);
 }
 
@@ -182,7 +185,7 @@ html.citizen-boot:has(.citizen-portal) #root {
 }
 
 .citizen-sidebar-note-icon {
-  background: rgb(198 161 90 / 0.18);
+  background: rgb(var(--citizen-accent-rgb) / 0.18);
   color: var(--citizen-gold);
 }
 
@@ -242,7 +245,7 @@ html.citizen-boot:has(.citizen-portal) #root {
 }
 
 .citizen-search-input:focus {
-  outline: 2px solid rgb(198 161 90 / 0.55);
+  outline: 2px solid rgb(var(--citizen-accent-rgb) / 0.55);
   outline-offset: 1px;
 }
 
@@ -257,8 +260,8 @@ html.citizen-boot:has(.citizen-portal) #root {
 }
 
 .citizen-search-glyph svg {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
 }
 
 .citizen-search-results {
@@ -285,7 +288,7 @@ html.citizen-boot:has(.citizen-portal) #root {
 }
 
 .citizen-search-results a:hover {
-  background: rgb(198 161 90 / 0.12);
+  background: rgb(var(--citizen-accent-rgb) / 0.12);
 }
 
 .citizen-icon-btn,
@@ -313,8 +316,8 @@ html.citizen-boot:has(.citizen-portal) #root {
 .citizen-icon-btn:hover,
 .citizen-bell:hover,
 .citizen-portal .citizen-logout:hover {
-  background: rgb(198 161 90 / 0.14);
-  border-color: rgb(198 161 90 / 0.45);
+  background: rgb(var(--citizen-accent-rgb) / 0.14);
+  border-color: rgb(var(--citizen-accent-rgb) / 0.45);
 }
 
 .citizen-icon-btn:active,
@@ -376,7 +379,7 @@ html.citizen-boot:has(.citizen-portal) #root {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: rgb(198 161 90 / 0.2);
+  background: rgb(var(--citizen-accent-rgb) / 0.2);
   color: var(--citizen-gold);
 }
 
@@ -395,7 +398,7 @@ html.citizen-boot:has(.citizen-portal) #root {
 .citizen-portal a.dash-panel:hover,
 .citizen-portal a.dash-more-card:hover,
 .citizen-portal .dash-stat:hover {
-  border-color: rgb(198 161 90 / 0.4);
+  border-color: rgb(var(--citizen-accent-rgb) / 0.4);
   box-shadow: var(--sw-shadow-lift);
   transform: translateY(-2px);
 }
@@ -469,7 +472,16 @@ html.citizen-boot:has(.citizen-portal) #root {
 }
 
 .citizen-portal .nav-label {
-  color: var(--citizen-faint);
+  color: var(--citizen-muted);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+}
+
+.citizen-portal .page-title,
+.citizen-portal .section-title,
+.citizen-portal .card-title,
+.citizen-portal .dash-hero-title {
+  font-family: "Source Serif 4", Georgia, serif;
 }
 
 .citizen-portal .notice-success {
@@ -505,13 +517,13 @@ html.citizen-boot:has(.citizen-portal) #root {
 .citizen-portal .hover\:bg-action-hover:hover,
 .citizen-portal .chip-link-primary:hover,
 .citizen-portal .dash-hero-cta:hover {
-  background: #b89245;
+  background: var(--citizen-gold-deep);
   color: var(--citizen-gold-ink);
   filter: none;
 }
 
 .citizen-portal .chip-link:hover {
-  background: rgb(198 161 90 / 0.16);
+  background: rgb(var(--citizen-accent-rgb) / 0.16);
   color: var(--citizen-text);
 }
 
@@ -599,9 +611,11 @@ html[data-citizen-theme="light"] .citizen-portal .text-red-800 {
 
 .citizen-portal .dash-hero {
   border: 1px solid var(--citizen-line);
-  border-radius: 16px;
-  padding: 1.35rem 1.25rem 1.45rem;
-  background: var(--citizen-card);
+  border-radius: 20px;
+  padding: 1.7rem 1.55rem 1.8rem;
+  background:
+    linear-gradient(135deg, rgb(var(--citizen-accent-rgb) / 0.14), transparent 42%),
+    var(--citizen-card);
   box-shadow: var(--sw-shadow-card);
   animation: portal-reveal 0.5s 0.08s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -625,36 +639,37 @@ html[data-citizen-theme="light"] .citizen-portal .text-red-800 {
 
 .citizen-portal .dash-hero-eyebrow {
   color: var(--citizen-gold);
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .citizen-portal .dash-hero-title {
-  margin: 0.35rem 0 0;
-  max-width: 22ch;
+  margin: 0.4rem 0 0;
+  max-width: 18ch;
   color: var(--citizen-text);
-  font-size: clamp(1.75rem, 2.2vw, 2rem);
-  font-weight: 750;
-  letter-spacing: -0.035em;
-  line-height: 1.12;
+  font-size: clamp(2rem, 2.8vw, 2.55rem);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
 }
 
 .citizen-portal .dash-hero-kicker {
-  margin: 0.55rem 0 0;
+  margin: 0.65rem 0 0;
   max-width: 42rem;
   color: var(--citizen-text);
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   font-weight: 650;
+  line-height: 1.4;
 }
 
 .citizen-portal .dash-hero-lead {
-  max-width: 40rem;
+  max-width: 42rem;
   margin-top: 0.55rem;
   color: var(--citizen-muted);
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.0625rem;
+  line-height: 1.65;
 }
 
 .citizen-portal .dash-hero-actions {
@@ -686,14 +701,14 @@ html[data-citizen-theme="light"] .citizen-portal .text-red-800 {
 }
 
 .citizen-portal .dash-hero-cta:hover {
-  background: #b89245;
+  background: var(--citizen-gold-deep);
   color: var(--citizen-gold-ink);
 }
 
 .citizen-portal .dash-voice-btn {
   align-self: flex-end;
-  border: 1px solid rgb(198 161 90 / 0.55);
-  background: rgb(198 161 90 / 0.14);
+  border: 1px solid rgb(var(--citizen-accent-rgb) / 0.55);
+  background: rgb(var(--citizen-accent-rgb) / 0.14);
   color: var(--citizen-text);
   white-space: nowrap;
 }
@@ -704,8 +719,8 @@ html[data-citizen-theme="light"] .citizen-portal .text-red-800 {
 }
 
 .citizen-portal .dash-voice-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
 }
 
 .citizen-portal .dash-stat-grid {
@@ -728,13 +743,20 @@ html[data-citizen-theme="light"] .citizen-portal .text-red-800 {
 
 .citizen-portal .dash-stat-icon {
   display: inline-flex;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.75rem;
+  height: 2.75rem;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
-  background: rgb(198 161 90 / 0.16);
+  border-radius: 12px;
+  background: rgb(var(--citizen-accent-rgb) / 0.16);
   color: var(--citizen-gold);
+}
+
+.citizen-portal .dash-stat-icon svg,
+.citizen-portal .dash-action-icon svg,
+.citizen-portal .dash-launch-icon svg {
+  width: 22px;
+  height: 22px;
 }
 
 .citizen-portal .dash-stat-value {
@@ -748,12 +770,13 @@ html[data-citizen-theme="light"] .citizen-portal .text-red-800 {
 .citizen-portal .dash-stat-label {
   margin-top: auto;
   color: var(--citizen-muted);
-  font-size: 0.95rem;
+  font-size: 1rem;
+  line-height: 1.4;
 }
 
 .citizen-portal .dash-action-icon {
   border-radius: 10px;
-  background: rgb(198 161 90 / 0.16);
+  background: rgb(var(--citizen-accent-rgb) / 0.16);
   color: var(--citizen-gold);
 }
 
@@ -774,19 +797,20 @@ html[data-citizen-theme="light"] .citizen-portal .text-red-800 {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  color: var(--citizen-faint);
-  font-size: 0.82rem;
+  color: var(--citizen-muted);
+  font-size: 0.9375rem;
+  line-height: 1.4;
 }
 
 .citizen-portal .dash-status {
   display: inline-flex;
   align-items: center;
-  min-height: 1.4rem;
-  padding: 0 0.55rem;
+  min-height: 1.75rem;
+  padding: 0.15rem 0.7rem;
   border-radius: 999px;
   background: rgb(126 176 142 / 0.16);
   color: var(--citizen-text);
-  font-size: 0.72rem;
+  font-size: 0.875rem;
   font-weight: 700;
 }
 
@@ -798,10 +822,10 @@ html[data-citizen-theme="light"] .citizen-portal .text-red-800 {
 }
 
 .citizen-portal .dash-launch-item p {
-  margin: 0.3rem 0 0;
+  margin: 0.35rem 0 0;
   color: var(--citizen-muted);
-  font-size: 0.92rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.55;
 }
 
 .citizen-portal .dash-launch-icon {
@@ -823,8 +847,8 @@ html[data-citizen-theme="light"] .citizen-portal .text-red-800 {
 }
 
 .citizen-portal .dash-activity-date {
-  color: var(--citizen-faint);
-  font-size: 0.82rem;
+  color: var(--citizen-muted);
+  font-size: 0.9375rem;
 }
 
 .citizen-portal .dash-activity-title {
@@ -1023,8 +1047,8 @@ html[data-citizen-theme="light"] .citizen-sidebar-link-active::before {
 .citizen-portal .uae-rail-glow {
   height: 92px;
   background:
-    radial-gradient(circle at 72% 0%, rgb(232 184 92 / 0.85), transparent 58%),
-    linear-gradient(180deg, rgb(198 161 90 / 0.18), transparent);
+    radial-gradient(circle at 72% 0%, rgb(var(--citizen-accent-rgb) / 0.55), transparent 58%),
+    linear-gradient(180deg, rgb(var(--citizen-accent-rgb) / 0.18), transparent);
 }
 
 .citizen-portal .uae-rail-body {
@@ -1036,7 +1060,7 @@ html[data-citizen-theme="light"] .citizen-sidebar-link-active::before {
 }
 
 .citizen-portal .uae-rail-kicker {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1067,7 +1091,7 @@ html[data-citizen-theme="light"] .citizen-sidebar-link-active::before {
 }
 
 .citizen-portal .uae-prompt:hover {
-  border-color: rgb(198 161 90 / 0.7);
+  border-color: rgb(var(--citizen-accent-rgb) / 0.7);
 }
 
 .citizen-portal .uae-mic {
@@ -1082,12 +1106,12 @@ html[data-citizen-theme="light"] .citizen-sidebar-link-active::before {
   font-size: 0;
   background: var(--citizen-gold-fill);
   color: var(--citizen-gold-ink);
-  box-shadow: 0 0 0 8px rgb(198 161 90 / 0.18);
+  box-shadow: 0 0 0 8px rgb(var(--citizen-accent-rgb) / 0.18);
 }
 
 .citizen-portal .uae-mic svg {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
 }
 
 @media (min-width: 900px) {
@@ -1099,7 +1123,7 @@ html[data-citizen-theme="light"] .citizen-sidebar-link-active::before {
   .citizen-portal .uae-bento .dash-stat:nth-child(3) {
     grid-column: 3;
     grid-row: 1 / span 2;
-    background: rgb(198 161 90 / 0.16);
+    background: rgb(var(--citizen-accent-rgb) / 0.16);
   }
 
   .citizen-portal .uae-bento .dash-stat:nth-child(4) {

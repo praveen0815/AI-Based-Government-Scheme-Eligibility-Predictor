@@ -214,7 +214,7 @@ describe("authentication pages", () => {
   it("sends an already signed-in administrator from login to the admin dashboard", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404 }));
     renderAuthenticatedApp(["/login"], { user: { ...TEST_USER, is_admin: true } });
-    expect(await screen.findByRole("heading", { name: "Admin Overview" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Operations overview" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Welcome back, Test User" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /^My Wallet$/ })).not.toBeInTheDocument();
   });

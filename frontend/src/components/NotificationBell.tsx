@@ -42,7 +42,7 @@ export function NotificationBell({
     >
       <BellIcon />
       {unreadCount > 0 ? (
-        <span className="absolute -right-1 -top-1 inline-flex min-w-6 items-center justify-center rounded-full bg-action px-1.5 py-0.5 text-[12px] font-bold text-white">
+        <span className="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-action px-1.5 py-0.5 text-[13px] font-bold leading-none text-white">
           {unreadCount > 99 ? "99+" : unreadCount}
         </span>
       ) : null}

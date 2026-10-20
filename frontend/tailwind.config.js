@@ -46,8 +46,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["Inter", "Manrope", "Segoe UI", "system-ui", "sans-serif"],
-        display: ["Manrope", "Inter", "Segoe UI", "system-ui", "sans-serif"],
+        sans: ["Source Sans 3", "Inter", "Segoe UI", "system-ui", "sans-serif"],
+        display: ["Source Serif 4", "Source Sans 3", "Georgia", "serif"],
       },
       boxShadow: {
         card: "var(--sw-shadow-card)",
