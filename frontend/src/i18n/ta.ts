@@ -2,7 +2,7 @@ import type { Messages } from "./types";
 
 export const ta: Messages = {
   brandName: "Scheme Predictor",
-  brandSubtitle: "AI-powered scheme discovery",
+  brandSubtitle: "தகுதி வழிகாட்டல் பணிப்பகுதி",
   productName: "SchemeWise AI",
   productTagline: "அரசு திட்டக் கண்டறிதல் மற்றும் தகுதி ஆராய்ச்சி தளம்",
   researchBadge: "கல்வி ஆராய்ச்சி முன்மாதிரி",
@@ -514,7 +514,7 @@ export const ta: Messages = {
   navSectionResearch: "ஆராய்ச்சி",
   navSectionPreferences: "விருப்பங்கள்",
   navSectionAuth: "கணக்கு",
-  sidebarTagline: "AI-powered scheme discovery",
+  sidebarTagline: "தகுதி வழிகாட்டல் பணிப்பகுதி",
   guestUser: "விருந்தினர்",
   notSignedIn: "உள்நுழையவில்லை",
   notifications: "அறிவிப்புகள்",
@@ -537,16 +537,16 @@ export const ta: Messages = {
   homeDisclaimer:
     "இந்த தளம் ஒரு கல்வி ஆராய்ச்சி முன்மாதிரி. முன்னறிவிப்புகள் மாதிரி பகுப்பாய்வு மற்றும் ஆவணப்படுத்தப்பட்ட விதிகளை அடிப்படையாகக் கொண்டவை. இது அரசு தளம் அல்ல. தகுதி உறுதிப்படுத்தப்படவில்லை. விண்ணப்பிக்கும் முன் அதிகாரப்பூர்வ ஆதாரங்களுடன் சரிபார்க்கவும்.",
   dashboardWelcome: (name) => `மீண்டும் வரவேற்கிறோம், ${name}`,
-  dashboardHeroTitle: "Scheme Predictor — உங்கள் திட்ட உதவி மையம்",
+  dashboardHeroTitle: "உங்கள் தகுதி முன்னேற்றம், ஒரே பார்வையில்",
   dashboardLead:
-    "உங்கள் விவரம், தகுதிச் சரிபார்ப்புகள், ஆவணத் தயாரிப்பு மற்றும் விண்ணப்பத் தயாரிப்பு நிலையை ஒரே இடத்தில் கண்காணிக்கவும். இது ஆராய்ச்சி முன்மாதிரி, அரசு தளம் அல்ல.",
+    "உங்கள் விவரம், தகுதி முடிவுகள், ஆவணத் தயாரிப்பு மற்றும் விண்ணப்பத் தயார்நிலையை மதிப்பாய்வு செய்யுங்கள். இவை ஆராய்ச்சி மதிப்பீடுகள்; அதிகாரப்பூர்வ அரசு முடிவு அல்ல.",
   dashboardLoading: "உங்கள் முகப்பு பலகை ஏற்றப்படுகிறது...",
   dashboardProfileNotCreated: "உங்கள் விவரம் இன்னும் உருவாக்கப்படவில்லை.",
   dashboardCreateProfileLead:
     "தனிப்பயன் திட்டப் பரிந்துரைகளுக்கு ஒரு சமூக-பொருளாதார பணப்பை தேவை. தொடங்க உங்கள் விவரத்தை உருவாக்குங்கள்.",
   dashboardCreateMyProfile: "என் விவரத்தை உருவாக்கு",
   dashboardCreateYourProfile: "உங்கள் விவரத்தை உருவாக்குங்கள்",
-  dashboardQuickActions: "விரைவு தொடக்கம்",
+  dashboardQuickActions: "முதன்மை செயல்கள்",
   dashboardStatusActive: "செயலில்",
   dashboardCompareNeedsRecommendations:
     "ஒப்பீட்டுக்கு முந்தைய பரிந்துரையில் தகுதிபெற வாய்ப்புள்ள திட்டங்கள் தேவை.",
@@ -566,9 +566,9 @@ export const ta: Messages = {
   dashboardMoreActions: "கூடுதல் செயல்கள்",
   dashboardBrowseSchemes: "திட்டங்களை உலாவு",
   dashboardPreparingReport: "உங்கள் PDF அறிக்கை தயாராகிறது...",
-  dashboardProgressOverview: "விரைவு புள்ளிவிவரங்கள்",
-  dashboardJourneyTitle: "குடிமக்கள் பயணம்",
-  dashboardJourneyLead: "இந்த ஆராய்ச்சி முன்மாதிரியில் உங்கள் தயாரிப்புப் பாதை. முடிந்த நிலைகள் அரசு ஒப்புதல் அல்ல.",
+  dashboardProgressOverview: "நிலை மேலோட்டம்",
+  dashboardJourneyTitle: "முன்னேற்ற வரிசை",
+  dashboardJourneyLead: "தயாரிப்பின் நிலைகள். ஒரு நிலை முடிந்தது என்பது அதிகாரப்பூர்வ ஒப்புதல் அல்ல.",
   dashboardJourneyProfileCreated: "விவரம் உருவாக்கப்பட்டது",
   dashboardJourneyProfileCompleted: "விவரம் நிறைவு",
   dashboardJourneyEligibilityChecked: "தகுதி சரிபார்க்கப்பட்டது",
@@ -1152,9 +1152,9 @@ export const ta: Messages = {
       ? "இந்த ஆராய்ச்சி முன்மாதிரியில் 1 திட்டத்தைக் கண்காணிக்கிறீர்கள்."
       : `இந்த ஆராய்ச்சி முன்மாதிரியில் ${count} திட்டங்களைக் கண்காணிக்கிறீர்கள்.`,
   adminNav: "நிர்வாகம்",
-  adminTitle: "நிர்வாக மேலோட்டம்",
+  adminTitle: "செயல்பாட்டு மேலோட்டம்",
   adminLead:
-    "பதிவு செய்யப்பட்ட பயனர்கள், ஆதார ஆவணங்கள் மற்றும் ஏற்கனவே உள்ள இணை விதி + இயந்திரக் கற்றல் முன்னறிவிப்புகளைக் கண்காணிக்கவும். ஆவண மதிப்பாய்வு தகுதியை மாற்றாது.",
+    "பதிவு கணக்குகள், ஆதார ஆவணங்கள் மற்றும் இணைத் தகுதி முடிவுகள். ஆவண மதிப்பாய்வு தகுதி முடிவை மாற்றாது.",
   adminLoading: "நிர்வாகத் தரவு ஏற்றப்படுகிறது...",
   adminOverview: "மேலோட்டம்",
   adminUsers: "பயனர்கள்",
@@ -1201,7 +1201,7 @@ export const ta: Messages = {
   adminConsole: "நிர்வாக முனையம்",
   adminConsoleRole: "நிர்வாகி",
   adminEnvironment: "கல்வி ஆராய்ச்சி முன்மாதிரி",
-  adminOverviewNav: "நிர்வாக மேலோட்டம்",
+  adminOverviewNav: "செயல்பாடுகள்",
   adminSectionOverview: "பணிப்பகுதி",
   adminSectionManagement: "பணிப்பகுதி",
   adminSectionAnalytics: "கண்காணிப்பு மற்றும் மதிப்பீடு",

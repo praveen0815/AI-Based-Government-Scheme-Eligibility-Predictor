@@ -73,7 +73,7 @@
   }
 
   .nav-label {
-    @apply text-[13px] font-bold uppercase tracking-[0.16em] text-[#8A958F];
+    @apply text-[14px] font-semibold uppercase tracking-[0.08em] text-ink-500;
   }
 
   .soft-link {

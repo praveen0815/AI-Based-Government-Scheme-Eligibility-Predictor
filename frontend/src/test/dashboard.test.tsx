@@ -158,7 +158,7 @@ describe("user dashboard", () => {
     expect(document.querySelector(".dash-hero")).toBeInTheDocument();
     expect(document.querySelector(".dash-voice-btn")).toHaveAttribute("href", "/voice-assistant");
     expect(document.querySelectorAll(".dash-voice-btn")).toHaveLength(1);
-    expect(screen.getByText("Scheme Predictor — your scheme command center")).toBeInTheDocument();
+    expect(screen.getByText("Your eligibility progress, in one view")).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "Scheme Assistant" })[0]).toHaveAttribute("href", "/scheme-assistant");
     expect(screen.getAllByRole("link", { name: "Voice Assistant" })[0]).toHaveAttribute("href", "/voice-assistant");
     expect(screen.getByRole("button", { name: "Switch to light mode" })).toBeInTheDocument();
@@ -195,8 +195,8 @@ describe("user dashboard", () => {
     renderAuthenticatedApp(["/dashboard"]);
     expect(await screen.findByText("2 predicted-eligible schemes")).toBeInTheDocument();
     expect(screen.getAllByText(SAMPLE_SCHEME.scheme_name).length).toBeGreaterThan(0);
-    expect(screen.getByRole("heading", { name: "Quick Stats" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Citizen journey" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Status overview" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Progress timeline" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Preparation summary" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "History" })).toBeInTheDocument();
     expect(screen.getByText("Recent activity")).toBeInTheDocument();
@@ -332,7 +332,7 @@ describe("user dashboard", () => {
     });
     vi.stubGlobal("fetch", fetchMock);
     renderAuthenticatedApp(["/dashboard"]);
-    expect(await screen.findByRole("heading", { name: "Citizen journey" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Progress timeline" })).toBeInTheDocument();
     expect(screen.getByText("Profile Created")).toBeInTheDocument();
     expect(screen.getByText("Profile Completed")).toBeInTheDocument();
     expect(screen.getByText("Eligibility Checked")).toBeInTheDocument();
