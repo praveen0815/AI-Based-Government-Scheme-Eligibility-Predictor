@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ErrorState } from "../components/ErrorState";
 import { LoadingState } from "../components/LoadingState";
 import { ResearchNotice } from "../components/ResearchNotice";
+import { SchemeRequirementsPanel } from "../components/SchemeRequirementsPanel";
 import { Badge } from "../components/ui/Badge";
 import { Button } from "../components/ui/Button";
 import { EmptyState } from "../components/ui/EmptyState";
@@ -275,6 +276,10 @@ export function SchemeDetailPage() {
           missing={t.catalogMissing}
           unverifiedLabel={t.needsVerification}
         />
+      </div>
+
+      <div className="card-surface p-6 md:p-8">
+        <SchemeRequirementsPanel schemeId={scheme.scheme_id} level={2} />
       </div>
 
       {actionError ? <ErrorState message={actionError} /> : null}

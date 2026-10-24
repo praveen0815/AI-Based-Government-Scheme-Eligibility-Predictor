@@ -1,13 +1,24 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ErrorState } from "../components/ErrorState";
 import { LoadingState } from "../components/LoadingState";
+import { ReadinessEvaluationDetails } from "../components/ReadinessEvaluationDetails";
 import { ResearchNotice } from "../components/ResearchNotice";
 import { EmptyState } from "../components/ui/EmptyState";
 import { PageHeader } from "../components/ui/PageHeader";
 import { useI18n } from "../context/LanguageContext";
-import { ApiError, fetchReadinessProgress, updateSchemeReadiness } from "../services/api";
-import type { ReadinessProgressResponse, ReadinessStage, SchemeReadiness } from "../types/api";
+import {
+  ApiError,
+  fetchReadinessEvaluations,
+  fetchReadinessProgress,
+  updateSchemeReadiness,
+} from "../services/api";
+import type {
+  ReadinessProgressResponse,
+  ReadinessStage,
+  SchemeReadiness,
+  SchemeReadinessEvaluation,
+} from "../types/api";
 
 const STAGES: ReadinessStage[] = [
   "not_started",
@@ -51,6 +62,23 @@ export function ReadinessPage() {
   const [error, setError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [evaluations, setEvaluations] = useState<SchemeReadinessEvaluation[] | null>(null);
+  const [evaluationError, setEvaluationError] = useState<string | null>(null);
+
+  const loadEvaluations = useCallback(async () => {
+    setEvaluationError(null);
+    try {
+      const response = await fetchReadinessEvaluations();
+      setEvaluations(Array.isArray(response?.schemes) ? response.schemes : []);
+    } catch (caught) {
+      setEvaluations([]);
+      setEvaluationError(caught instanceof ApiError ? caught.message : t.networkError);
+    }
+  }, [t]);
+
+  useEffect(() => {
+    void loadEvaluations();
+  }, [loadEvaluations]);
 
   useEffect(() => {
     let cancelled = false;
@@ -85,6 +113,7 @@ export function ReadinessPage() {
         };
       });
       setSummary(await fetchReadinessProgress());
+      void loadEvaluations();
     } catch (caught) {
       setSaveError(caught instanceof ApiError ? caught.message : t.readinessSaveFailed);
     } finally {
@@ -98,6 +127,49 @@ export function ReadinessPage() {
     <div className="mx-auto max-w-5xl page-stack">
       <PageHeader title={t.readinessTitle} description={t.readinessLead} />
       <ResearchNotice compact />
+
+      <section className="space-y-4" aria-labelledby="readiness-evaluation-title">
+        <div>
+          <h2 id="readiness-evaluation-title" className="section-title">
+            {t.evalTitle}
+          </h2>
+          <p className="mt-2 text-[16px] leading-relaxed text-ink-500">{t.evalLead}</p>
+        </div>
+        {evaluations === null ? <LoadingState message={t.evalLoading} /> : null}
+        {evaluationError ? <ErrorState message={evaluationError} onRetry={() => void loadEvaluations()} /> : null}
+        {evaluations !== null && !evaluationError && evaluations.length === 0 ? (
+          <p className="text-[16px] text-ink-500">{t.evalEmpty}</p>
+        ) : null}
+        {evaluations && evaluations.length > 0 ? (
+          <div className="grid gap-5">
+            {evaluations.map((evaluation) => (
+              <article key={evaluation.scheme_id} className="card-surface space-y-4 p-6 md:p-8">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <h3 className="card-title">
+                      <Link to={`/schemes/${evaluation.scheme_id}`} className="hover:text-action hover:underline">
+                        {evaluation.scheme_name}
+                      </Link>
+                    </h3>
+                    <p className="mt-1 text-[15px] text-ink-500">{evaluation.scheme_id}</p>
+                  </div>
+                  {evaluation.official_source_url ? (
+                    <a
+                      href={evaluation.official_source_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center rounded-[12px] border border-line px-4 py-2.5 text-[16px] font-semibold text-ink-900 hover:bg-sage"
+                    >
+                      {t.visitOfficialWebsite}
+                    </a>
+                  ) : null}
+                </div>
+                <ReadinessEvaluationDetails evaluation={evaluation} headingTag="h4" />
+              </article>
+            ))}
+          </div>
+        ) : null}
+      </section>
 
       {loading ? <LoadingState message={t.readinessLoading} /> : null}
       {error ? <ErrorState message={error} /> : null}

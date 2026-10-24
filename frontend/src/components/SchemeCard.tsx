@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { useI18n } from "../context/LanguageContext";
 import type { RecommendedScheme } from "../types/api";
 import { displayCatalogText, isUnverified } from "../utils/catalogText";
+import { SchemeRequirementsPanel } from "./SchemeRequirementsPanel";
 import { Badge } from "./ui/Badge";
 import { Button } from "./ui/Button";
 import { WhyThisScheme } from "./WhyThisScheme";
@@ -39,6 +40,7 @@ export function SchemeCard({
 }) {
   const { language, t } = useI18n();
   const [open, setOpen] = useState(true);
+  const detailsId = useId();
   const reasons = scheme.rule_reasons ?? scheme.rule_result?.reasons ?? [];
   const status =
     outcome === "not_eligible"
@@ -109,7 +111,13 @@ export function SchemeCard({
         >
           {t.viewDetails}
         </Link>
-        <Button type="button" variant="secondary" onClick={() => setOpen((value) => !value)}>
+        <Button
+          type="button"
+          variant="secondary"
+          aria-expanded={open}
+          aria-controls={detailsId}
+          onClick={() => setOpen((value) => !value)}
+        >
           {open ? t.hideDetails : t.viewScheme}
         </Button>
         {scheme.official_source_url ? (
@@ -143,7 +151,7 @@ export function SchemeCard({
       </div>
 
       {open ? (
-        <div className="mt-6 space-y-5 border-t border-line pt-6">
+        <div id={detailsId} className="mt-6 space-y-5 border-t border-line pt-6">
           <section>
             <h4 className="text-[16px] font-semibold text-ink-900">{t.aboutScheme}</h4>
             <CatalogValue value={scheme.description} missing={t.catalogMissing} unverifiedLabel={t.needsVerification} />
@@ -164,6 +172,9 @@ export function SchemeCard({
               unverifiedLabel={t.needsVerification}
             />
           </section>
+          <div className="border-t border-line pt-5">
+            <SchemeRequirementsPanel schemeId={scheme.scheme_id} />
+          </div>
           <p className="text-[15px] text-ink-500">{t.probabilityExplanation}</p>
         </div>
       ) : null}

@@ -33,6 +33,7 @@ export interface RuleResult {
   reasons: string[];
   rule_status?: string | null;
   verification_notes?: string | null;
+  unverified_items?: string[];
 }
 
 export interface RecommendedScheme {
@@ -368,6 +369,156 @@ export interface ReadinessProgressResponse {
   schemes: SchemeReadiness[];
   schemes_being_prepared: number;
   overall_progress_percent: number;
+  disclaimer: string;
+}
+
+export type RequirementVerificationStatus = "verified" | "unverified" | "missing";
+export type ConditionBasis = "official_source" | "department_convention" | "project_interpretation";
+export type DocumentRequirementLevel = "mandatory" | "optional" | "unspecified";
+export type DocumentListStatus = "listed" | "missing";
+
+export interface RequirementCondition {
+  key: string;
+  label: string;
+  profile_fields: string[];
+  verification_status: RequirementVerificationStatus;
+  basis: ConditionBasis;
+  note: string | null;
+}
+
+export interface InformationNotChecked {
+  key: string;
+  label: string;
+  verification_status: RequirementVerificationStatus;
+  note: string | null;
+}
+
+export interface RequirementDocument {
+  key: string;
+  label: string;
+  requirement: DocumentRequirementLevel;
+  verification_status: RequirementVerificationStatus;
+  source_url: string | null;
+  last_verified_at: string | null;
+}
+
+export interface ApplicationStep {
+  key: string;
+  order: number;
+  text: string;
+  verification_status: RequirementVerificationStatus;
+  source_url: string | null;
+  last_verified_at: string | null;
+}
+
+export interface OfficialLink {
+  url: string;
+  origin: "official_source_url" | "eligibility_notes" | "application_method";
+}
+
+export interface SchemeRequirements {
+  scheme_id: string;
+  scheme_name: string;
+  department: string | null;
+  ml_scope: string;
+  rule_evaluated: boolean;
+  rule_status: string | null;
+  conditions: RequirementCondition[];
+  required_profile_fields: string[];
+  information_not_checked: InformationNotChecked[];
+  documents_status: DocumentListStatus;
+  documents: RequirementDocument[];
+  application_steps: ApplicationStep[];
+  official_source_url: string | null;
+  official_links: OfficialLink[];
+  eligibility_notes: string | null;
+  last_checked: string | null;
+  unverified_items: string[];
+  disclaimer: string;
+}
+
+export interface SchemeRequirementsListResponse {
+  scheme_count: number;
+  schemes: SchemeRequirements[];
+  disclaimer: string;
+}
+
+/** Backend order: missing information, ineligible, missing documents, unverified, eligible. */
+export const READINESS_EVALUATION_STATES = [
+  "insufficient_information",
+  "ineligible_under_rules",
+  "missing_mandatory_documents",
+  "unverified_requirements",
+  "eligible_under_rules",
+] as const;
+
+export type ReadinessEvaluationState = (typeof READINESS_EVALUATION_STATES)[number];
+export type EligibilityOutcome = "eligible_under_rules" | "ineligible_under_rules" | "insufficient_information";
+export type ConditionOutcome = "met" | "not_met" | "unknown";
+export type DocumentCitizenStatus = "not_started" | "ready" | "needs_verification";
+
+export interface EvaluatedCondition {
+  key: string;
+  label: string;
+  outcome: ConditionOutcome;
+  rule_reason: string | null;
+  profile_fields: string[];
+  verification_status: string;
+  basis: string;
+  note: string | null;
+}
+
+export interface EvaluatedDocument {
+  key: string;
+  label: string;
+  requirement: string;
+  verification_status: string;
+  citizen_status: DocumentCitizenStatus;
+}
+
+export interface SchemeReadinessEvaluation {
+  scheme_id: string;
+  scheme_name: string;
+  readiness_state: ReadinessEvaluationState;
+  blocking_reasons: string[];
+  eligibility: {
+    outcome: EligibilityOutcome;
+    rule_status: string | null;
+    conditions: EvaluatedCondition[];
+    verification_notes: string | null;
+  };
+  profile: {
+    has_wallet: boolean;
+    required_fields: string[];
+    missing_fields: string[];
+  };
+  documents: {
+    documents_status: string;
+    items: EvaluatedDocument[];
+    mandatory_missing: string[];
+    requirement_level_unspecified: boolean;
+  };
+  unverified_requirements: string[];
+  application_steps: string[];
+  official_source_url: string | null;
+  ml_comparison: {
+    prediction: string;
+    eligible_probability: number;
+    agrees_with_rule: boolean;
+    note: string;
+  } | null;
+  manual_stage: {
+    stage: ReadinessStage | null;
+    consistent_with_evaluation: boolean;
+    note: string | null;
+  };
+  last_checked: string | null;
+  disclaimer: string;
+}
+
+export interface ReadinessEvaluationListResponse {
+  schemes: SchemeReadinessEvaluation[];
+  count: number;
   disclaimer: string;
 }
 

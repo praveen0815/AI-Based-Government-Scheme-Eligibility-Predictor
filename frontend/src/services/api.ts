@@ -16,6 +16,10 @@ import type {
   DocumentProgressResponse,
   InsightsResponse,
   ReadinessProgressResponse,
+  ReadinessEvaluationListResponse,
+  SchemeReadinessEvaluation,
+  SchemeRequirements,
+  SchemeRequirementsListResponse,
   DashboardOverviewResponse,
   ReadinessStage,
   SchemeReadiness,
@@ -577,6 +581,29 @@ export async function updateSchemeReadiness(
     method: "PATCH",
     body: JSON.stringify({ stage }),
   });
+}
+
+export async function fetchReadinessEvaluations(): Promise<ReadinessEvaluationListResponse> {
+  return requestJson<ReadinessEvaluationListResponse>("/api/v1/readiness/evaluation");
+}
+
+export async function fetchSchemeReadinessEvaluation(schemeId: string): Promise<SchemeReadinessEvaluation> {
+  return requestJson<SchemeReadinessEvaluation>(
+    `/api/v1/readiness/evaluation/${encodeURIComponent(schemeId)}`,
+  );
+}
+
+export async function fetchSchemeRequirements(schemeId: string): Promise<SchemeRequirements> {
+  return requestJson<SchemeRequirements>(`/api/v1/schemes/${encodeURIComponent(schemeId)}/requirements`);
+}
+
+export async function fetchSchemeRequirementsList(mlScope?: string): Promise<SchemeRequirementsListResponse> {
+  const suffix = mlScope ? `?ml_scope=${encodeURIComponent(mlScope)}` : "";
+  return requestJson<SchemeRequirementsListResponse>(`/api/v1/scheme-requirements${suffix}`);
+}
+
+export async function fetchSchemeKnowledgeRecord(schemeId: string): Promise<SchemeKnowledgeRecord> {
+  return requestJson<SchemeKnowledgeRecord>(`/api/v1/scheme-knowledge/${encodeURIComponent(schemeId)}`);
 }
 
 export async function fetchSchemeDocumentChecklist(schemeId: string): Promise<SchemeDocumentChecklist> {
