@@ -101,6 +101,7 @@ class RuleResultPayload(BaseModel):
     reasons: list[str]
     rule_status: str | None = None
     verification_notes: str | None = None
+    unverified_items: list[str] = Field(default_factory=list)
 
 
 class PredictionResponse(BaseModel):
@@ -133,8 +134,11 @@ class PredictionResponse(BaseModel):
                 "rule_result": {
                     "eligible": True,
                     "reasons": ["female", "student"],
-                    "rule_status": "documented",
-                    "verification_notes": None,
+                    "rule_status": "PARTIALLY_VERIFIED",
+                    "verification_notes": (
+                        "Not yet confirmed against an official source: required documents."
+                    ),
+                    "unverified_items": ["required documents"],
                 },
                 "rule_reasons": ["female", "student"],
                 "ml_prediction": "eligible",

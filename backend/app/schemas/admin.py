@@ -15,7 +15,8 @@ from app.schemas.wallet import CitizenWalletResponse
 
 ADMIN_DISCLAIMER = (
     "Administrator monitoring for this academic research prototype. "
-    "Eligibility values are existing Hybrid Rule + ML predictions only. "
+    "Eligibility values come from the documented rule engine; the Decision Tree is shown "
+    "only as an independent comparison. "
     "They are not government approval, and document review does not change eligibility."
 )
 
@@ -43,6 +44,7 @@ class AdminOverviewResponse(BaseModel):
     eligible_scheme_results: int = Field(..., ge=0)
     not_eligible_scheme_results: int = Field(..., ge=0)
     cannot_fully_evaluate_users: int = Field(..., ge=0)
+    users_without_wallet: int = Field(default=0, ge=0)
     recent_activity: list[AdminActivityItem]
     disclaimer: str
 

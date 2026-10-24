@@ -65,6 +65,7 @@ def predict(payload: PredictionRequest) -> PredictionResponse:
             reasons=hybrid.rule.rule_reasons,
             rule_status=hybrid.rule.rule_status,
             verification_notes=hybrid.rule.verification_notes,
+            unverified_items=list(hybrid.rule.unverified_items),
         ),
         rule_reasons=hybrid.rule.rule_reasons,
         ml_prediction=hybrid.ml_prediction,

@@ -78,6 +78,15 @@ def _template_items(required_documents: str | None) -> list[tuple[str, str, str]
     return items
 
 
+def catalog_document_items(required_documents: str | None) -> list[tuple[str, str]]:
+    """(item_key, label) pairs for catalog documents, using the checklist's stable keys."""
+    return [
+        (key, label)
+        for key, label, source in _template_items(required_documents)
+        if source == "catalog"
+    ]
+
+
 def _progress_percent(ready_count: int, item_count: int) -> int:
     if item_count <= 0:
         return 0
@@ -117,6 +126,11 @@ def _saved_rows(session: Session, user_id: str, scheme_id: str | None = None) ->
         return query.all()
     except (OperationalError, InterfaceError) as exc:
         raise DatabaseUnavailableError("The document checklist database is unavailable.") from exc
+
+
+def saved_document_statuses(session: Session, user_id: str, scheme_id: str) -> dict[str, str]:
+    """Owner-scoped self-declared checklist statuses keyed by item_key."""
+    return {row.item_key: row.status for row in _saved_rows(session, user_id, scheme_id)}
 
 
 def _build_scheme_checklist(

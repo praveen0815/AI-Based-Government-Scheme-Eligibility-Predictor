@@ -318,6 +318,14 @@ export default function App() {
           }
         />
         <Route
+          path="/admin/scheme-knowledge"
+          element={
+            <AdminRoute>
+              <AdminSchemesPage />
+            </AdminRoute>
+          }
+        />
+        <Route
           path="/admin/evaluation"
           element={
             <AdminRoute>

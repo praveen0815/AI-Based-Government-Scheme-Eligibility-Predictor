@@ -32,24 +32,29 @@ export function AdminKpiCard({
   label,
   value,
   hint,
-  tone = "blue",
+  chip,
+  footer,
+  tone = "mint",
   icon,
 }: {
   label: string;
   value: string;
   hint?: string;
-  tone?: "blue" | "green" | "amber" | "teal";
+  chip?: string;
+  footer?: string;
+  tone?: "mint" | "sky" | "gold" | "violet" | "blue" | "green" | "amber" | "teal";
   icon?: ReactNode;
 }) {
   return (
     <article className={`admin-kpi admin-kpi-${tone}`}>
       <div className="admin-kpi-top">
         <p className="admin-kpi-label">{label}</p>
-        {icon ? <span className="admin-kpi-icon">{icon}</span> : null}
+        {chip ? <p className="admin-kpi-chip">{chip}</p> : null}
       </div>
-      <div>
-        <p className="admin-kpi-value">{value}</p>
-        {hint ? <p className="admin-kpi-hint">{hint}</p> : null}
+      <p className="admin-kpi-value">{value}</p>
+      <div className="admin-kpi-foot">
+        {footer || hint ? <p className="admin-kpi-hint">{footer || hint}</p> : <span />}
+        {icon ? <span className="admin-kpi-icon">{icon}</span> : null}
       </div>
     </article>
   );

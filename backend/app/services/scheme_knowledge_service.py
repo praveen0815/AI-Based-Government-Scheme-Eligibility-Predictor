@@ -21,6 +21,7 @@ from app.schemas.scheme_knowledge import (
     SchemeKnowledgeListResponse,
     SchemeKnowledgeRecord,
 )
+from app.services.scheme_requirements_service import registry_overlay_keys
 from app.services.scheme_service import SchemeRecord, get_scheme_service
 
 _NEEDS_VERIFICATION = "needs verification"
@@ -83,11 +84,12 @@ def update_scheme_knowledge_item(
     payload: SchemeKnowledgeItemUpdate,
     admin_user_id: str,
 ) -> SchemeKnowledgeRecord:
-    if field_key not in KNOWLEDGE_FIELD_KEYS:
-        raise SchemeKnowledgeRejectedError("That knowledge field is not part of the official catalog overlay.")
     record = get_scheme_service().get_record(scheme_id)
     if record is None:
         raise SchemeKnowledgeNotFoundError("No scheme knowledge record was found.")
+    is_registry_item = field_key in registry_overlay_keys(record)
+    if field_key not in KNOWLEDGE_FIELD_KEYS and not is_registry_item:
+        raise SchemeKnowledgeRejectedError("That knowledge field is not part of the official catalog overlay.")
     if (
         payload.verification_status is None
         and payload.source_url is None
@@ -108,7 +110,9 @@ def update_scheme_knowledge_item(
             row = SchemeKnowledgeItemRecord(
                 scheme_id=scheme_id,
                 field_key=field_key,
-                verification_status=_default_status(_field_value(record, field_key)),
+                verification_status=(
+                    "unverified" if is_registry_item else _default_status(_field_value(record, field_key))
+                ),
             )
             session.add(row)
         if payload.verification_status is not None:

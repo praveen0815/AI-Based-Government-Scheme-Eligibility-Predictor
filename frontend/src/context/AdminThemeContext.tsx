@@ -11,7 +11,7 @@ export function readStoredAdminTheme(): AdminTheme {
   if (typeof window === "undefined") return "light";
   const stored = window.localStorage.getItem(ADMIN_THEME_STORAGE_KEY);
   if (isAdminTheme(stored)) return stored;
-  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  return "light";
 }
 
 interface AdminThemeState {

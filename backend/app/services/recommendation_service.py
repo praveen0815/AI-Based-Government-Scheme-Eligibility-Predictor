@@ -35,6 +35,7 @@ def _rule_payload(hybrid: HybridPrediction) -> RuleResultPayload:
         reasons=hybrid.rule.rule_reasons,
         rule_status=hybrid.rule.rule_status,
         verification_notes=hybrid.rule.verification_notes,
+        unverified_items=list(hybrid.rule.unverified_items),
     )
 
 

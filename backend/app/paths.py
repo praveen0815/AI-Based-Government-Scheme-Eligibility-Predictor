@@ -8,6 +8,7 @@ from pathlib import Path
 
 DEFAULT_MODEL_ARTIFACT = "ml/models/baseline/decision_tree.joblib"
 DEFAULT_SCHEME_CATALOG = "dataset/raw/schemes.csv"
+DEFAULT_SCHEME_REQUIREMENTS = "dataset/raw/scheme_requirements.json"
 DEFAULT_RUN_METADATA = "ml/models/baseline/run_metadata.json"
 DEFAULT_ELIGIBILITY_DATASET = "dataset/processed/eligibility_dataset.csv"
 DEFAULT_EVALUATION_DIR = "ml/models/evaluation"
@@ -49,6 +50,13 @@ def scheme_catalog_relative() -> str:
 
 def scheme_catalog_path() -> Path:
     relative = Path(scheme_catalog_relative())
+    if relative.is_absolute():
+        return relative
+    return (project_root() / relative).resolve()
+
+
+def scheme_requirements_path() -> Path:
+    relative = Path(os.environ.get("SCHEME_REQUIREMENTS_PATH", DEFAULT_SCHEME_REQUIREMENTS))
     if relative.is_absolute():
         return relative
     return (project_root() / relative).resolve()

@@ -22,7 +22,7 @@ KnowledgeContentState = Literal["present", "missing", "unverified_placeholder"]
 KNOWLEDGE_DISCLAIMER = (
     "This knowledge base repeats official catalog text only. "
     "Catalog presence is not verification. Retrieval does not predict eligibility "
-    "or change Hybrid Rule + ML results."
+    "or change rule-engine eligibility results."
 )
 
 KNOWLEDGE_FIELD_LABELS: dict[str, str] = {

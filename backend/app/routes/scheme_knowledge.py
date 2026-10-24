@@ -13,7 +13,7 @@ router = APIRouter(prefix="/api/v1/scheme-knowledge", tags=["scheme-knowledge"])
 
 _NOTE = (
     "Read-only retrieval of official catalog text plus admin verification metadata. "
-    "This does not calculate eligibility or change Hybrid Rule + ML results."
+    "This does not calculate eligibility or change rule-engine eligibility results."
 )
 
 

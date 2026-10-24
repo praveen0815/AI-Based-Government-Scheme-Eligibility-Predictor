@@ -44,6 +44,7 @@ from app.routes.applications import router as applications_router
 from app.routes.uploads import router as uploads_router
 from app.routes.document_scanner import router as document_scanner_router
 from app.routes.scheme_knowledge import router as scheme_knowledge_router
+from app.routes.scheme_requirements import router as scheme_requirements_router
 from app.routes.scheme_assistant import router as scheme_assistant_router
 from app.routes.scheme_agent import router as scheme_agent_router
 from app.routes.reports import router as reports_router
@@ -58,6 +59,7 @@ from app.services.google_token_service import GoogleAuthUnavailableError, Google
 from app.services.compare_service import CompareSelectionError
 from app.services.document_checklist_service import DocumentChecklistNotFoundError
 from app.services.readiness_service import ReadinessNotFoundError
+from app.services.readiness_evaluation_service import ReadinessEvaluationNotFoundError
 from app.services.notification_service import NotificationNotFoundError
 from app.services.admin_service import AdminUserNotFoundError
 from app.services.application_service import ApplicationConflictError, ApplicationNotFoundError
@@ -71,6 +73,11 @@ from app.services.ocr_service import OcrUnavailableError, OcrUnreadableError
 from app.services.scheme_knowledge_service import (
     SchemeKnowledgeNotFoundError,
     SchemeKnowledgeRejectedError,
+)
+from app.services.scheme_requirements_service import (
+    RequirementsRegistryError,
+    SchemeRequirementsNotFoundError,
+    get_requirements_registry,
 )
 from app.services.history_service import HistoryNotFoundError
 from app.services.wallet_service import (
@@ -106,7 +113,13 @@ async def lifespan(_app: FastAPI):
         get_model_service().load()
         get_scheme_service().load()
         get_evaluation_service().load()
-    except (ModelUnavailableError, CatalogUnavailableError, EvaluationUnavailableError):
+        get_requirements_registry().load()
+    except (
+        ModelUnavailableError,
+        CatalogUnavailableError,
+        EvaluationUnavailableError,
+        RequirementsRegistryError,
+    ):
         logger.exception("Required model or scheme catalog was not loaded at startup")
         raise
     engine = get_engine()
@@ -168,6 +181,7 @@ app.include_router(dashboard_router)
 app.include_router(uploads_router)
 app.include_router(document_scanner_router)
 app.include_router(scheme_knowledge_router)
+app.include_router(scheme_requirements_router)
 app.include_router(scheme_assistant_router)
 app.include_router(scheme_agent_router)
 app.include_router(notifications_router)
@@ -268,6 +282,13 @@ async def readiness_not_found_handler(
     return JSONResponse(status_code=404, content={"detail": str(exc)})
 
 
+@app.exception_handler(ReadinessEvaluationNotFoundError)
+async def readiness_evaluation_not_found_handler(
+    _request: Request, exc: ReadinessEvaluationNotFoundError
+) -> JSONResponse:
+    return JSONResponse(status_code=404, content={"detail": str(exc)})
+
+
 @app.exception_handler(UploadNotFoundError)
 async def upload_not_found_handler(_request: Request, exc: UploadNotFoundError) -> JSONResponse:
     return JSONResponse(status_code=404, content={"detail": str(exc)})
@@ -349,6 +370,20 @@ async def scheme_knowledge_rejected_handler(
     _request: Request, exc: SchemeKnowledgeRejectedError
 ) -> JSONResponse:
     return JSONResponse(status_code=422, content={"detail": str(exc)})
+
+
+@app.exception_handler(SchemeRequirementsNotFoundError)
+async def scheme_requirements_not_found_handler(
+    _request: Request, exc: SchemeRequirementsNotFoundError
+) -> JSONResponse:
+    return JSONResponse(status_code=404, content={"detail": str(exc)})
+
+
+@app.exception_handler(RequirementsRegistryError)
+async def requirements_registry_handler(
+    _request: Request, exc: RequirementsRegistryError
+) -> JSONResponse:
+    return JSONResponse(status_code=503, content={"detail": str(exc)})
 
 
 @app.exception_handler(CompareSelectionError)

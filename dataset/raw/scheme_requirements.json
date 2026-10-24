@@ -1,0 +1,219 @@
+{
+  "version": 1,
+  "review_reference": "docs/scheme_quality_review.md (Phase 2.1 review dated 2026-08-14)",
+  "status_values": {
+    "verified": "Stated on the official source cited for the scheme (Phase 2.1 review).",
+    "unverified": "Encoded from a department convention or project interpretation, or not yet confirmed.",
+    "missing": "Not stated on any official source read so far."
+  },
+  "basis_values": {
+    "official_source": "Condition text appears on the scheme's official source.",
+    "department_convention": "Condition comes from a department-wide statement, not the scheme page.",
+    "project_interpretation": "Condition encodes the project's reading of official wording; needs confirmation."
+  },
+  "schemes": {
+    "TN-SW-001": {
+      "conditions": [
+        {
+          "key": "gender_female",
+          "label": "Applicant is female",
+          "profile_fields": ["gender"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "is_student",
+          "label": "Applicant is currently a student",
+          "profile_fields": ["is_student"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "first_higher_education_course",
+          "label": "Studying the first recognised higher-education course",
+          "profile_fields": ["first_higher_education_course"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "government_school_6_to_12",
+          "label": "Studied Classes 6 to 12 in a Government school",
+          "profile_fields": ["school_background"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        }
+      ],
+      "information_not_checked": [
+        {
+          "key": "family_income",
+          "label": "Economically weaker family",
+          "verification_status": "missing",
+          "note": "The official page refers to economically weaker families but states no numeric income ceiling. The rule engine does not check income."
+        }
+      ]
+    },
+    "TN-SW-002": {
+      "conditions": [
+        {
+          "key": "gender_male",
+          "label": "Applicant is male",
+          "profile_fields": ["gender"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "is_student",
+          "label": "Applicant is currently a student",
+          "profile_fields": ["is_student"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "first_higher_education_course",
+          "label": "Studying the first recognised higher-education course",
+          "profile_fields": ["first_higher_education_course"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "government_or_aided_tamil_medium_school_6_to_12",
+          "label": "Studied Classes 6 to 12 in a Government school or a Government-aided Tamil-medium school",
+          "profile_fields": ["school_background"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        }
+      ],
+      "information_not_checked": [
+        {
+          "key": "family_income",
+          "label": "Economically weaker family",
+          "verification_status": "missing",
+          "note": "The official page refers to economically weaker families but states no numeric income ceiling. The rule engine does not check income."
+        }
+      ]
+    },
+    "TN-SW-004": {
+      "conditions": [
+        {
+          "key": "gender_female",
+          "label": "Applicant is female",
+          "profile_fields": ["gender"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "widow_remarrying",
+          "label": "Applicant is a widow who is remarrying",
+          "profile_fields": ["marital_status"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "age_18_or_above",
+          "label": "Applicant is 18 years or older",
+          "profile_fields": ["age"],
+          "verification_status": "unverified",
+          "basis": "department_convention",
+          "note": "No scheme-specific age is printed on the marriage-assistance page. The Social Welfare Department child-marriage page says marriage assistance is designed for girls who have completed 18 years."
+        }
+      ],
+      "information_not_checked": []
+    },
+    "TN-SW-006": {
+      "conditions": [
+        {
+          "key": "gender_female",
+          "label": "Applicant is female",
+          "profile_fields": ["gender"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "orphan",
+          "label": "Applicant is an orphan",
+          "profile_fields": ["is_orphan"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "age_18_or_above",
+          "label": "Applicant is 18 years or older",
+          "profile_fields": ["age"],
+          "verification_status": "unverified",
+          "basis": "department_convention",
+          "note": "No scheme-specific age is printed on the marriage-assistance page. The Social Welfare Department child-marriage page says marriage assistance is designed for girls who have completed 18 years."
+        }
+      ],
+      "information_not_checked": []
+    },
+    "TN-REV-001": {
+      "conditions": [
+        {
+          "key": "age_18_to_65",
+          "label": "Applicant is between 18 and 65 years old",
+          "profile_fields": ["age"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "main_member_occupation",
+          "label": "Applicant belongs to an official main-member occupation group",
+          "profile_fields": ["occupation_category"],
+          "verification_status": "verified",
+          "basis": "official_source",
+          "note": "The official groups also include cultivating tenants and allied activities, which the citizen profile's occupation categories may not represent."
+        },
+        {
+          "key": "land_holding_limit",
+          "label": "Land-holding limit: wet land up to 2.50 acres or dry land up to 5.00 acres",
+          "profile_fields": ["wet_land_acres", "dry_land_acres"],
+          "verification_status": "unverified",
+          "basis": "project_interpretation",
+          "note": "The current rule accepts either limit. This reading of the 'wet or dry' wording is pending confirmation against the official G.O. (Ms.) No. 265, Revenue, 10.09.2011."
+        }
+      ],
+      "information_not_checked": []
+    },
+    "TN-REV-002": {
+      "conditions": [
+        {
+          "key": "gender_female",
+          "label": "Applicant is female",
+          "profile_fields": ["gender"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "never_married",
+          "label": "Applicant has never married",
+          "profile_fields": ["marital_status"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "age_50_or_above",
+          "label": "Applicant is 50 years or older",
+          "profile_fields": ["age"],
+          "verification_status": "verified",
+          "basis": "official_source"
+        },
+        {
+          "key": "destitute",
+          "label": "Applicant is destitute",
+          "profile_fields": ["is_destitute"],
+          "verification_status": "verified",
+          "basis": "official_source",
+          "note": "The official wording 'destitute and poor' is recorded as one yes/no answer."
+        }
+      ],
+      "information_not_checked": [
+        {
+          "key": "income_or_bpl",
+          "label": "Numeric income ceiling or BPL status",
+          "verification_status": "missing",
+          "note": "The official OAP page does not state a numeric income ceiling or BPL requirement. The rule engine does not check it."
+        }
+      ]
+    }
+  }
+}

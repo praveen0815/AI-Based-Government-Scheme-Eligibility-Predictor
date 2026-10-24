@@ -1,30 +1,8 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useI18n } from "../../context/LanguageContext";
-import {
-  BellIcon,
-  BrainIcon,
-  CheckIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ClipboardIcon,
-  DashboardIcon,
-  DocumentIcon,
-  EvaluationIcon,
-  InsightsIcon,
-  MicIcon,
-  SchemesIcon,
-  SettingsIcon,
-  ShieldIcon,
-  UploadIcon,
-  UserIcon,
-} from "../icons";
-
-type AdminNavItem = {
-  to: string;
-  label: string;
-  end?: boolean;
-  icon: typeof DashboardIcon;
-};
+import { GovernmentEmblem } from "../GovernmentEmblem";
+import { ChevronLeftIcon, ChevronRightIcon } from "../icons";
+import { adminPrimaryNav } from "./adminNav";
 
 function itemClass(active: boolean, collapsed: boolean) {
   return [
@@ -46,36 +24,11 @@ export function AdminSidebar({
   onToggleCollapsed: () => void;
 }) {
   const { t } = useI18n();
-
-  const sections: { label: string; items: AdminNavItem[] }[] = [
-    {
-      label: t.adminSectionManagement,
-      items: [
-        { to: "/admin", end: true, label: t.adminOverviewNav, icon: DashboardIcon },
-        { to: "/admin/users", label: t.adminUsers, icon: UserIcon },
-        { to: "/admin/documents", label: t.adminDocumentVerification, icon: DocumentIcon },
-        { to: "/admin/applications", label: t.navApplications, icon: ClipboardIcon },
-        { to: "/admin/schemes", label: t.adminSchemeManagement, icon: SchemesIcon },
-      ],
-    },
-    {
-      label: t.adminSectionAnalytics,
-      items: [
-        { to: "/admin/eligibility", label: t.adminEligibilityMonitoring, icon: CheckIcon },
-        { to: "/admin/evaluation", label: t.adminSchemeEvaluation, icon: EvaluationIcon },
-        { to: "/admin/system-evaluation", label: t.navSystemEvaluation, icon: BrainIcon },
-        { to: "/admin/research-dashboard", label: t.navResearchDashboard, icon: InsightsIcon },
-        { to: "/admin/notifications", label: t.navNotifications, icon: BellIcon },
-        { to: "/admin/voice-assistant", label: t.navVoiceAssistant, icon: MicIcon },
-      ],
-    },
-    {
-      label: t.adminSectionAccount,
-      items: [
-        { to: "/admin/uploads", label: t.navUploads, icon: UploadIcon },
-        { to: "/admin/settings", label: t.navSettings, icon: SettingsIcon },
-      ],
-    },
+  const { pathname } = useLocation();
+  const items = adminPrimaryNav(t);
+  const sections = [
+    { label: t.adminSectionManagement, items: items.filter((item) => item.to !== "/admin/settings") },
+    { label: t.adminSectionAccount, items: items.filter((item) => item.to === "/admin/settings") },
   ];
 
   return (
@@ -95,16 +48,16 @@ export function AdminSidebar({
             <NavLink
               to="/admin"
               end
-              className="admin-brand-mark admin-brand-mark-solo"
+              className="admin-brand-mark admin-brand-mark-emblem admin-brand-mark-solo"
               aria-label={t.brandName}
               onClick={onClose}
             >
-              <ShieldIcon />
+              <GovernmentEmblem className="admin-emblem" />
             </NavLink>
           ) : (
-            <NavLink to="/admin" className="admin-brand" onClick={onClose}>
-              <span className="admin-brand-mark">
-                <ShieldIcon />
+            <NavLink to="/admin" end className="admin-brand" onClick={onClose}>
+              <span className="admin-brand-mark admin-brand-mark-emblem">
+                <GovernmentEmblem className="admin-emblem" />
               </span>
               <span className="admin-brand-copy">
                 <span className="admin-brand-title">{t.brandName}</span>
@@ -127,7 +80,12 @@ export function AdminSidebar({
                     end={item.end}
                     title={item.label}
                     aria-label={item.label}
-                    className={({ isActive }) => itemClass(isActive, collapsed)}
+                    className={({ isActive }) =>
+                      itemClass(
+                        isActive || (item.alsoActive ?? []).some((path) => pathname.startsWith(path)),
+                        collapsed,
+                      )
+                    }
                     onClick={onClose}
                   >
                     <item.icon />
@@ -142,13 +100,12 @@ export function AdminSidebar({
         <div className="admin-sidebar-foot">
           {collapsed ? (
             <p className="admin-system admin-system-collapsed">
-              <span className="admin-system-dot" aria-hidden="true" />
-              <span className="sr-only">{t.adminSystemOnline}</span>
+              <span className="sr-only">{t.adminEnvironment}</span>
+              <span className="admin-system-version">{t.adminVersion}</span>
             </p>
           ) : (
             <p className="admin-system">
-              <span className="admin-system-dot" aria-hidden="true" />
-              <span>{t.adminSystemOnline}</span>
+              <span>{t.adminEnvironment}</span>
               <span className="admin-system-version">{t.adminVersion}</span>
             </p>
           )}

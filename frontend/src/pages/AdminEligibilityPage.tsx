@@ -52,6 +52,11 @@ export function AdminEligibilityPage() {
         eyebrow={t.adminSectionAnalytics}
         title={t.adminEligibilityMonitoring}
         description={t.adminEligibilityLead}
+        actions={
+          <Link to="/admin/evaluation" className="admin-link">
+            {t.adminSchemeEvaluation}
+          </Link>
+        }
       />
       <p className="admin-note">{t.adminPredictionNotice}</p>
       <AdminPanel>

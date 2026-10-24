@@ -153,10 +153,13 @@ def get_admin_overview(session: Session) -> AdminOverviewResponse:
     eligible_scheme_results = 0
     not_eligible_scheme_results = 0
     cannot_fully_evaluate_users = 0
+    users_without_wallet = 0
     for user in users:
         view = _eligibility_for_user(session, user.id)
-        if view.prediction_label == "cannot_fully_evaluate" or view.prediction_label == "not_evaluated":
+        if view.prediction_label == "cannot_fully_evaluate":
             cannot_fully_evaluate_users += 1
+        elif view.prediction_label == "not_evaluated":
+            users_without_wallet += 1
         for scheme in view.evaluated_schemes:
             if scheme.prediction == "eligible":
                 eligible_scheme_results += 1
@@ -233,6 +236,7 @@ def get_admin_overview(session: Session) -> AdminOverviewResponse:
         eligible_scheme_results=eligible_scheme_results,
         not_eligible_scheme_results=not_eligible_scheme_results,
         cannot_fully_evaluate_users=cannot_fully_evaluate_users,
+        users_without_wallet=users_without_wallet,
         recent_activity=activity[:ACTIVITY_LIMIT],
         disclaimer=ADMIN_DISCLAIMER,
     )

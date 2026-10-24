@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useI18n } from "../../context/LanguageContext";
 import { useRecommendation } from "../../context/RecommendationContext";
@@ -7,32 +7,19 @@ import { LanguageSwitcher } from "../LanguageSwitcher";
 import { NotificationBell } from "../NotificationBell";
 import { MenuIcon, MicIcon, SearchIcon, UserIcon } from "../icons";
 import { AdminThemeToggle } from "./AdminThemeToggle";
+import { adminBreadcrumbs } from "./adminPageMeta";
+import { adminSearchDestinations } from "./adminNav";
 
 export function AdminTopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
   const { user, logout } = useAuth();
   const { clearResult } = useRecommendation();
   const { t } = useI18n();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [query, setQuery] = useState("");
+  const crumbs = adminBreadcrumbs(pathname, t);
 
-  const destinations = useMemo(
-    () => [
-      { to: "/admin", label: t.adminOverviewNav },
-      { to: "/admin/users", label: t.adminUsers },
-      { to: "/admin/documents", label: t.adminDocumentVerification },
-      { to: "/admin/applications", label: t.navApplications },
-      { to: "/admin/schemes", label: t.adminSchemeManagement },
-      { to: "/admin/eligibility", label: t.adminEligibilityMonitoring },
-      { to: "/admin/evaluation", label: t.adminSchemeEvaluation },
-      { to: "/admin/system-evaluation", label: t.navSystemEvaluation },
-      { to: "/admin/research-dashboard", label: t.navResearchDashboard },
-      { to: "/admin/notifications", label: t.navNotifications },
-      { to: "/admin/voice-assistant", label: t.navVoiceAssistant },
-      { to: "/admin/uploads", label: t.navUploads },
-      { to: "/admin/settings", label: t.navSettings },
-    ],
-    [t],
-  );
+  const destinations = useMemo(() => adminSearchDestinations(t), [t]);
   const matches = query.trim()
     ? destinations.filter((item) => item.label.toLowerCase().includes(query.trim().toLowerCase()))
     : [];
@@ -49,6 +36,23 @@ export function AdminTopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
         <button type="button" className="admin-icon-btn lg:hidden" aria-label={t.openMenu} onClick={onOpenMenu}>
           <MenuIcon />
         </button>
+        <nav className="admin-breadcrumbs" aria-label={t.adminBreadcrumbLabel}>
+          <ol>
+            {crumbs.map((crumb, index) => {
+              const current = index === crumbs.length - 1;
+              return (
+                <li key={`${crumb.label}-${index}`}>
+                  {index > 0 ? <span aria-hidden="true">/</span> : null}
+                  {crumb.to && !current ? (
+                    <Link to={crumb.to}>{crumb.label}</Link>
+                  ) : (
+                    <span aria-current={current ? "page" : undefined}>{crumb.label}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+        </nav>
         <div className="admin-search hidden md:block">
           <span className="admin-search-glyph" aria-hidden="true">
             <SearchIcon />
@@ -61,6 +65,9 @@ export function AdminTopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
             className="admin-input admin-search-input"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") setQuery("");
+            }}
             placeholder={t.adminSearchPlaceholder}
           />
           {query.trim() ? (
@@ -88,12 +95,12 @@ export function AdminTopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
             {t.navVoiceAssistant}
           </Link>
           <Link to="/admin/settings" className="admin-profile">
-            <span className="admin-profile-avatar">
-              <UserIcon />
-            </span>
-            <span className="hidden text-left lg:block">
+            <span className="hidden text-right lg:block">
               <span className="admin-profile-name block">{user?.full_name || user?.email}</span>
               <span className="admin-profile-role block">{t.adminConsoleRole}</span>
+            </span>
+            <span className="admin-profile-avatar">
+              <UserIcon />
             </span>
           </Link>
           <button type="button" className="admin-logout" onClick={handleLogout}>

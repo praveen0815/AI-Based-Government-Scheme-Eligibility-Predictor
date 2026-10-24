@@ -8,7 +8,14 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db, require_db
 from app.deps import get_current_user
 from app.models.user import UserRecord
-from app.schemas.readiness import ReadinessProgressResponse, ReadinessStageUpdate, SchemeReadiness
+from app.schemas.readiness import (
+    ReadinessEvaluationListResponse,
+    ReadinessProgressResponse,
+    ReadinessStageUpdate,
+    SchemeReadiness,
+    SchemeReadinessEvaluation,
+)
+from app.services.readiness_evaluation_service import evaluate_scheme_readiness, list_readiness_evaluations
 from app.services.readiness_service import get_scheme_readiness, list_readiness, update_scheme_stage
 
 router = APIRouter(prefix="/api/v1", tags=["readiness"])
@@ -31,6 +38,41 @@ def read_readiness(
     session: Session | None = Depends(get_db),
 ) -> ReadinessProgressResponse:
     return list_readiness(require_db(session), current_user.id)
+
+
+_EVALUATION_NOTE = (
+    "Requires a JWT. Evaluates only the caller's own wallet and checklist for every CORE scheme, "
+    "whether or not it was recommended before. Separates the documented rule result from missing "
+    "profile information, missing mandatory documents and unverified official requirements. "
+    "Read-only; the Decision Tree is shown only as an independent comparison."
+)
+
+
+@router.get(
+    "/readiness/evaluation",
+    response_model=ReadinessEvaluationListResponse,
+    summary="Evaluate application readiness for every CORE scheme",
+    description=_EVALUATION_NOTE,
+)
+def read_readiness_evaluations(
+    current_user: UserRecord = Depends(get_current_user),
+    session: Session | None = Depends(get_db),
+) -> ReadinessEvaluationListResponse:
+    return list_readiness_evaluations(require_db(session), current_user.id)
+
+
+@router.get(
+    "/readiness/evaluation/{scheme_id}",
+    response_model=SchemeReadinessEvaluation,
+    summary="Evaluate application readiness for one CORE scheme",
+    description=_EVALUATION_NOTE,
+)
+def read_scheme_readiness_evaluation(
+    scheme_id: str,
+    current_user: UserRecord = Depends(get_current_user),
+    session: Session | None = Depends(get_db),
+) -> SchemeReadinessEvaluation:
+    return evaluate_scheme_readiness(require_db(session), current_user.id, scheme_id)
 
 
 @router.get(

@@ -10,6 +10,7 @@ describe("admin page header metadata", () => {
     expect(adminPageMeta("/admin/documents", en).title).toBe(en.adminDocumentVerification);
     expect(adminPageMeta("/admin/applications", en).title).toBe(en.navApplications);
     expect(adminPageMeta("/admin/schemes", en).title).toBe(en.adminSchemeManagement);
+    expect(adminPageMeta("/admin/scheme-knowledge", en).title).toBe(en.adminNavSchemeKnowledge);
     expect(adminPageMeta("/admin/eligibility", en).title).toBe(en.adminEligibilityMonitoring);
     expect(adminPageMeta("/admin/evaluation", en).title).toBe(en.adminSchemeEvaluation);
     expect(adminPageMeta("/admin/system-evaluation", en).title).toBe(en.navSystemEvaluation);

@@ -49,15 +49,18 @@ def _catalog_scheme(scheme_id: str):
 
 
 def _public(row: ApplicationTrackingRecord) -> ApplicationItem:
-    scheme = _catalog_scheme(row.scheme_id)
+    try:
+        scheme = _catalog_scheme(row.scheme_id)
+    except ApplicationNotFoundError:
+        scheme = None
     status: ApplicationStatus = row.status if row.status in APPLICATION_STATUSES else "planning"
     return ApplicationItem(
         application_id=row.id,
-        scheme_id=scheme.scheme_id,
-        scheme_name=scheme.scheme_name,
-        department=scheme.department,
-        required_documents=scheme.required_documents,
-        official_source_url=scheme.official_source_url,
+        scheme_id=row.scheme_id,
+        scheme_name=scheme.scheme_name if scheme else row.scheme_id,
+        department=scheme.department if scheme else None,
+        required_documents=scheme.required_documents if scheme else None,
+        official_source_url=scheme.official_source_url if scheme else None,
         status=status,
         application_date=row.application_date,
         created_at=_iso(row.created_at),

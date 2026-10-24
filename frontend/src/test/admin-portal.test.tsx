@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { en } from "../i18n/en";
@@ -291,28 +291,26 @@ describe("admin portal access", () => {
     expect(await screen.findByRole("heading", { name: en.adminTitle })).toBeInTheDocument();
     expect(document.querySelector(".admin-console")).toBeInTheDocument();
     expect(screen.getByLabelText(en.adminSearchLabel)).toBeInTheDocument();
-    expect(screen.getByRole("navigation", { name: en.adminConsole })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: en.adminOverviewNav })).toHaveAttribute("href", "/admin");
-    expect(screen.getByRole("link", { name: en.adminUsers })).toHaveAttribute("href", "/admin/users");
-    expect(screen.getByRole("link", { name: en.adminDocumentVerification })).toHaveAttribute("href", "/admin/documents");
-    expect(screen.getByRole("link", { name: en.navApplications })).toHaveAttribute("href", "/admin/applications");
-    expect(screen.getByRole("link", { name: en.adminSchemeManagement })).toHaveAttribute("href", "/admin/schemes");
-    expect(screen.getByRole("link", { name: en.adminEligibilityMonitoring })).toHaveAttribute("href", "/admin/eligibility");
-    expect(screen.getByRole("link", { name: en.adminSchemeEvaluation })).toHaveAttribute("href", "/admin/evaluation");
-    expect(screen.getByRole("link", { name: en.navSystemEvaluation })).toHaveAttribute("href", "/admin/system-evaluation");
-    expect(screen.getByRole("link", { name: en.navResearchDashboard })).toHaveAttribute("href", "/admin/research-dashboard");
-    expect(screen.getByRole("link", { name: /^Notifications$/ })).toHaveAttribute("href", "/admin/notifications");
+    const navigation = screen.getByRole("navigation", { name: en.adminConsole });
+    expect(within(navigation).getByRole("link", { name: en.navDashboard })).toHaveAttribute("href", "/admin");
+    expect(within(navigation).getByRole("link", { name: en.adminUsers })).toHaveAttribute("href", "/admin/users");
+    expect(within(navigation).getByRole("link", { name: en.navApplications })).toHaveAttribute("href", "/admin/applications");
+    expect(within(navigation).getByRole("link", { name: en.adminDocuments })).toHaveAttribute("href", "/admin/documents");
+    expect(within(navigation).getByRole("link", { name: en.adminNavSchemes })).toHaveAttribute("href", "/admin/schemes");
+    expect(within(navigation).getByRole("link", { name: en.adminNavSchemeKnowledge })).toHaveAttribute("href", "/admin/scheme-knowledge");
+    expect(within(navigation).getByRole("link", { name: en.adminNavEligibilityModel })).toHaveAttribute("href", "/admin/eligibility");
+    expect(within(navigation).getByRole("link", { name: en.adminNavAnalytics })).toHaveAttribute("href", "/admin/research-dashboard");
+    expect(within(navigation).getByRole("link", { name: en.adminNavMonitoring })).toHaveAttribute("href", "/admin/system-evaluation");
+    expect(screen.getByRole("link", { name: en.notificationsBellLabel(0) })).toHaveAttribute("href", "/admin/notifications");
     const voiceLinks = screen.getAllByRole("link", { name: en.navVoiceAssistant });
     expect(voiceLinks.length).toBeGreaterThan(0);
     for (const link of voiceLinks) {
       expect(link).toHaveAttribute("href", "/admin/voice-assistant");
     }
-    expect(screen.getByRole("link", { name: en.navUploads })).toHaveAttribute("href", "/admin/uploads");
     expect(screen.getByRole("link", { name: en.navSettings })).toHaveAttribute("href", "/admin/settings");
     for (const label of CITIZEN_ONLY_NAV) {
       expect(screen.queryByRole("link", { name: label })).not.toBeInTheDocument();
     }
-    expect(screen.queryByRole("link", { name: /^Dashboard$/ })).not.toBeInTheDocument();
     expect(document.body.textContent).not.toContain("admin-token");
   });
 });
@@ -322,8 +320,10 @@ describe("admin portal modules", () => {
     vi.stubGlobal("fetch", adminFetch());
     renderApp(["/admin"], { user: ADMIN_USER, token: "admin-token" });
     expect(await screen.findByText(en.adminTotalUsers)).toBeInTheDocument();
+    expect(screen.getByText(en.adminPreliminaryNotice)).toBeInTheDocument();
     expect(screen.getByText(en.adminPendingReviews)).toBeInTheDocument();
     expect(screen.getByText("Uploaded school-certificate.pdf")).toBeInTheDocument();
+    expect(await screen.findByText(SAMPLE_SCHEME.scheme_name)).toBeInTheDocument();
   });
 
   it("lists users and opens eligibility monitoring for one account", async () => {

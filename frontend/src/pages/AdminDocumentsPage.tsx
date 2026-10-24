@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { AdminPageHeader, AdminPanel, AdminStatusBadge } from "../components/admin/adminUi";
 import { ErrorState } from "../components/ErrorState";
 import { LoadingState } from "../components/LoadingState";
@@ -55,6 +56,11 @@ export function AdminDocumentsPage() {
         eyebrow={t.adminSectionManagement}
         title={t.adminDocumentVerification}
         description={t.adminDocumentsLead}
+        actions={
+          <Link to="/admin/uploads" className="admin-link">
+            {t.navUploads}
+          </Link>
+        }
       />
       <p className="admin-note">{t.adminDocumentSeparate}</p>
       {notice ? (
