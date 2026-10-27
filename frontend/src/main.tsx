@@ -11,6 +11,7 @@ import { RecommendationProvider } from "./context/RecommendationContext";
 import "./index.css";
 import "./styles/portal.css";
 import "./styles/admin.css";
+import "./styles/experience.css";
 
 function OptionalGoogleProvider({ children }: { children: ReactNode }) {
   const clientId = googleClientId();

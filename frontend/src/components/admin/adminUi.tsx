@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { AdminActivityType, ApplicationStatus, DocumentReviewStatus } from "../../types/api";
+import { AnimatedMetric } from "../CitizenMotion";
 import { useI18n } from "../../context/LanguageContext";
 
 export function AdminPageHeader({
@@ -51,7 +52,9 @@ export function AdminKpiCard({
         <p className="admin-kpi-label">{label}</p>
         {chip ? <p className="admin-kpi-chip">{chip}</p> : null}
       </div>
-      <p className="admin-kpi-value">{value}</p>
+      <p className="admin-kpi-value">
+        {/^\d+$/.test(value) ? <AnimatedMetric value={value} /> : value}
+      </p>
       <div className="admin-kpi-foot">
         {footer || hint ? <p className="admin-kpi-hint">{footer || hint}</p> : <span />}
         {icon ? <span className="admin-kpi-icon">{icon}</span> : null}

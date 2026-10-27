@@ -8,10 +8,10 @@ function isCitizenTheme(value: string | null | undefined): value is CitizenTheme
 }
 
 export function readStoredCitizenTheme(): CitizenTheme {
-  if (typeof window === "undefined") return "dark";
+  if (typeof window === "undefined") return "light";
   const stored = window.localStorage.getItem(CITIZEN_THEME_STORAGE_KEY);
   if (isCitizenTheme(stored)) return stored;
-  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  return "light";
 }
 
 export function applyCitizenTheme(theme: CitizenTheme) {

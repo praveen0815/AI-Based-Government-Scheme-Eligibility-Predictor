@@ -1164,6 +1164,10 @@ export const en: Messages = {
   dashApplications: "Applications",
   dashRecommendedForYou: "Recommended for you",
   dashProfileImprovement: "Profile improvement",
+  dashProfileSummary: "Profile summary",
+  dashUnreadNotifications: "Unread notifications",
+  dashNextStep: "Next step",
+  dashProfileUpdate: "Update profile",
   researchDashTitle: "Research Dashboard",
   researchDashLead: "System-level research metrics from the existing evaluation and Phase 29 system evaluation APIs.",
   researchDashDisclaimer:
@@ -1255,7 +1259,7 @@ export const en: Messages = {
   adminDocumentVerification: "Document Verification",
   adminSchemeManagement: "Scheme Management",
   adminSchemeManagementLead:
-    "Official scheme catalog for this research prototype. Eligibility rules and ML results cannot be edited here.",
+    "Official scheme catalog with source and verification records for each catalog field. Eligibility rules and ML results cannot be edited here.",
   adminEligibilityMonitoring: "Eligibility Monitoring",
   adminSchemeEvaluation: "Scheme Evaluation",
   adminApplicationsLead:
@@ -1315,7 +1319,6 @@ export const en: Messages = {
   adminKpiCatalogSchemes: "Active schemes",
   adminTotalSchemes: "Total Schemes",
   adminNavSchemes: "Schemes",
-  adminNavSchemeKnowledge: "Scheme Knowledge",
   adminNavEligibilityModel: "Eligibility & Model",
   adminNavAnalytics: "Analytics & Reports",
   adminNavMonitoring: "System Monitoring",
@@ -1339,6 +1342,20 @@ export const en: Messages = {
     count === 1 ? "1 profile cannot be fully evaluated" : `${count} profiles cannot be fully evaluated`,
   adminHoursAgo: (count) => (count === 1 ? "1 hour ago" : `${count} hours ago`),
   adminMinutesAgo: (count) => (count === 1 ? "1 minute ago" : `${count} minutes ago`),
+  adminAlertsTitle: "Operational alerts",
+  adminAlertUnverifiedSchemes: (count) =>
+    count === 1 ? "1 scheme still needs catalog verification" : `${count} schemes still need catalog verification`,
+  adminAlertNoIssues: "No operational alerts from the current overview.",
+  assistantWidgetTitle: "Nira · Voice Assistant",
+  assistantWidgetOpen: "Open voice assistant",
+  assistantWidgetClose: "Close voice assistant",
+  assistantWidgetLauncher: "Ask Nira",
+  assistantWidgetNoteCitizen:
+    "Nira can help with scheme eligibility, your profile, and recommendations. She is not a government officer and does not grant official eligibility.",
+  assistantWidgetNoteAdmin:
+    "Nira can help with this admin workspace using your existing permissions. She cannot change eligibility rules or invent official data.",
+  assistantWidgetLog: "Conversation",
+  assistantWidgetFullPage: "Open full assistant",
   scannerTitle: "AI Document Scanner",
   scannerLead:
     "Extract education-certificate fields, review them, and confirm only the values you want copied into your wallet. Scanning is not document verification and does not change eligibility.",

@@ -297,7 +297,8 @@ describe("admin portal access", () => {
     expect(within(navigation).getByRole("link", { name: en.navApplications })).toHaveAttribute("href", "/admin/applications");
     expect(within(navigation).getByRole("link", { name: en.adminDocuments })).toHaveAttribute("href", "/admin/documents");
     expect(within(navigation).getByRole("link", { name: en.adminNavSchemes })).toHaveAttribute("href", "/admin/schemes");
-    expect(within(navigation).getByRole("link", { name: en.adminNavSchemeKnowledge })).toHaveAttribute("href", "/admin/scheme-knowledge");
+    expect(within(navigation).queryByRole("link", { name: "Scheme Knowledge" })).not.toBeInTheDocument();
+    expect(document.querySelector('a[href="/admin/scheme-knowledge"]')).toBeNull();
     expect(within(navigation).getByRole("link", { name: en.adminNavEligibilityModel })).toHaveAttribute("href", "/admin/eligibility");
     expect(within(navigation).getByRole("link", { name: en.adminNavAnalytics })).toHaveAttribute("href", "/admin/research-dashboard");
     expect(within(navigation).getByRole("link", { name: en.adminNavMonitoring })).toHaveAttribute("href", "/admin/system-evaluation");
@@ -320,6 +321,10 @@ describe("admin portal modules", () => {
     vi.stubGlobal("fetch", adminFetch());
     renderApp(["/admin"], { user: ADMIN_USER, token: "admin-token" });
     expect(await screen.findByText(en.adminTotalUsers)).toBeInTheDocument();
+    expect(document.querySelectorAll(".assistant-dock")).toHaveLength(1);
+    expect(document.querySelector(".assistant-dock-admin")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: en.assistantWidgetOpen })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: en.adminAlertsTitle })).toBeInTheDocument();
     expect(screen.getByText(en.adminPreliminaryNotice)).toBeInTheDocument();
     expect(screen.getByText(en.adminPendingReviews)).toBeInTheDocument();
     expect(screen.getByText("Uploaded school-certificate.pdf")).toBeInTheDocument();
@@ -431,5 +436,24 @@ describe("admin portal modules", () => {
     await user.click(screen.getAllByRole("button", { name: en.adminKnowledgeSave })[0]);
     expect(await screen.findByText(en.adminKnowledgeSaved)).toBeInTheDocument();
     expect(vi.mocked(fetch).mock.calls.some(([url, init]) => String(url).includes("/api/v1/admin/scheme-knowledge/") && String(init?.method) === "PATCH")).toBe(true);
+  });
+
+  it("redirects the former Scheme Knowledge URL to the consolidated Schemes page", async () => {
+    const user = userEvent.setup();
+    vi.stubGlobal("fetch", adminFetch());
+    renderApp(["/admin/scheme-knowledge"], { user: ADMIN_USER, token: "admin-token" });
+    expect(await screen.findByRole("heading", { name: en.adminSchemeManagement })).toBeInTheDocument();
+    const navigation = screen.getByRole("navigation", { name: en.adminConsole });
+    expect(within(navigation).getByRole("link", { name: en.adminNavSchemes })).toHaveAttribute("aria-current", "page");
+    await user.click(screen.getByRole("button", { name: en.adminKnowledgeOpen }));
+    expect(screen.getAllByRole("button", { name: en.adminKnowledgeSave }).length).toBeGreaterThan(0);
+  });
+
+  it("does not let citizens reach admin scheme management through the former URL", async () => {
+    vi.stubGlobal("fetch", adminFetch());
+    renderApp(["/admin/scheme-knowledge"], { user: TEST_USER, token: "test-token" });
+    expect(await screen.findByText(en.adminForbiddenTitle)).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: en.adminSchemeManagement })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: en.adminKnowledgeSave })).not.toBeInTheDocument();
   });
 });

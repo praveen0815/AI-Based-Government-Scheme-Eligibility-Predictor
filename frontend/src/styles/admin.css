@@ -34,6 +34,11 @@
   --admin-ok: #047857;
   --admin-danger-bg: #fef2f2;
   --admin-danger: #b91c1c;
+  --admin-cyan: #0e7490;
+  --admin-cyan-soft: #ecfeff;
+  --admin-chart-navy: #1d4e89;
+  --admin-chart-cyan: #14b8a6;
+  --admin-chart-amber: #d97706;
   --admin-muted-bg: #eef2f6;
   --admin-muted-ink: #475569;
   --sw-canvas: 244 247 251;
@@ -82,6 +87,11 @@
   --admin-ok: #6ee7b7;
   --admin-danger-bg: rgb(248 113 113 / 0.16);
   --admin-danger: #fca5a5;
+  --admin-cyan: #67e8f9;
+  --admin-cyan-soft: rgb(103 232 249 / 0.12);
+  --admin-chart-navy: #7eb4e0;
+  --admin-chart-cyan: #5eead4;
+  --admin-chart-amber: #f5c542;
   --admin-muted-bg: #1a2533;
   --admin-muted-ink: #cbd5e1;
   --admin-sidebar: #0c1420;

@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAssistantWidget } from "../components/assistant/assistantWidgetContext";
 import { AnimatedMetric, MotionBlock } from "../components/CitizenMotion";
 import { ErrorState } from "../components/ErrorState";
 import { RevealSection } from "../components/RevealSection";
@@ -253,6 +254,90 @@ function HistorySchemePreview({ scheme }: { scheme: HistorySchemeRef }) {
   );
 }
 
+const JOURNEY_HREF: Record<DashboardJourneyKey, string> = {
+  profile_created: "/wallet",
+  profile_completed: "/wallet",
+  eligibility_checked: "/check",
+  schemes_recommended: "/schemes",
+  documents_prepared: "/documents",
+  application_readiness: "/readiness",
+};
+
+function ProfileOverview({
+  name,
+  email,
+  percent,
+  nextStep,
+  applications,
+  unread,
+}: {
+  name: string;
+  email: string;
+  percent: number;
+  nextStep: DashboardJourneyKey | null;
+  applications: number;
+  unread: number;
+}) {
+  const { t } = useI18n();
+  const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+  const initial = (name || email).trim().charAt(0).toUpperCase() || "?";
+  return (
+    <section className="dash-profile reveal-up" aria-labelledby="dashboard-profile-summary">
+      <div className="dash-profile-id">
+        <span className="dash-profile-avatar" aria-hidden="true">
+          {initial}
+        </span>
+        <div className="min-w-0">
+          <h2 id="dashboard-profile-summary" className="dash-profile-title">
+            {t.dashProfileSummary}
+          </h2>
+          <p className="dash-profile-name">{name}</p>
+          {email && email !== name ? <p className="dash-profile-email">{email}</p> : null}
+        </div>
+      </div>
+      <div className="dash-profile-meter">
+        <div className="dash-profile-meter-copy">
+          <span>{t.dashboardProgressProfile}</span>
+          <strong>
+            <AnimatedMetric value={`${clamped}%`} />
+          </strong>
+        </div>
+        <div
+          className="dash-progress-track"
+          role="progressbar"
+          aria-label={t.dashboardProgressProfile}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={clamped}
+        >
+          <span className="dash-progress-fill" style={{ width: `${clamped}%` }} />
+        </div>
+        <p className="dash-profile-facts">
+          <span>
+            {t.dashApplications}: <strong>{applications}</strong>
+          </span>
+          <span>
+            {t.dashUnreadNotifications}: <strong>{unread}</strong>
+          </span>
+        </p>
+      </div>
+      <div className="dash-profile-next">
+        {nextStep ? (
+          <>
+            <p className="dash-profile-next-label">{t.dashNextStep}</p>
+            <Link to={JOURNEY_HREF[nextStep]} className="dash-profile-next-link">
+              {journeyLabel(nextStep, t)}
+            </Link>
+          </>
+        ) : null}
+        <Link to="/wallet" className="dash-text-link">
+          {t.dashProfileUpdate}
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 function ProgressCard({
   title,
   value,
@@ -282,6 +367,7 @@ export function DashboardPage() {
   const { user } = useAuth();
   const { language, t } = useI18n();
   const { result } = useRecommendation();
+  const assistantWidget = useAssistantWidget();
   const [account, setAccount] = useState<AuthUser | null>(user);
   const [wallet, setWallet] = useState<CitizenWallet | null>(null);
   const [completeness, setCompleteness] = useState<ProfileCompleteness | null>(null);
@@ -292,6 +378,7 @@ export function DashboardPage() {
   const [overview, setOverview] = useState<DashboardOverviewResponse | null>(null);
   const [uploads, setUploads] = useState<SupportingUploadListResponse | null>(null);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [applications, setApplications] = useState<ApplicationListResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -378,8 +465,10 @@ export function DashboardPage() {
 
         if (notificationsResult.status === "fulfilled") {
           setNotifications(notificationsResult.value.notifications.filter((item) => !item.is_read).slice(0, 3));
+          setUnreadCount(notificationsResult.value.unread_count ?? 0);
         } else {
           setNotifications([]);
+          setUnreadCount(0);
         }
 
         if (applicationsResult.status === "fulfilled") {
@@ -462,6 +551,16 @@ export function DashboardPage() {
 
       {!loading && !error ? (
         <>
+          {wallet ? (
+            <ProfileOverview
+              name={displayName}
+              email={account?.email || user?.email || ""}
+              percent={snapshot.progress.profile_completeness_percent}
+              nextStep={snapshot.journey.find((step) => step.status === "current")?.key ?? null}
+              applications={applications?.count ?? 0}
+              unread={unreadCount}
+            />
+          ) : null}
           {!wallet ? (
             <EmptyState title={t.dashboardProfileNotCreated} description={t.dashboardCreateProfileLead}>
               <Button type="button" onClick={() => navigate("/wallet")}>
@@ -673,10 +772,22 @@ export function DashboardPage() {
                   </Link>
                 ))}
               </div>
-              <Link to="/voice-assistant" className="dash-voice-btn uae-mic">
-                <MicIcon />
-                {t.navVoiceAssistant}
-              </Link>
+              {assistantWidget?.available ? (
+                <button
+                  type="button"
+                  className="dash-voice-btn uae-mic"
+                  aria-haspopup="dialog"
+                  onClick={assistantWidget.open}
+                >
+                  <MicIcon />
+                  {t.navVoiceAssistant}
+                </button>
+              ) : (
+                <Link to="/voice-assistant" className="dash-voice-btn uae-mic">
+                  <MicIcon />
+                  {t.navVoiceAssistant}
+                </Link>
+              )}
             </div>
           </RevealSection>
 
@@ -820,6 +931,7 @@ export function DashboardPage() {
             )}
           </RevealSection>
 
+          <div className="dash-pair">
           <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-readiness">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
@@ -887,6 +999,7 @@ export function DashboardPage() {
               <p className="text-[16px] text-ink-500">{t.documentsEmptyLead}</p>
             )}
           </RevealSection>
+          </div>
 
           <RevealSection className="card-surface space-y-5 p-6 md:p-8" aria-labelledby="dashboard-uploads">
             <div className="flex flex-wrap items-start justify-between gap-3">

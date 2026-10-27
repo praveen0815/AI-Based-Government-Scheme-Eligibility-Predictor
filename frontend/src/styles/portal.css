@@ -72,41 +72,42 @@ html[data-citizen-theme="dark"] .citizen-portal {
 }
 
 html[data-citizen-theme="light"] .citizen-portal {
-  --citizen-bg: #f3f6f9;
+  /* Sage green, ivory and white. */
+  --citizen-bg: #f8f6ef;
   --citizen-chrome: #ffffff;
   --citizen-card: #ffffff;
-  --citizen-card-soft: #eef3f8;
-  --citizen-text: #122033;
-  --citizen-muted: #4b5d73;
-  --citizen-faint: #5e7086;
-  --citizen-line: #d5dee8;
-  --citizen-accent-rgb: 29 78 137;
-  --citizen-gold: #1d4e89;
-  --citizen-gold-fill: #1d4e89;
-  --citizen-gold-deep: #163a68;
+  --citizen-card-soft: #eef4ee;
+  --citizen-text: #1f2f29;
+  --citizen-muted: #4c5f56;
+  --citizen-faint: #5f7168;
+  --citizen-line: #dde6dd;
+  --citizen-accent-rgb: 47 111 84;
+  --citizen-gold: #2f6f54;
+  --citizen-gold-fill: #3a7a5e;
+  --citizen-gold-deep: #255a44;
   --citizen-gold-ink: #ffffff;
-  --sw-canvas: 243 246 249;
+  --sw-canvas: 248 246 239;
   --sw-surface: 255 255 255;
-  --sw-sage: 238 243 248;
-  --sw-line: 213 222 232;
-  --sw-line-strong: #c3d0de;
-  --sw-ink-900: 18 32 51;
-  --sw-ink-700: 55 72 92;
-  --sw-ink-500: 75 93 115;
-  --sw-action: 29 78 137;
-  --sw-action-hover: 22 58 104;
-  --sw-accent: 29 78 137;
-  --sw-success: 22 122 74;
+  --sw-sage: 236 243 236;
+  --sw-line: 221 230 221;
+  --sw-line-strong: #c4d3c6;
+  --sw-ink-900: 31 47 41;
+  --sw-ink-700: 58 76 68;
+  --sw-ink-500: 76 95 86;
+  --sw-action: 47 111 84;
+  --sw-action-hover: 37 90 68;
+  --sw-accent: 47 111 84;
+  --sw-success: 27 122 74;
   --sw-warning: 146 96 20;
   --sw-danger: 168 42 42;
-  --sw-navy-950: 18 32 51;
-  --sw-navy-900: 18 42 72;
+  --sw-navy-950: 31 47 41;
+  --sw-navy-900: 37 90 68;
   --sw-navy-800: 255 255 255;
-  --sw-navy-700: 238 243 248;
-  --sw-navy-600: 226 234 242;
-  --sw-shadow-card: 0 8px 24px rgb(18 32 51 / 0.06);
-  --sw-shadow-lift: 0 14px 32px rgb(18 32 51 / 0.1);
-  --sw-shadow-inset: inset 0 0 0 1px rgb(18 32 51 / 0.06);
+  --sw-navy-700: 236 243 236;
+  --sw-navy-600: 222 234 224;
+  --sw-shadow-card: 0 1px 2px rgb(31 47 41 / 0.04), 0 8px 24px rgb(47 111 84 / 0.07);
+  --sw-shadow-lift: 0 4px 10px rgb(31 47 41 / 0.05), 0 16px 34px rgb(47 111 84 / 0.12);
+  --sw-shadow-inset: inset 0 0 0 1px rgb(31 47 41 / 0.06);
   color-scheme: light;
   background: var(--citizen-bg);
   color: var(--citizen-text);
@@ -938,12 +939,9 @@ html[data-citizen-theme="light"] .citizen-portal .text-red-800 {
 }
 
 html[data-citizen-theme="light"] .citizen-sidebar-link-active {
-  background: #b8923e;
-  color: #1c1914;
-}
-
-html[data-citizen-theme="light"] .citizen-sidebar-link-active::before {
-  display: none;
+  background: rgb(47 111 84 / 0.12);
+  color: #1f3f31;
+  font-weight: 650;
 }
 
 .citizen-portal .uae-board {

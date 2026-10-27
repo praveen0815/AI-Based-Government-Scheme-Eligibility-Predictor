@@ -2,7 +2,6 @@ import type { ComponentType, SVGProps } from "react";
 import type { Messages } from "../../i18n/types";
 import {
   BrainIcon,
-  BulbIcon,
   ClipboardIcon,
   DashboardIcon,
   DocumentIcon,
@@ -36,7 +35,6 @@ export function adminPrimaryNav(t: Messages): AdminNavItem[] {
     { to: "/admin/applications", label: t.navApplications, icon: ClipboardIcon },
     { to: "/admin/documents", label: t.adminDocuments, icon: DocumentIcon },
     { to: "/admin/schemes", label: t.adminNavSchemes, icon: SchemesIcon },
-    { to: "/admin/scheme-knowledge", label: t.adminNavSchemeKnowledge, icon: BulbIcon },
     {
       to: "/admin/eligibility",
       label: t.adminNavEligibilityModel,

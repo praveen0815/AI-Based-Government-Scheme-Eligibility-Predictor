@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { AdminPageHeader, AdminPanel } from "../components/admin/adminUi";
 import { ErrorState } from "../components/ErrorState";
 import { LoadingState } from "../components/LoadingState";
@@ -20,8 +19,6 @@ function statusLabel(status: KnowledgeVerificationStatus, t: ReturnType<typeof u
 
 export function AdminSchemesPage() {
   const { t } = useI18n();
-  const { pathname } = useLocation();
-  const knowledgeRoute = pathname.startsWith("/admin/scheme-knowledge");
   const [schemes, setSchemes] = useState<SchemeKnowledgeRecord[]>([]);
   const [departments, setDepartments] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -106,8 +103,8 @@ export function AdminSchemesPage() {
     <div className="admin-stack">
       <AdminPageHeader
         eyebrow={t.adminSectionManagement}
-        title={knowledgeRoute ? t.adminNavSchemeKnowledge : t.adminSchemeManagement}
-        description={knowledgeRoute ? t.adminKnowledgeNote : t.adminSchemeManagementLead}
+        title={t.adminSchemeManagement}
+        description={t.adminSchemeManagementLead}
       />
       <p className="admin-note">{t.adminReadOnlyCatalog}</p>
       <p className="admin-note">{t.adminKnowledgeNote}</p>

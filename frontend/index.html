@@ -14,12 +14,12 @@
         color: #eef3f8;
       }
       html.citizen-boot[data-citizen-theme="light"] {
-        background: #f3f6f9;
-        color: #122033;
+        background: #f8f6ef;
+        color: #1f2f29;
       }
       html.admin-boot[data-admin-theme="light"] {
-        background: #f4f7fb;
-        color: #12263a;
+        background: #f5f8fc;
+        color: #0f1f3d;
       }
       html.admin-boot[data-admin-theme="dark"] {
         background: #0c121b;
@@ -32,27 +32,17 @@
           var path = window.location.pathname;
           var skip = path === "/login" || path === "/register" || path.indexOf("/admin") === 0;
           var stored = localStorage.getItem("schemewise.citizen-theme");
-          var theme =
-            stored === "light" || stored === "dark"
-              ? stored
-              : window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches
-                ? "light"
-                : "dark";
+          var theme = stored === "light" || stored === "dark" ? stored : "light";
           document.documentElement.setAttribute("data-citizen-theme", theme);
           if (!skip) document.documentElement.classList.add("citizen-boot");
           if (path.indexOf("/admin") === 0) {
             var adminStored = localStorage.getItem("schemewise.admin-theme");
-            var adminTheme =
-              adminStored === "light" || adminStored === "dark"
-                ? adminStored
-                : window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches
-                  ? "light"
-                  : "dark";
+            var adminTheme = adminStored === "light" || adminStored === "dark" ? adminStored : "light";
             document.documentElement.setAttribute("data-admin-theme", adminTheme);
             document.documentElement.classList.add("admin-boot");
           }
         } catch (error) {
-          document.documentElement.setAttribute("data-citizen-theme", "dark");
+          document.documentElement.setAttribute("data-citizen-theme", "light");
         }
       })();
     </script>

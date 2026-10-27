@@ -16,9 +16,6 @@ export function adminPageMeta(pathname: string, t: Messages): { title: string; d
   if (pathname.startsWith("/admin/applications")) {
     return { title: t.navApplications, description: t.adminApplicationsLead };
   }
-  if (pathname.startsWith("/admin/scheme-knowledge")) {
-    return { title: t.adminNavSchemeKnowledge, description: t.adminKnowledgeNote };
-  }
   if (pathname.startsWith("/admin/schemes")) {
     return { title: t.adminSchemeManagement, description: t.adminSchemeManagementLead };
   }

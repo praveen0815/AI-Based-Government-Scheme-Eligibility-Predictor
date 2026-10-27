@@ -1045,6 +1045,10 @@ export interface Messages {
   dashApplications: string;
   dashRecommendedForYou: string;
   dashProfileImprovement: string;
+  dashProfileSummary: string;
+  dashUnreadNotifications: string;
+  dashNextStep: string;
+  dashProfileUpdate: string;
   researchDashTitle: string;
   researchDashLead: string;
   researchDashDisclaimer: string;
@@ -1182,7 +1186,6 @@ export interface Messages {
   adminKpiCatalogSchemes: string;
   adminTotalSchemes: string;
   adminNavSchemes: string;
-  adminNavSchemeKnowledge: string;
   adminNavEligibilityModel: string;
   adminNavAnalytics: string;
   adminNavMonitoring: string;
@@ -1203,6 +1206,17 @@ export interface Messages {
   adminKpiIncompleteProfiles: (count: number) => string;
   adminHoursAgo: (count: number) => string;
   adminMinutesAgo: (count: number) => string;
+  adminAlertsTitle: string;
+  adminAlertUnverifiedSchemes: (count: number) => string;
+  adminAlertNoIssues: string;
+  assistantWidgetTitle: string;
+  assistantWidgetOpen: string;
+  assistantWidgetClose: string;
+  assistantWidgetLauncher: string;
+  assistantWidgetNoteCitizen: string;
+  assistantWidgetNoteAdmin: string;
+  assistantWidgetLog: string;
+  assistantWidgetFullPage: string;
   scannerTitle: string;
   scannerLead: string;
   scannerWarning: string;

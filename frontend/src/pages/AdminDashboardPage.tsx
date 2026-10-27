@@ -10,7 +10,6 @@ import { ErrorState } from "../components/ErrorState";
 import {
   BellIcon,
   BrainIcon,
-  BulbIcon,
   ClipboardIcon,
   DocumentIcon,
   EvaluationIcon,
@@ -135,7 +134,14 @@ function TrendChart({
         const y = pad.top + innerHeight - barHeight;
         return (
           <g key={point.key}>
-            <rect x={x} y={y} width={barWidth} height={Math.max(barHeight, point.value > 0 ? 4 : 0)} rx="5" fill={point.value === peak ? "#14b8a6" : "#3b82f6"} />
+            <rect
+              className={`admin-trend-bar ${point.value === peak ? "admin-trend-bar-peak" : ""}`}
+              x={x}
+              y={y}
+              width={barWidth}
+              height={Math.max(barHeight, point.value > 0 ? 4 : 0)}
+              rx="5"
+            />
             <text x={x + barWidth / 2} y={height - 8} textAnchor="middle" fill="#6b7280" fontSize="11">
               {point.label}
             </text>
@@ -178,6 +184,7 @@ function StatusDonut({
                     cx="60"
                     cy="60"
                     r={radius}
+                    className="admin-donut-segment"
                     fill="none"
                     stroke={segment.color}
                     strokeWidth="14"
@@ -188,7 +195,7 @@ function StatusDonut({
               })
             : null}
         </g>
-        <text x="60" y="64" textAnchor="middle" fill="#1c2430" fontSize="16" fontWeight="700">
+        <text className="admin-donut-center" x="60" y="64" textAnchor="middle" fontSize="16" fontWeight="700">
           {center}
         </text>
       </svg>
@@ -340,13 +347,35 @@ export function AdminDashboardPage() {
     systemState.status === "ready"
       ? systemState.data.models.find((model) => model.selected) ?? systemState.data.models[0]
       : undefined;
+  const unverifiedSchemes =
+    catalogState.status === "ready"
+      ? catalogState.data.schemes.filter((scheme) => {
+          const status = (scheme.catalog_rule_status ?? "").toUpperCase();
+          return status.length > 0 && status !== "VERIFIED" && status !== "FULLY_VERIFIED";
+        }).length
+      : 0;
+  const alerts = data
+    ? [
+        data.pending_document_reviews > 0
+          ? { tone: "warn" as const, text: t.adminKpiPendingHint(data.pending_document_reviews), href: "/admin/documents" }
+          : null,
+        data.cannot_fully_evaluate_users > 0
+          ? { tone: "info" as const, text: t.adminKpiIncompleteProfiles(data.cannot_fully_evaluate_users), href: "/admin/eligibility" }
+          : null,
+        data.rejected_documents > 0
+          ? { tone: "danger" as const, text: `${t.adminRejectedDocuments}: ${data.rejected_documents}`, href: "/admin/documents" }
+          : null,
+        unverifiedSchemes > 0
+          ? { tone: "warn" as const, text: t.adminAlertUnverifiedSchemes(unverifiedSchemes), href: "/admin/schemes" }
+          : null,
+      ].filter((item): item is { tone: "warn" | "info" | "danger"; text: string; href: string } => item !== null)
+    : [];
 
   const quickActions = [
     { to: "/admin/users", label: t.adminUsers, icon: <UserIcon /> },
     { to: "/admin/applications", label: t.navApplications, icon: <ClipboardIcon /> },
     { to: "/admin/documents", label: t.adminDocumentVerification, icon: <DocumentIcon /> },
     { to: "/admin/schemes", label: t.adminSchemeManagement, icon: <SchemesIcon /> },
-    { to: "/admin/scheme-knowledge", label: t.adminNavSchemeKnowledge, icon: <BulbIcon /> },
     { to: "/admin/eligibility", label: t.adminEligibilityMonitoring, icon: <EvaluationIcon /> },
     { to: "/admin/evaluation", label: t.adminSchemeEvaluation, icon: <BrainIcon /> },
     { to: "/admin/research-dashboard", label: t.navResearchDashboard, icon: <InsightsIcon /> },
@@ -455,6 +484,22 @@ export function AdminDashboardPage() {
               icon={<ClipboardIcon />}
             />
           </section>
+
+          <AdminPanel title={t.adminAlertsTitle} padded>
+            {alerts.length === 0 ? <p className="admin-empty">{t.adminAlertNoIssues}</p> : null}
+            {alerts.length > 0 ? (
+              <ul className="admin-alerts">
+                {alerts.map((alert) => (
+                  <li key={alert.text}>
+                    <Link to={alert.href} className={`admin-alert admin-alert-${alert.tone}`}>
+                      <span className="admin-alert-dot" aria-hidden="true" />
+                      <span className="admin-alert-text">{alert.text}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </AdminPanel>
 
           <section className="admin-chart-row" aria-label={t.adminApplicationTrends}>
             <AdminPanel title={t.adminApplicationTrends} padded actions={<Link to="/admin/applications" className="admin-link">{t.adminViewAll}</Link>}>

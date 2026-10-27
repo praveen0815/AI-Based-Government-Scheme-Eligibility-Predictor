@@ -12,6 +12,7 @@ import type {
   RecommendationHistoryListResponse,
 } from "../types/api";
 import { CITIZEN_THEME_STORAGE_KEY } from "../context/CitizenThemeContext";
+import { en } from "../i18n/en";
 import { recommendResponse, SAMPLE_SCHEME, SECOND_SCHEME, VALID_PROFILE } from "./fixtures";
 import { renderApp, renderAuthenticatedApp, TEST_USER } from "./renderApp";
 
@@ -156,12 +157,15 @@ describe("user dashboard", () => {
     expect(welcome.closest(".dash-hero-copy")).toBeInTheDocument();
     expect(document.querySelector(".dash-hero-welcome")).not.toBeInTheDocument();
     expect(document.querySelector(".dash-hero")).toBeInTheDocument();
-    expect(document.querySelector(".dash-voice-btn")).toHaveAttribute("href", "/voice-assistant");
+    expect(document.querySelectorAll(".assistant-dock")).toHaveLength(1);
+    expect(document.querySelector(".assistant-dock-citizen")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: en.assistantWidgetOpen })).toBeInTheDocument();
+    expect(document.querySelector(".dash-voice-btn")?.tagName).toBe("BUTTON");
     expect(document.querySelectorAll(".dash-voice-btn")).toHaveLength(1);
     expect(screen.getByText("Your eligibility progress, in one view")).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "Scheme Assistant" })[0]).toHaveAttribute("href", "/scheme-assistant");
-    expect(screen.getAllByRole("link", { name: "Voice Assistant" })[0]).toHaveAttribute("href", "/voice-assistant");
-    expect(screen.getByRole("button", { name: "Switch to light mode" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: en.assistantWidgetOpen })).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByRole("button", { name: "Switch to dark mode" })).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "Browse Schemes" })[0]).toHaveAttribute("href", "/schemes");
     expect(screen.getAllByText("Your profile is not created yet.").length).toBeGreaterThan(0);
     expect(screen.getByRole("button", { name: "Create My Profile" })).toBeInTheDocument();
@@ -172,11 +176,12 @@ describe("user dashboard", () => {
     vi.stubGlobal("fetch", mockDashboardFetch({ wallet: null }));
     renderAuthenticatedApp(["/dashboard"]);
     expect(await screen.findByRole("heading", { name: "Welcome back, Test User" })).toBeInTheDocument();
-    const user = userEvent.setup();
-    await user.click(screen.getByRole("button", { name: "Switch to light mode" }));
     expect(document.documentElement.dataset.citizenTheme).toBe("light");
-    expect(window.localStorage.getItem(CITIZEN_THEME_STORAGE_KEY)).toBe("light");
-    expect(screen.getByRole("button", { name: "Switch to dark mode" })).toBeInTheDocument();
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "Switch to dark mode" }));
+    expect(document.documentElement.dataset.citizenTheme).toBe("dark");
+    expect(window.localStorage.getItem(CITIZEN_THEME_STORAGE_KEY)).toBe("dark");
+    expect(screen.getByRole("button", { name: "Switch to light mode" })).toBeInTheDocument();
   });
 
   it("shows completeness for an incomplete wallet", async () => {
@@ -337,9 +342,9 @@ describe("user dashboard", () => {
     expect(screen.getByText("Profile Completed")).toBeInTheDocument();
     expect(screen.getByText("Eligibility Checked")).toBeInTheDocument();
     expect(screen.getByText("Schemes Recommended")).toBeInTheDocument();
-    expect(screen.getByText("Documents Prepared")).toBeInTheDocument();
+    expect(screen.getAllByText("Documents Prepared").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Application Readiness").length).toBeGreaterThan(0);
-    expect(screen.getByText("100%")).toBeInTheDocument();
+    expect(screen.getAllByText("100%").length).toBeGreaterThan(0);
   });
 
   it("shows unread reminders from the notifications API", async () => {

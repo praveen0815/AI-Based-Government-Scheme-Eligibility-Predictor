@@ -1174,6 +1174,10 @@ export const ta: Messages = {
   dashApplications: "விண்ணப்பங்கள்",
   dashRecommendedForYou: "உங்களுக்குப் பரிந்துரைக்கப்பட்டவை",
   dashProfileImprovement: "சுயவிவர மேம்பாடு",
+  dashProfileSummary: "சுயவிவரச் சுருக்கம்",
+  dashUnreadNotifications: "படிக்காத அறிவிப்புகள்",
+  dashNextStep: "அடுத்த படி",
+  dashProfileUpdate: "சுயவிவரத்தைப் புதுப்பி",
   researchDashTitle: "ஆராய்ச்சி முகப்புப் பலகை",
   researchDashLead: "ஏற்கனவே உள்ள மதிப்பீடு மற்றும் Phase 29 கணினி மதிப்பீட்டு API-களிலிருந்து அமைப்பு நிலை ஆராய்ச்சி அளவீடுகள்.",
   researchDashDisclaimer:
@@ -1265,7 +1269,7 @@ export const ta: Messages = {
   adminDocumentVerification: "ஆவணச் சரிபார்ப்பு",
   adminSchemeManagement: "திட்ட மேலாண்மை",
   adminSchemeManagementLead:
-    "இந்த ஆராய்ச்சி முன்மாதிரியின் அதிகாரப்பூர்வ திட்டப் பட்டியல். தகுதி விதிகளையும் இயந்திரக் கற்றல் முடிவுகளையும் இங்கு திருத்த முடியாது.",
+    "ஒவ்வொரு பட்டியல் புலத்திற்குமான மூலம் மற்றும் சரிபார்ப்புப் பதிவுகளுடன் கூடிய அதிகாரப்பூர்வ திட்டப் பட்டியல். தகுதி விதிகளையும் இயந்திரக் கற்றல் முடிவுகளையும் இங்கு திருத்த முடியாது.",
   adminEligibilityMonitoring: "தகுதி கண்காணிப்பு",
   adminSchemeEvaluation: "திட்ட மதிப்பீடு",
   adminApplicationsLead:
@@ -1325,7 +1329,6 @@ export const ta: Messages = {
   adminKpiCatalogSchemes: "செயலில் உள்ள திட்டங்கள்",
   adminTotalSchemes: "மொத்தத் திட்டங்கள்",
   adminNavSchemes: "திட்டங்கள்",
-  adminNavSchemeKnowledge: "திட்ட அறிவு",
   adminNavEligibilityModel: "தகுதி மற்றும் மாதிரி",
   adminNavAnalytics: "பகுப்பாய்வு மற்றும் அறிக்கைகள்",
   adminNavMonitoring: "அமைப்பு கண்காணிப்பு",
@@ -1348,6 +1351,20 @@ export const ta: Messages = {
     count === 1 ? "1 சுயவிவரம் முழுமையாக மதிப்பிடப்படவில்லை" : `${count} சுயவிவரங்கள் முழுமையாக மதிப்பிடப்படவில்லை`,
   adminHoursAgo: (count) => (count === 1 ? "1 மணி நேரத்திற்கு முன்" : `${count} மணி நேரத்திற்கு முன்`),
   adminMinutesAgo: (count) => (count === 1 ? "1 நிமிடத்திற்கு முன்" : `${count} நிமிடங்களுக்கு முன்`),
+  adminAlertsTitle: "செயல்பாட்டு எச்சரிக்கைகள்",
+  adminAlertUnverifiedSchemes: (count) =>
+    count === 1 ? "1 திட்டத்திற்கு அட்டவணைச் சரிபார்ப்பு தேவை" : `${count} திட்டங்களுக்கு அட்டவணைச் சரிபார்ப்பு தேவை`,
+  adminAlertNoIssues: "தற்போதைய மேலோட்டத்தில் செயல்பாட்டு எச்சரிக்கைகள் இல்லை.",
+  assistantWidgetTitle: "நிரா · குரல் உதவியாளர்",
+  assistantWidgetOpen: "குரல் உதவியாளரைத் திற",
+  assistantWidgetClose: "குரல் உதவியாளரை மூடு",
+  assistantWidgetLauncher: "நிராவிடம் கேள்",
+  assistantWidgetNoteCitizen:
+    "நிரா திட்டத் தகுதி, உங்கள் சுயவிவரம் மற்றும் பரிந்துரைகளில் உதவலாம். அவர் அரசு அதிகாரி அல்ல; அதிகாரப்பூர்வ தகுதியை வழங்கமாட்டார்.",
+  assistantWidgetNoteAdmin:
+    "நிரா உங்கள் தற்போதைய அனுமதிகளுடன் இந்த நிர்வாகப் பணியிடத்தில் உதவலாம். தகுதி விதிகளை மாற்றவோ அதிகாரப்பூர்வ தரவை உருவாக்கவோ முடியாது.",
+  assistantWidgetLog: "உரையாடல்",
+  assistantWidgetFullPage: "முழு உதவியாளரைத் திற",
   scannerTitle: "AI ஆவண ச்கேனர்",
   scannerLead:
     "கல்விச் சான்றிதழ் புலங்களைப் பிரித்தெடுத்து மதிப்பாய்வு செய்து, பணப்பைக்கு நகலெடுக்க விரும்பும் மதிப்புகளை மட்டும் உறுதி செய்யுங்கள். ச்கேன் ஆவணச் சரிபார்ப்பு அல்ல; தகுதியை மாற்றாது.",

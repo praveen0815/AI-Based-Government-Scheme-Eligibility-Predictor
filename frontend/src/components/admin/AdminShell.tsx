@@ -1,5 +1,7 @@
 import { useState, type ReactNode } from "react";
+import { useLocation } from "react-router-dom";
 import { AdminThemeProvider, useAdminTheme } from "../../context/AdminThemeContext";
+import { AssistantWidgetHost } from "../assistant/AssistantWidget";
 import { AdminSidebar } from "./AdminSidebar";
 import { AdminTopBar } from "./AdminTopBar";
 
@@ -7,6 +9,7 @@ const COLLAPSE_KEY = "admin-sidebar-collapsed";
 
 function AdminShellFrame({ children }: { children: ReactNode }) {
   const { theme } = useAdminTheme();
+  const { pathname } = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(() => {
     try {
@@ -30,18 +33,22 @@ function AdminShellFrame({ children }: { children: ReactNode }) {
 
   return (
     <div className={`admin-console ${collapsed ? "admin-console-collapsed" : ""}`} data-admin-theme={theme}>
-      <AdminSidebar
-        open={mobileOpen}
-        collapsed={collapsed}
-        onClose={() => setMobileOpen(false)}
-        onToggleCollapsed={toggleCollapsed}
-      />
-      <div className="admin-workspace">
-        <AdminTopBar onOpenMenu={() => setMobileOpen(true)} />
-        <main className="admin-main">
-          <div className="admin-page-enter">{children}</div>
-        </main>
-      </div>
+      <AssistantWidgetHost variant="admin">
+        <AdminSidebar
+          open={mobileOpen}
+          collapsed={collapsed}
+          onClose={() => setMobileOpen(false)}
+          onToggleCollapsed={toggleCollapsed}
+        />
+        <div className="admin-workspace">
+          <AdminTopBar onOpenMenu={() => setMobileOpen(true)} />
+          <main className="admin-main">
+            <div key={pathname} className="admin-page-enter">
+              {children}
+            </div>
+          </main>
+        </div>
+      </AssistantWidgetHost>
     </div>
   );
 }

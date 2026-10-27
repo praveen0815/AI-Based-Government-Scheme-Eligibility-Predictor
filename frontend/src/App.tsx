@@ -1,5 +1,5 @@
 import { Component, Suspense, type ReactNode } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { AdminRoute } from "./components/AdminRoute";
 import { ErrorState } from "./components/ErrorState";
 import { LoadingState } from "./components/LoadingState";
@@ -319,11 +319,7 @@ export default function App() {
         />
         <Route
           path="/admin/scheme-knowledge"
-          element={
-            <AdminRoute>
-              <AdminSchemesPage />
-            </AdminRoute>
-          }
+          element={<Navigate to="/admin/schemes" replace />}
         />
         <Route
           path="/admin/evaluation"
